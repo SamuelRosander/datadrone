@@ -1,0 +1,34 @@
+/** {
+	border: 1px dotted blue;
+}*/
+
+@font-face {
+    font-family: CenturyGothic;
+    src: url(GOTHIC.TTF);
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	font-family: "CenturyGothic";
+}
+
+h3 {
+	padding: 0;
+	margin: 0;
+}
+
+#banner {
+	height: 50px;
+	background-image: linear-gradient(#c2ff6b, #8dba4d);
+	line-height: 50px;
+}
+
+#menu {
+	float: right;
+}
+
+.wrapper {
+	margin: 0 auto;
+	max-width: 500px;
+}

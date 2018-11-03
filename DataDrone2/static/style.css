@@ -1,0 +1,100 @@
+/* * {
+	border: 1px dotted blue;
+} */
+
+@font-face {
+    font-family: CenturyGothic;
+    src: url(GOTHIC.TTF);
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	font-family: "CenturyGothic";
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+a:hover {
+  color: #555;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	padding: 0;
+	margin: 0;
+}
+
+#banner {
+	height: 50px;
+	background-image: linear-gradient(#c2ff6b, #8dba4d);
+	line-height: 50px;
+}
+
+#menu {
+	float: right;
+}
+
+#menu a {
+  padding: 10px;
+}
+
+.wrapper {
+	margin: 0 auto;
+	max-width: 500px;
+}
+
+.main-container {
+  margin: 0;
+  padding: 50px 0;
+}
+
+.form {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  margin: 25px 0 0 0;
+  height: 50px;
+  border: 0;
+  background-color: #eee;
+}
+
+.form-checkbox {
+  position: relative;
+  top: 10px;
+  margin: 0px 0 0 5px;
+  font-size: 0.8em;
+}
+
+.large-button {
+  background-color: #b2ea62;
+}
+
+.large-button:hover {
+  color: #fff;
+  background-color: #8ebc4d;
+  cursor: pointer;
+}
+
+.form-flash {
+  position: absolute;
+  color: red;
+  font-size: 0.8em;
+}
+
+.login-flash {
+  color: red;
+  font-size: 0.8em;
+  float: right;
+}
+
+.info-flash {
+  position: relative;
+  top: -20px;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #cff4f5;
+  color: #448c8f;
+}

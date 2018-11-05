@@ -3,7 +3,7 @@ from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import Length, Email, EqualTo, ValidationError
 from DataDrone2 import bcrypt
-from DataDrone2.models import Users
+from DataDrone2.models import User
 
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=32)])

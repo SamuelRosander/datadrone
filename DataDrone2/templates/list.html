@@ -2,6 +2,16 @@
 
 {% block body %}
 
-<h1>List</h1>
+{% for item in items %}
+<form method="POST" action="{{ url_for("item_addentry", item_id=item.item_id) }}">
+  <div class="list-item">
+    <input type="submit" class="btn-plus" value="+1">
+    <!-- <span class="list-geo-box"><label for="geo">Geo<input type="checkbox" id="geo"></label></span> -->
+    <span class="list-geo-box"><input type="checkbox" id="switch-{{ item.item_id }}" /><label for="switch-{{ item.item_id }}">Toggle</label></span>
+    <div class="item-title">{{ item.name }}</div>
+    <div class="item-spotlight">Days since last: 0</div>
+  </div>
+</form>
+{% endfor %}
 
-{% endblock%}
+{% endblock %}

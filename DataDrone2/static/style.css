@@ -98,3 +98,95 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #cff4f5;
   color: #448c8f;
 }
+
+.list-item {
+  background-color: #eee;
+  height: 50px;
+  margin-bottom: 10px;
+  padding-left: 5px;
+}
+
+.btn-plus {
+  background-color: #b2ea62;
+  float: right;
+  border: 0;
+  width: 50px;
+  height: 50px;
+}
+
+.btn-plus:hover {
+  color: #fff;
+  background-color: #8ebc4d;
+  cursor: pointer;
+}
+
+.list-geo-box {
+  /* line-height: 50px; */
+  margin-right: 12px;
+  float: right;
+  font-size: 0.8em;
+}
+
+/* .list-geo-box input {
+  position: relative;
+  top: 2px;
+} */
+
+.item-title {
+  height: 32px;
+  line-height: 32px;
+  font-size: 1.4em;
+}
+
+.item-spotlight {
+  height: 18px;
+  line-height: 18px;
+  font-size: 0.8em;
+}
+
+/* Toggle checkbox */
+
+.list-item input[type=checkbox]{
+	height: 0;
+	width: 0;
+	visibility: hidden;
+}
+
+.list-item label {
+	cursor: pointer;
+	text-indent: -9999px;
+	width: 40px;
+	height: 20px;
+	background: grey;
+	display: inline-block;
+	border-radius: 20px;
+	position: relative;
+  top: 12px;
+}
+
+.list-item label:after {
+	content: '';
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	width: 18px;
+	height: 18px;
+	background: #fff;
+	border-radius: 18px;
+	transition: 0.3s;
+}
+
+.list-item input:checked + label {
+	background: #8ebc4d;
+}
+
+.list-item input:checked + label:after {
+	left: calc(100% - 1px);
+	transform: translateX(-100%);
+}
+
+.list-item label:active:after {
+	width: 24px;
+}
+
+/* End checkbox */

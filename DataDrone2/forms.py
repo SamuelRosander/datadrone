@@ -13,12 +13,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField("Sign Up")
 
     def validate_username(self, field):
-        user = Users.query.filter_by(username=field.data).first()
+        user = User.query.filter_by(username=field.data).first()
         if user:
             raise ValidationError("Username already exists.")
 
     def validate_email(self, field):
-        email = Users.query.filter_by(email=field.data).first()
+        email = User.query.filter_by(email=field.data).first()
         if email:
             raise ValidationError("Email adress already exists.")
 
@@ -38,17 +38,17 @@ class UpdateAccountForm(FlaskForm):
 
     def validate_username(self, field):
         if current_user.username != field.data:
-            user = Users.query.filter_by(username=field.data).first()
+            user = User.query.filter_by(username=field.data).first()
             if user:
                 raise ValidationError("Username already exists.")
 
     def validate_email(self, field):
         if current_user.email != field.data:
-            email = Users.query.filter_by(email=field.data).first()
+            email = User.query.filter_by(email=field.data).first()
             if email:
                 raise ValidationError("Email adress already exists.")
 
     def validate_current_password(self, field):
-        user = Users.query.filter_by(username=current_user.username).first()
+        user = User.query.filter_by(username=current_user.username).first()
         if not bcrypt.check_password_hash(user.password, field.data):
             raise ValidationError("Wrong password.")

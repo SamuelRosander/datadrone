@@ -7,8 +7,9 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 def index():
 	if current_user.is_authenticated:
+		form = AddItemForm()
 		items = Item.query.filter_by(user_id=current_user.user_id).all()
-		return render_template("list.html", items=items)
+		return render_template("list.html", items=items, form=form)
 	else:
 		return render_template("home.html")
 
@@ -68,6 +69,16 @@ def account():
 def entry(entry_id):
 	entry = Entry.query.get(entry_id)
 	return render_template("entry.html", entry=entry)
+
+@app.route("/item/add", methods=["POST"])
+@login_required
+def item_add():
+	form = AddItemForm()
+	if form.validate_on_submit():
+		item = Item(user_id=current_user.user_id, itemname=form.itemname.data)
+		db.session.add(item)
+		db.session.commit()
+	return redirect(url_for("index"))
 
 @app.route("/item/<int:item_id>/addentry", methods=["POST"])
 @login_required

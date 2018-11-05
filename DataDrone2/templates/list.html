@@ -3,15 +3,43 @@
 {% block body %}
 
 {% for item in items %}
-<form method="POST" action="{{ url_for("item_addentry", item_id=item.item_id) }}">
+
+<form method="POST" action="{{ url_for('item_addentry', item_id=item.item_id) }}">
   <div class="list-item">
     <input type="submit" class="btn-plus" value="+1">
-    <!-- <span class="list-geo-box"><label for="geo">Geo<input type="checkbox" id="geo"></label></span> -->
     <span class="list-geo-box"><input type="checkbox" id="switch-{{ item.item_id }}" /><label for="switch-{{ item.item_id }}">Toggle</label></span>
-    <div class="item-title">{{ item.name }}</div>
+    <div class="item-title">{{ item.itemname }}</div>
     <div class="item-spotlight">Days since last: 0</div>
   </div>
 </form>
 {% endfor %}
+
+<input type="button" class="form large-button" value="Add new item" id="add-item-btn">
+
+<div id="add-item-modal-fade"></div>
+<div id="add-item-modal-container">
+  What do you want to keep track of?
+  <form action="{{ url_for('item_add') }}" method="post">
+  {{ form.hidden_tag() }}
+    <input type="submit" class="btn-plus" Value="Add">
+    {{ form.itemname(class="form", id="add-item-input") }}
+  </form>
+</div>
+
+<script src="{{ url_for('static', filename='jquery.js')}}"></script>
+<script>
+  $(document).ready(function(){
+    $("#add-item-btn").click(function() {
+      $("#add-item-modal-fade").show();
+      $("#add-item-modal-container").show();
+      $("#add-item-input").focus();
+    });
+
+    $("#add-item-modal-fade").click(function() {
+      $("#add-item-modal-fade").hide();
+      $("#add-item-modal-container").hide();
+    });
+  });
+</script>
 
 {% endblock %}

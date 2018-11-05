@@ -52,3 +52,6 @@ class UpdateAccountForm(FlaskForm):
         user = User.query.filter_by(username=current_user.username).first()
         if not bcrypt.check_password_hash(user.password, field.data):
             raise ValidationError("Wrong password.")
+
+class AddItemForm(FlaskForm):
+    itemname = StringField("Itemname", validators=[Length(min=2, max=64)])

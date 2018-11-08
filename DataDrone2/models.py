@@ -26,6 +26,7 @@ class Item(db.Model):
 	item_id = db.Column(db.Integer, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey("ddusers.user_id"), nullable=False)
 	itemname = db.Column(db.String(64), nullable=False)
+	geo_default = db.Column(db.Boolean, default=False)
 	hidden = db.Column(db.Boolean, default=False)
 	deleted = db.Column(db.Boolean, default=False)
 	entries = db.relationship("Entry", backref="owner", lazy=True)

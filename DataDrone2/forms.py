@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField
 from wtforms.validators import Length, Email, EqualTo, ValidationError
 from DataDrone2 import bcrypt
 from DataDrone2.models import User
@@ -55,3 +55,8 @@ class UpdateAccountForm(FlaskForm):
 
 class AddItemForm(FlaskForm):
     itemname = StringField("Itemname", validators=[Length(min=2, max=64)])
+
+class AddEntryForm(FlaskForm):
+    geo = BooleanField("Geo")
+    latitude = HiddenField("Latitude")
+    longitude = HiddenField("Longitude")

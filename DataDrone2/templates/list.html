@@ -4,10 +4,13 @@
 
 {% for item in items %}
 
-<form method="POST" action="{{ url_for('item_addentry', item_id=item.item_id) }}">
+<form method="POST" action="{{ url_for('item_addentry', item_id=item.item_id) }}" id="add_entry_form-{{ item.item_id }}">
+  {{ entry_form.csrf_token() }}
+  {{ entry_form.latitude(id="latitude-" ~ item.item_id) }}
+  {{ entry_form.longitude(id="longitude-" ~ item.item_id) }}
   <div class="list-item">
-    <input type="submit" class="btn-plus" value="+1">
-    <span class="list-geo-box"><input type="checkbox" id="switch-{{ item.item_id }}" /><label for="switch-{{ item.item_id }}">Toggle</label></span>
+    <input type="button" class="btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
+    <span class="list-geo-box">{{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}<label for="geo_switch-{{ item.item_id }}">Toggle</label></span>
     <div class="item-title">{{ item.itemname }}</div>
     <div class="item-spotlight">Days since last: 0</div>
   </div>
@@ -20,9 +23,9 @@
 <div id="add-item-modal-container">
   What do you want to keep track of?
   <form action="{{ url_for('item_add') }}" method="post">
-  {{ form.hidden_tag() }}
+  {{ item_form.hidden_tag() }}
     <input type="submit" class="btn-plus" Value="Add">
-    {{ form.itemname(class="form", id="add-item-input") }}
+    {{ item_form.itemname(class="form", id="add-item-input") }}
   </form>
 </div>
 
@@ -40,6 +43,32 @@
       $("#add-item-modal-container").hide();
     });
   });
+
+  function sendForm(item_id) {
+    if(!$("#geo_switch-" + item_id).is(':checked')) {
+      document.getElementById("add_entry_form-" + item_id).submit();
+    } else {
+      var ua = navigator.userAgent.toLowerCase(), isAndroid = ua.indexOf("android") > -1, geoTimeout = isAndroid ? '15000' : '1000';
+
+      function success(position) {
+        $("#latitude-" + item_id).val(position.coords.latitude);
+        $("#longitude-" + item_id).val(position.coords.longitude);
+
+        document.getElementById("add_entry_form-" + item_id).submit();
+      }
+
+      function error(err) {
+        alert(err.message);
+      }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 3000, timeout: geoTimeout});
+      } else {
+        alert('Location services must be enabled to use this');
+      }
+    }
+  }
+
 </script>
 
 {% endblock %}

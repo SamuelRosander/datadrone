@@ -7,9 +7,10 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 def index():
 	if current_user.is_authenticated:
-		form = AddItemForm()
+		item_form = AddItemForm()
+		entry_form = AddEntryForm()
 		items = Item.query.filter_by(user_id=current_user.user_id).all()
-		return render_template("list.html", items=items, form=form)
+		return render_template("list.html", items=items, item_form=item_form, entry_form=entry_form)
 	else:
 		return render_template("home.html")
 
@@ -84,10 +85,18 @@ def item_add():
 @login_required
 def item_addentry(item_id):
 	item = Item.query.get_or_404(item_id)
+	form = AddEntryForm()
 	if item.owner != current_user:
 		abort(403)
-	entry = Entry(item_id = item_id)
+	if form.geo.data:
+		entry = Entry(item_id = item_id, latitude = form.latitude.data, longitude = form.longitude.data)
+		item.geo_default = True;
+	else:
+		entry = Entry(item_id = item_id)
+		item.geo_default = False;
 	db.session.add(entry)
+	db.session.add(item)
 	db.session.commit()
 	flash("Entry added!", "info")
 	return redirect(url_for("entry", entry_id=entry.entry_id))
+	# return redirect(url_for("index"))

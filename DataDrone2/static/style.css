@@ -125,6 +125,28 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: 12px;
   float: right;
   font-size: 0.8em;
+  width: 50px;
+}
+
+.tag {
+  float: right;
+}
+
+.tag:hover {
+  cursor: pointer;
+}
+
+.tag-checkbox-label {
+  background-color: #fff;
+  float: left;
+  width: 220px;
+  margin: 10px ;
+}
+
+.tag-checkbox-label label {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
 }
 
 /* .list-geo-box input {
@@ -160,7 +182,8 @@ h1, h2, h3, h4, h5, h6 {
 	display: inline-block;
 	border-radius: 20px;
 	position: relative;
-  top: 12px;
+  top: -4px;
+  left: 6px;
 }
 
 .list-item label:after {
@@ -190,7 +213,7 @@ h1, h2, h3, h4, h5, h6 {
 /* end checkbox */
 
 /* Add item modal */
-#add-item-modal-fade {
+.modal-fade {
   display: none;
   position: fixed;
   top: 0px;
@@ -198,24 +221,26 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: 100%;
   background-color: #fff;
-  background-color: rgba(255, 255, 255, 0.9)
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1;
 }
 
-#add-item-modal-container {
+#add-item-modal-newitem {
   display: none;
   position: fixed;
   width: 500px;
   top: 20%;
   left: 50%;
   margin-left: -250px;
+  z-index: 2;
 }
 
-#add-item-modal-container form {
+#add-item-modal-newitem form {
   display: hidden;
   box-shadow: 0px 3px 8px #aaa;
 }
 
-#add-item-modal-container input {
+#add-item-modal-newitem input {
   margin: 0;
 }
 
@@ -223,3 +248,24 @@ h1, h2, h3, h4, h5, h6 {
   width: 450px;
 }
 /* end modal
+
+/* item tags modal */
+.modal-item-tags {
+  display: none;
+  position: fixed;
+  background-color: #eee;
+  width: 500px;
+  top: 20%;
+  left: 50%;
+  margin-left: -250px;
+  z-index: 2;
+  box-shadow: 0px 3px 8px #aaa;
+}
+
+.modal-item-tags-container {
+  padding: 10px;
+}
+
+.modal-item-tags p {
+  margin: 10px 0 0 10px;
+}

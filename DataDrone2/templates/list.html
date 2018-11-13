@@ -10,17 +10,52 @@
   {{ entry_form.longitude(id="longitude-" ~ item.item_id) }}
   <div class="list-item">
     <input type="button" class="btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
-    <span class="list-geo-box">{{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}<label for="geo_switch-{{ item.item_id }}">Toggle</label></span>
+    <span class="list-geo-box">
+      {{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}
+      <label for="geo_switch-{{ item.item_id }}">
+        Toggle
+      </label>
+    </span>
+    <span class="tag" id="tag-{{ item.item_id }}" target="{{ item.item_id }}">
+      {% if item.taglinks %}
+        {% set ns=namespace(active_tags=False) %}
+        {% for taglink in item.taglinks if taglink.is_default %}
+          {% set ns.active_tags = True %}
+        {% endfor %}
+
+        {% if ns.active_tags == True %}
+          <img src="{{ url_for('static', filename='img/tag_active.png') }}" id="tag-img-{{ item.item_id }}">
+        {% else %}
+          <img src="{{ url_for('static', filename='img/tag_inactive.png') }}" id="tag-img-{{ item.item_id }}">
+        {% endif %}
+      {% endif %}
+    </span>
     <div class="item-title">{{ item.itemname }}</div>
     <div class="item-spotlight">Days since last: 0</div>
+  </div>
+
+  <div class="modal-item-tags" id="modal-item-tags-{{ item.item_id }}">
+    <div class="modal-item-tags-container">
+      <p>Tags</p>
+      {% for taglink in item.taglinks %}
+          <span class="tag-checkbox-label">
+            <label>
+              <input type="checkbox" name="tag-{{ taglink.tag.tag_id }}" class="tag-checkbox" target="{{ item.item_id }}" {{ 'checked' if taglink.is_default }}>
+              {{ taglink.tag.name }}
+            </label>
+          </span>
+      {% endfor %}
+    </div>
+      <input type="button" class="form large-button tag-button" Value="Save">
   </div>
 </form>
 {% endfor %}
 
 <input type="button" class="form large-button" value="Add new item" id="add-item-btn">
 
-<div id="add-item-modal-fade"></div>
-<div id="add-item-modal-container">
+<div id="tags-modal-fade" class="modal-fade"></div>
+<div id="add-item-modal-fade" class="modal-fade"></div>
+<div id="add-item-modal-newitem">
   What do you want to keep track of?
   <form action="{{ url_for('item_add') }}" method="post">
   {{ item_form.hidden_tag() }}
@@ -29,46 +64,7 @@
   </form>
 </div>
 
-<script src="{{ url_for('static', filename='jquery.js')}}"></script>
-<script>
-  $(document).ready(function(){
-    $("#add-item-btn").click(function() {
-      $("#add-item-modal-fade").show();
-      $("#add-item-modal-container").show();
-      $("#add-item-input").focus();
-    });
-
-    $("#add-item-modal-fade").click(function() {
-      $("#add-item-modal-fade").hide();
-      $("#add-item-modal-container").hide();
-    });
-  });
-
-  function sendForm(item_id) {
-    if(!$("#geo_switch-" + item_id).is(':checked')) {
-      document.getElementById("add_entry_form-" + item_id).submit();
-    } else {
-      var ua = navigator.userAgent.toLowerCase(), isAndroid = ua.indexOf("android") > -1, geoTimeout = isAndroid ? '15000' : '1000';
-
-      function success(position) {
-        $("#latitude-" + item_id).val(position.coords.latitude);
-        $("#longitude-" + item_id).val(position.coords.longitude);
-
-        document.getElementById("add_entry_form-" + item_id).submit();
-      }
-
-      function error(err) {
-        alert(err.message);
-      }
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 3000, timeout: geoTimeout});
-      } else {
-        alert('Location services must be enabled to use this');
-      }
-    }
-  }
-
-</script>
+<script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+<script src="{{url_for('static', filename='js/list.js')}}"></script>
 
 {% endblock %}

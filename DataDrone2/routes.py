@@ -10,7 +10,9 @@ def index():
 		item_form = AddItemForm()
 		entry_form = AddEntryForm()
 		items = Item.query.filter_by(user_id=current_user.user_id).all()
-		return render_template("list.html", items=items, item_form=item_form, entry_form=entry_form)
+		tags = Tag.query.filter_by(user_id=current_user.user_id).all()
+		taglinks = TagLink.query.filter(Item.user_id == current_user.user_id).all()
+		return render_template("list.html", items=items, tags=tags, taglinks=taglinks, item_form=item_form, entry_form=entry_form)
 	else:
 		return render_template("home.html")
 
@@ -85,18 +87,37 @@ def item_add():
 @login_required
 def item_addentry(item_id):
 	item = Item.query.get_or_404(item_id)
+	taglinks = TagLink.query.filter_by(item_id=item_id).all()
 	form = AddEntryForm()
+
 	if item.owner != current_user:
 		abort(403)
-	if form.geo.data:
-		entry = Entry(item_id = item_id, latitude = form.latitude.data, longitude = form.longitude.data)
-		item.geo_default = True;
+
+	if form.geo.data:	#if geo checkbox is checked
+		entry = Entry(item_id = item_id, latitude = form.latitude.data, longitude = form.longitude.data)	#add entry with geo
+		item.geo_default = True;	#used as a "remember" function for the geo checkbox
 	else:
-		entry = Entry(item_id = item_id)
+		entry = Entry(item_id = item_id)	#add entry without geo
 		item.geo_default = False;
+
 	db.session.add(entry)
 	db.session.add(item)
-	db.session.commit()
+	db.session.commit()	#needed for entry.entry_id in tag section below
+
+	checked_tags = []
+	form_data = request.form	#get all form data
+	for f in form_data:
+		if f[:4] == "tag-":	#if id is tag-X and it's checked (doesn't show if not checked)
+			checked_tags.append(int(f[4:]))	#add it to the list of checked tags
+
+	for taglink in taglinks:	#loop through all visible tags for the item
+		taglink.is_default = False	#set all as default. will be changed again below if it's checked. Used for saving the "checked"-value
+
+		if taglink.tag_id in checked_tags:	#if any visible tags (taglinks) are checked
+			taglink.is_default = True	#the tag will now be checked per default in the future
+			entry_tag = EntryTag(entry_id = entry.entry_id, tag_id = taglink.tag_id)	#create an entrytag object...
+			db.session.add(entry_tag)	#...and add it to the db
+
+	db.session.commit()	#commit tag changes
 	flash("Entry added!", "info")
 	return redirect(url_for("entry", entry_id=entry.entry_id))
-	# return redirect(url_for("index"))

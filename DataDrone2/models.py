@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
 	email = db.Column(db.String(128), unique=True, nullable=False)
 	register_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
 	items = db.relationship("Item", backref="owner", lazy=True)
+	tags = db.relationship("Tag", backref="owner", lazy=True)
 
 	def __repr__(self):
 		return f"User('{self.user_id}', '{self.username}', '{self.email}')"
@@ -29,10 +30,11 @@ class Item(db.Model):
 	geo_default = db.Column(db.Boolean, default=False)
 	hidden = db.Column(db.Boolean, default=False)
 	deleted = db.Column(db.Boolean, default=False)
-	entries = db.relationship("Entry", backref="owner", lazy=True)
+	entries = db.relationship("Entry", backref="item", lazy=True)
+	taglinks = db.relationship("TagLink", backref="item", lazy=True)
 
 	def __repr__(self):
-		return f"Item('{self.item_id}', '{self.user_id}', '{self.itemname}',)"
+		return f"Item('{self.item_id}', '{self.user_id}', '{self.itemname}')"
 
 class Entry(db.Model):
 	__tablename__ = "ddentries"
@@ -42,6 +44,37 @@ class Entry(db.Model):
 	comment = db.Column(db.String(256))
 	latitude = db.Column(db.Float)
 	longitude = db.Column(db.Float)
+	entrytags = db.relationship("EntryTag", backref="entry", lazy=True)
 
 	def __repr__(self):
-		return f"Entry('{self.entry_id}', '{self.item_id}', '{self.timestamp}',)"
+		return f"Entry('{self.entry_id}', '{self.item_id}', '{self.timestamp}')"
+
+class Tag(db.Model):
+	__tablename__ = "ddtags"
+	tag_id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey("ddusers.user_id"), nullable=False)
+	name = db.Column(db.String(32), nullable=False)
+	taglinks = db.relationship("TagLink", backref="tag", lazy=True)
+	tagentries = db.relationship("EntryTag", backref="tag", lazy=True)
+
+	def __repr__(self):
+		return f"Tag('{self.tag_id}', '{self.name}')"
+
+class TagLink(db.Model):
+	__tablename__ = "ddtaglinks"
+	taglink_id = db.Column(db.Integer, primary_key=True)
+	item_id = db.Column(db.Integer, db.ForeignKey("dditems.item_id"), nullable=False)
+	tag_id = db.Column(db.Integer, db.ForeignKey("ddtags.tag_id"), nullable=False)
+	is_default = db.Column(db.Boolean, default=False)
+
+	def __repr__(self):
+		return f"TagLink('{self.taglink_id}', '{self.item_id}', '{self.tag_id}')"
+
+class EntryTag(db.Model):
+	__tablename__ = "ddentrytags"
+	entrytag_id = db.Column(db.Integer, primary_key=True)
+	entry_id = db.Column(db.Integer, db.ForeignKey("ddentries.entry_id"), nullable=False)
+	tag_id = db.Column(db.Integer, db.ForeignKey("ddtags.tag_id"), nullable=False)
+
+	def __repr__(self):
+		return f"EntryTag('self.entrytag_id', 'self.entry_id', 'self.tag_id')"

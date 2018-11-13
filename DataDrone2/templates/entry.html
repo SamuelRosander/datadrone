@@ -8,5 +8,10 @@ ID: {{ entry.entry_id }}<br>
 Lat: {{ entry.latitude }}<br>
 Long: {{ entry.longitude }}<br>
 Comment: {{ entry.comment }}<br>
+<br>
+Tags:<br>
+{% for tagentry in entry.entrytags %}
+  {{ tagentry.tag.name }}<br>
+{% endfor %}
 
 {% endblock %}

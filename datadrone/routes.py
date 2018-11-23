@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort
-from DataDrone2 import app, db, bcrypt
-from DataDrone2.forms import *
-from DataDrone2.models import *
+from datadrone import app, db, bcrypt
+from datadrone.forms import *
+from datadrone.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
@@ -14,7 +14,7 @@ def index():
 		taglinks = TagLink.query.filter(Item.user_id == current_user.user_id).all()
 		return render_template("list.html", items=items, tags=tags, taglinks=taglinks, item_form=item_form, entry_form=entry_form)
 	else:
-		return render_template("home.html")
+		return redirect(url_for("login"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

@@ -1,4 +1,4 @@
-from DataDrone2 import db, login_manager
+from datadrone import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
 

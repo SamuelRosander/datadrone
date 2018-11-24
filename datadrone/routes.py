@@ -11,9 +11,16 @@ def index():
 		item_form = AddItemForm()
 		entry_form = AddEntryForm()
 		items = Item.query.filter_by(user_id=current_user.user_id).order_by(Item.item_id)
+		spotlight_stat = {}
+		for item in items:
+			latest_entry = Entry.query.filter_by(item_id=item.item_id).order_by(Entry.timestamp.desc()).first()
+			if latest_entry:
+				spotlight_stat[item.item_id] = get_days_since_last(latest_entry)
+			else:
+				spotlight_stat[item.item_id] = 0
 		tags = Tag.query.filter_by(user_id=current_user.user_id).order_by(Tag.tag_id)
 		taglinks = TagLink.query.filter(Item.user_id == current_user.user_id).all()
-		return render_template("list.html", items=items, tags=tags, taglinks=taglinks, item_form=item_form, entry_form=entry_form)
+		return render_template("list.html", items=items, tags=tags, taglinks=taglinks, item_form=item_form, entry_form=entry_form, spotlight_stat=spotlight_stat)
 	else:
 		return redirect(url_for("login"))
 

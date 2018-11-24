@@ -1,5 +1,10 @@
 import datetime
 
+today = datetime.datetime.now()
+
+def get_days_since_last(entry):
+    return (today - entry.timestamp).days
+
 def get_stats(entries):
 
     stats = {}
@@ -17,8 +22,6 @@ def get_stats(entries):
     stats["total_today"] = 0
 
     if entries.count() > 0:
-        today = datetime.datetime.now()
-
         stats["first"] = entries[0].timestamp
         stats["last"] = entries[entries.count()-1].timestamp
         stats["total"] = entries.count()

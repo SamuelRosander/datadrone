@@ -22,7 +22,14 @@ Total today: {{ stats['total_today'] }}
 <br><br>
 
 {% for entry in entries[::-1] %}
-{{ entry.timestamp }}<br>
+  <a href="{{ url_for('entry', entry_id=entry.entry_id)}}">{{ entry.timestamp }}</a>
+  {% for entrytag in entry.entrytags %}
+    {{ entrytag.tag.name }}
+  {% endfor %}
+  {% if entry.comment %}
+    {{ entry.comment }}
+  {% endif %}
+  <br>
 {% endfor %}
 
 {% endblock%}

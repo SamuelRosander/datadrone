@@ -2,16 +2,22 @@
 
 {% block body %}
 
-<h1>Entry</h1>
+<h3>Entry</h3>
+<form method="POST" action="">
+  {{ form.hidden_tag() }}
+  
+  ID: {{ entry.entry_id }}<br>
+  Timestamp : {{ form.timestamp }}<br>
+  Lat: {{ form.latitude }}<br>
+  Long: {{ form.longitude }}<br>
+  Comment: {{ form.comment }}<br>
+  <br>
+  Tags:<br>
+  {% for entrytag in entry.entrytags %}
+    {{ entrytag.tag.name }}<br>
+  {% endfor %}
+  {{ form.submit }}
 
-ID: {{ entry.entry_id }}<br>
-Lat: {{ entry.latitude }}<br>
-Long: {{ entry.longitude }}<br>
-Comment: {{ entry.comment }}<br>
-<br>
-Tags:<br>
-{% for tagentry in entry.entrytags %}
-  {{ tagentry.tag.name }}<br>
-{% endfor %}
+</form>
 
 {% endblock %}

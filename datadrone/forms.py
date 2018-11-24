@@ -60,3 +60,10 @@ class AddEntryForm(FlaskForm):
     geo = BooleanField("Geo")
     latitude = HiddenField("Latitude")
     longitude = HiddenField("Longitude")
+
+class UpdateEntryForm(FlaskForm):
+    timestamp = StringField("Timestamp")
+    latitude = StringField("Latitude")
+    longitude = StringField("Longitude")
+    comment = StringField("Comment")
+    submit = SubmitField("Update")

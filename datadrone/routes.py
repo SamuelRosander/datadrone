@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from datadrone import app, db, bcrypt
 from datadrone.forms import *
 from datadrone.models import *
+from datadrone.stats import *
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
@@ -9,8 +10,8 @@ def index():
 	if current_user.is_authenticated:
 		item_form = AddItemForm()
 		entry_form = AddEntryForm()
-		items = Item.query.filter_by(user_id=current_user.user_id).all()
-		tags = Tag.query.filter_by(user_id=current_user.user_id).all()
+		items = Item.query.filter_by(user_id=current_user.user_id).order_by(Item.item_id)
+		tags = Tag.query.filter_by(user_id=current_user.user_id).order_by(Tag.tag_id)
 		taglinks = TagLink.query.filter(Item.user_id == current_user.user_id).all()
 		return render_template("list.html", items=items, tags=tags, taglinks=taglinks, item_form=item_form, entry_form=entry_form)
 	else:
@@ -46,10 +47,13 @@ def logout():
 	logout_user()
 	return redirect(url_for("login"))
 
-@app.route("/details")
+@app.route("/details/<int:item_id>")
 @login_required
-def details():
-	return render_template("details.html")
+def details(item_id):
+	item = Item.query.get(item_id)
+	entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
+	stats = get_stats(entries)
+	return render_template("details.html", item=item, entries=entries, stats=stats)
 
 @app.route("/account", methods=["GET", "POST"])
 @login_required

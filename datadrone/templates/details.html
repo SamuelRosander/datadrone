@@ -2,6 +2,27 @@
 
 {% block body %}
 
-<h1>Details</h1>
+<h3>{{ item.itemname }}</h3>
+
+Search between:<br>
+<input type="text"><br>
+<input type="text"><input type="button">
+
+<br><br>
+
+First: {{ stats['first'] }}<br>
+Last: {{ stats['last'] }}<br>
+Total: {{ stats['total'] }}<br>
+Avg/day: {{ stats['average_a_day'] }}<br>
+Max in a day: {{ stats['max_in_a_day'] }} ({{ stats['max_in_a_day-date'] }})<br>
+Longest without: {{ stats['longest_without'] }} ({{ stats['longest_without_start'] }} - {{ stats['longest_without_end'] }})<br>
+Days since last: {{ stats['days_since_last'] }}<br>
+Total today: {{ stats['total_today'] }}
+
+<br><br>
+
+{% for entry in entries[::-1] %}
+{{ entry.timestamp }}<br>
+{% endfor %}
 
 {% endblock%}

@@ -30,7 +30,7 @@
         {% endif %}
       {% endif %}
     </span>
-    <div class="item-title">{{ item.itemname }}</div>
+    <a href="{{ url_for('details', item_id=item.item_id) }}"><div class="item-title">{{ item.itemname }}</div></a>
     <div class="item-spotlight">Days since last: 0</div>
   </div>
 

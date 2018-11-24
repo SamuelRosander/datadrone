@@ -1,14 +1,15 @@
 import datetime
 
-today = datetime.datetime.now()
-
 def get_days_since_last(entry):
-    return (today - entry.timestamp).days
+    now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
 
-def get_stats(entries):
+    return (now - entry.timestamp).days
 
+def get_all(entries):
+    now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
     stats = {}
 
+    stats["now"] = now
     stats["first"] = 0
     stats["last"] = 0
     stats["total"] = 0
@@ -25,8 +26,8 @@ def get_stats(entries):
         stats["first"] = entries[0].timestamp
         stats["last"] = entries[entries.count()-1].timestamp
         stats["total"] = entries.count()
-        stats["average_a_day"] = round(stats["total"]/(today - stats["first"]).days, 2)
-        stats["days_since_last"] = (today - stats["last"]).days
+        stats["average_a_day"] = round(stats["total"]/(now - stats["first"]).days, 2)
+        stats["days_since_last"] = (now - stats["last"]).days
 
         tempdate = 0
         temp_max_in_a_day = 0
@@ -41,7 +42,7 @@ def get_stats(entries):
                 stats["max_in_a_day"] = temp_max_in_a_day
                 stats["max_in_a_day-date"] = tempdate
 
-            if entry.timestamp.date() == today.date():
+            if entry.timestamp.date() == now.date():
                 stats["total_today"] += 1
 
             if i > 0:
@@ -55,6 +56,6 @@ def get_stats(entries):
         if stats["days_since_last"] > stats["longest_without"]:
             stats["longest_without"] = stats["days_since_last"]
             stats["longest_without_start"] = entries[entries.count()-1].timestamp.date()
-            stats["longest_without_end"] = today.date()
+            stats["longest_without_end"] = now.date()
 
     return stats

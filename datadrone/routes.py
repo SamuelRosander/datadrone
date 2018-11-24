@@ -2,20 +2,21 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from datadrone import app, db, bcrypt
 from datadrone.forms import *
 from datadrone.models import *
-from datadrone.stats import *
+import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
+import datetime
 
 @app.route("/")
 def index():
 	if current_user.is_authenticated:
 		item_form = AddItemForm()
 		entry_form = AddEntryForm()
-		items = Item.query.filter_by(user_id=current_user.user_id).order_by(Item.item_id)
+		items = Item.query.filter_by(user_id=current_user.user_id, deleted=False).order_by(Item.item_id)
 		spotlight_stat = {}
 		for item in items:
 			latest_entry = Entry.query.filter_by(item_id=item.item_id).order_by(Entry.timestamp.desc()).first()
 			if latest_entry:
-				spotlight_stat[item.item_id] = get_days_since_last(latest_entry)
+				spotlight_stat[item.item_id] = stats.get_days_since_last(latest_entry)
 			else:
 				spotlight_stat[item.item_id] = 0
 		tags = Tag.query.filter_by(user_id=current_user.user_id).order_by(Tag.tag_id)
@@ -59,8 +60,8 @@ def logout():
 def details(item_id):
 	item = Item.query.get(item_id)
 	entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
-	stats = get_stats(entries)
-	return render_template("details.html", item=item, entries=entries, stats=stats)
+	all_stats = stats.get_all(entries)
+	return render_template("details.html", item=item, entries=entries, stats=all_stats)
 
 @app.route("/account", methods=["GET", "POST"])
 @login_required
@@ -105,10 +106,10 @@ def item_addentry(item_id):
 		abort(403)
 
 	if form.geo.data:	#if geo checkbox is checked
-		entry = Entry(item_id = item_id, latitude = form.latitude.data, longitude = form.longitude.data)	#add entry with geo
+		entry = Entry(item_id = item_id, latitude = form.latitude.data, longitude = form.longitude.data, timestamp = datetime.datetime.utcnow() + datetime.timedelta(hours=1))	#add entry with geo
 		item.geo_default = True;	#used as a "remember" function for the geo checkbox
 	else:
-		entry = Entry(item_id = item_id)	#add entry without geo
+		entry = Entry(item_id = item_id, timestamp = datetime.datetime.utcnow() + datetime.timedelta(hours=1))	#add entry without geo
 		item.geo_default = False;
 
 	db.session.add(entry)

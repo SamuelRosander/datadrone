@@ -42,6 +42,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .wrapper {
+  padding: 0 10px;
 	margin: 0 auto;
 	max-width: 500px;
 }
@@ -140,7 +141,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #fff;
   float: left;
   width: 220px;
-  margin: 10px ;
+  margin: 10px;
 }
 
 .tag-checkbox-label label {

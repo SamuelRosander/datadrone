@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from datadrone import app, db, bcrypt
-from datadrone.forms import *
-from datadrone.models import *
+from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm
+from datadrone.models import User, Item, Entry, Tag, TagLink, EntryTag
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
 import datetime
@@ -25,6 +25,18 @@ def index():
 	else:
 		return redirect(url_for("login"))
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+	form = RegistrationForm()
+	if form.validate_on_submit():
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+		user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+		db.session.add(user)
+		db.session.commit()
+		flash("Account created.", "info")
+		return redirect(url_for("login"))
+	return render_template("register.html", form=form)
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 	form = LoginForm()
@@ -38,30 +50,10 @@ def login():
 			flash("Incorrect username or password.", "error")
 	return render_template("login.html", form=form)
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-	form = RegistrationForm()
-	if form.validate_on_submit():
-		hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
-		user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-		db.session.add(user)
-		db.session.commit()
-		flash("Account created.", "info")
-		return redirect(url_for("login"))
-	return render_template("register.html", form=form)
-
 @app.route("/logout")
 def logout():
 	logout_user()
 	return redirect(url_for("login"))
-
-@app.route("/details/<int:item_id>")
-@login_required
-def details(item_id):
-	item = Item.query.get(item_id)
-	entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
-	all_stats = stats.get_all(entries)
-	return render_template("details.html", item=item, entries=entries, stats=all_stats)
 
 @app.route("/account", methods=["GET", "POST"])
 @login_required
@@ -80,24 +72,13 @@ def account():
 		form.email.data = current_user.email
 	return render_template("account.html", form=form)
 
-@app.route("/entry/<int:entry_id>", methods=["GET", "POST"])
-def entry(entry_id):
-	entry = Entry.query.get(entry_id)
-	form = UpdateEntryForm()
-	if form.validate_on_submit():
-		entry.timestamp = form.timestamp.data
-		entry.latitude = form.latitude.data
-		entry.longitude = form.longitude.data
-		entry.comment = form.comment.data
-		db.session.commit()
-		flash("Entry has been updated.", "info")
-	elif request.method == "GET":
-		form.timestamp.data = entry.timestamp
-		form.latitude.data = entry.latitude
-		form.longitude.data = entry.longitude
-		form.comment.data = entry.comment
-
-	return render_template("entry.html", entry=entry, form=form)
+@app.route("/details/<int:item_id>")
+@login_required
+def details(item_id):
+	item = Item.query.get(item_id)
+	entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
+	all_stats = stats.get_all(entries)
+	return render_template("details.html", item=item, entries=entries, stats=all_stats)
 
 @app.route("/item/add", methods=["POST"])
 @login_required
@@ -147,3 +128,22 @@ def item_addentry(item_id):
 	db.session.commit()	#commit tag changes
 	flash("Entry added!", "info")
 	return redirect(url_for("entry", entry_id=entry.entry_id))
+
+@app.route("/entry/<int:entry_id>", methods=["GET", "POST"])
+def entry(entry_id):
+	entry = Entry.query.get(entry_id)
+	form = UpdateEntryForm()
+	if form.validate_on_submit():
+		entry.timestamp = form.timestamp.data
+		entry.latitude = form.latitude.data
+		entry.longitude = form.longitude.data
+		entry.comment = form.comment.data
+		db.session.commit()
+		flash("Entry has been updated.", "info")
+	elif request.method == "GET":
+		form.timestamp.data = entry.timestamp
+		form.latitude.data = entry.latitude
+		form.longitude.data = entry.longitude
+		form.comment.data = entry.comment
+
+	return render_template("entry.html", entry=entry, form=form)

@@ -100,11 +100,12 @@ def item_addentry(item_id):
 	if item.owner != current_user:
 		abort(403)
 
+	timestamp = (datetime.datetime.utcnow() + datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
 	if form.geo.data:	#if geo checkbox is checked
-		entry = Entry(item_id = item_id, latitude = form.latitude.data, longitude = form.longitude.data, timestamp = datetime.datetime.utcnow() + datetime.timedelta(hours=1))	#add entry with geo
+		entry = Entry(item_id = item_id, latitude = form.latitude.data, longitude = form.longitude.data, timestamp = timestamp)	#add entry with geo
 		item.geo_default = True;	#used as a "remember" function for the geo checkbox
 	else:
-		entry = Entry(item_id = item_id, timestamp = datetime.datetime.utcnow() + datetime.timedelta(hours=1))	#add entry without geo
+		entry = Entry(item_id = item_id, timestamp = timestamp)	#add entry without geo
 		item.geo_default = False;
 
 	db.session.add(entry)

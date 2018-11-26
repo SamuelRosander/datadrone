@@ -5,7 +5,8 @@
 <h3>Entry</h3>
 <form method="POST" action="">
   {{ form.hidden_tag() }}
-  
+
+  Item: <a href="{{ url_for('details', item_id=entry.item.item_id) }}">{{ entry.item.itemname }}</a><br>
   ID: {{ entry.entry_id }}<br>
   Timestamp : {{ form.timestamp }}<br>
   Lat: {{ form.latitude }}<br>
@@ -19,5 +20,21 @@
   {{ form.submit }}
 
 </form>
+<div id="map"></div>
+<script>
+  function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: {lat: {{ entry.latitude }}, lng: {{ entry.longitude }}}
+    });
 
+    var marker = new google.maps.Marker({
+      position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
+      map:map
+    });
+
+  }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCv89Lm44klib2QbXjtUy38jFosKg5ET0g&callback=initMap">
+</script>
 {% endblock %}

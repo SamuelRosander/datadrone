@@ -275,3 +275,40 @@ h1, h2, h3, h4, h5, h6 {
 .modal-item-tags p {
   margin: 10px 0 0 10px;
 }
+
+#latest-entries {
+  height: 400px;
+  overflow: scroll;
+  border: 1px solid black;
+  padding: 5px 0;
+}
+
+.tag-box {
+  position: relative;
+  top: -4px;
+  padding: 4px;
+  background-color: #ddd;
+  border-radius: 4px;
+  font-size: 0.6em;
+  font-family: Courier New;
+}
+
+#latest-entries table tr td {
+  padding: 0 10px;
+}
+
+#latest-entries table tr:hover {
+  background-color: #eee;
+}
+
+#latest-entries table {
+  width: auto;
+}
+
+#latest-entries table td {
+  white-space: nowrap;
+}
+
+#latest-entries table td:last-child {
+  width: 100%;
+}

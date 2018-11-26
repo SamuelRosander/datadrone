@@ -57,15 +57,32 @@ Total today: {{ stats['total_today'] }}
 
 <br><br>
 
-{% for entry in entries[::-1] %}
-  <a href="{{ url_for('entry', entry_id=entry.entry_id)}}">{{ entry.timestamp }}</a>
-  {% for entrytag in entry.entrytags %}
-    {{ entrytag.tag.name }}
-  {% endfor %}
-  {% if entry.comment %}
-    {{ entry.comment }}
-  {% endif %}
-  <br>
-{% endfor %}
+<h3>Entries</h3>
+<div id="latest-entries">
+  <table>
+    {% for entry in entries[::-1] %}
+      <tr>
+        <td>
+          <a href="{{ url_for('entry', entry_id=entry.entry_id)}}">{{ entry.timestamp }}</a>
+        </td>
+        <td>
+          {% if entry.latitude and entry.longitude %}
+            G
+          {% endif %}
+        </td>
+        <td>
+          {% if entry.comment %}
+            C
+          {% endif %}
+        </td>
+        <td>
+          {% for entrytag in entry.entrytags %}
+            <span class="tag-box">{{ entrytag.tag.name }}</span>
+          {% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
 
 {% endblock%}

@@ -75,7 +75,11 @@ def account():
 @app.route("/details/<int:item_id>")
 @login_required
 def details(item_id):
-	item = Item.query.get(item_id)
+	item = Item.query.get_or_404(item_id)
+
+	if item.owner != current_user:
+		abort(403)
+
 	entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
 	all_stats = stats.get_all(entries)
 	return render_template("details.html", item=item, entries=entries, stats=all_stats)
@@ -133,6 +137,10 @@ def item_addentry(item_id):
 @app.route("/entry/<int:entry_id>", methods=["GET", "POST"])
 def entry(entry_id):
 	entry = Entry.query.get(entry_id)
+
+	if entry.item.owner != current_user:
+		abort(403)
+
 	form = UpdateEntryForm()
 	if form.validate_on_submit():
 		entry.timestamp = form.timestamp.data

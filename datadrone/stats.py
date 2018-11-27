@@ -21,12 +21,15 @@ def get_all(entries):
     stats["longest_without_start"] = "0000-00-00"
     stats["longest_without_end"] = "0000-00-00"
     stats["total_today"] = 0
+    stats["total_nr_of_days"] = 0
 
     if entries.count() > 0:
         stats["first"] = entries[0].timestamp
         stats["last"] = entries[entries.count()-1].timestamp
         stats["total"] = entries.count()
-        stats["average_a_day"] = round(stats["total"]/(now - stats["first"]).days, 2)
+        if (now - stats["first"]).days == 0: # if this is the first day of the item
+            stats["total_nr_of_days"] = 1   # set nr of days to 1 to prevent division by 0
+        stats["average_a_day"] = round(stats["total"]/stats["total_nr_of_days"], 2)
         stats["days_since_last"] = (now - stats["last"]).days
 
         tempdate = 0

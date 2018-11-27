@@ -27,7 +27,8 @@ def get_all(entries):
         stats["first"] = entries[0].timestamp
         stats["last"] = entries[entries.count()-1].timestamp
         stats["total"] = entries.count()
-        if (now - stats["first"]).days == 0: # if this is the first day of the item
+        stats["total_nr_of_days"] = (now - stats["first"]).days
+        if stats["total_nr_of_days"] == 0: # if this is the first day of the item
             stats["total_nr_of_days"] = 1   # set nr of days to 1 to prevent division by 0
         stats["average_a_day"] = round(stats["total"]/stats["total_nr_of_days"], 2)
         stats["days_since_last"] = (now - stats["last"]).days

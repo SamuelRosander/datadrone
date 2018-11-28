@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField
 from wtforms.validators import Length, Email, EqualTo, ValidationError
+from wtforms.fields.html5 import DateField
 from datadrone import bcrypt
 from datadrone.models import User
 
@@ -67,3 +68,8 @@ class UpdateEntryForm(FlaskForm):
     longitude = StringField("Longitude")
     comment = StringField("Comment")
     submit = SubmitField("Update")
+
+class DetailsSearchScopeForm(FlaskForm):
+    scope_from = DateField("From")
+    scope_to = DateField("To")
+    submit = SubmitField("->")

@@ -4,11 +4,25 @@
 
 <h3>{{ item.itemname }}</h3>
 
-Search between:<br>
-<input type="text"><br>
-<input type="text"><input type="button">
+<form method="POST" action="">
+  {{ form.hidden_tag() }}
+  Search between:<br>
+  {{ form.scope_from(class="form-small", value=form.scope_from.data) }}<br>
+  {% if form.scope_from.errors %}
+    {% for error in form.scope_from.errors %}
+      <div class="form-small-flash">{{ error }}</div>
+    {% endfor %}
+  {% endif %}
+  {{ form.scope_to(class="form-small", value=form.scope_to.data) }}
+  {% if form.scope_to.errors %}
+    {% for error in form.scope_to.errors %}
+      <div class="form-small-flash">{{ error }}</div>
+    {% endfor %}
+  {% endif %}
+  {{ form.submit(class="btn-small") }}
+</form>
 
-<br><br>
+<br>
 
 First: {{ stats['first'] }}<br>
 Last: {{ stats['last'] }}<br>
@@ -59,7 +73,7 @@ Total today: {{ stats['total_today'] }}
 
 <h3>Entries</h3>
 <div id="latest-entries">
-  <table>
+  <table cellspacing=0, cellpadding=0>
     {% for entry in entries[::-1] %}
       <tr>
         <td>

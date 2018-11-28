@@ -67,6 +67,16 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #eee;
 }
 
+.form-small {
+  box-sizing: border-box;
+  width: 150px;
+  height: 30px;
+  padding: 0 6px;
+  margin: 2px 0;
+  border: 0;
+  background-color: #eee;
+}
+
 .form-checkbox {
   position: relative;
   top: 10px;
@@ -86,6 +96,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .form-flash {
   position: absolute;
+  color: red;
+  font-size: 0.8em;
+}
+
+.form-small-flash {
   color: red;
   font-size: 0.8em;
 }
@@ -110,6 +125,24 @@ h1, h2, h3, h4, h5, h6 {
   height: 50px;
   margin-bottom: 10px;
   padding-left: 5px;
+}
+
+.btn-small {
+  background-color: #b2ea62;
+  border: 0;
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  margin: 2px 0;
+  position: relative;
+  top: 2px;
+}
+
+.btn-small:hover {
+  color: #fff;
+  background-color: #8ebc4d;
+  cursor: pointer;
 }
 
 .btn-plus {
@@ -278,7 +311,7 @@ h1, h2, h3, h4, h5, h6 {
 
 #latest-entries {
   height: 400px;
-  overflow: scroll;
+  overflow: auto;
   border: 1px solid black;
   padding: 5px 0;
 }

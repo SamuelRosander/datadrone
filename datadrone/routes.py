@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from datadrone import app, db, bcrypt
-from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm
+from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm
 from datadrone.models import User, Item, Entry, Tag, TagLink, EntryTag
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
@@ -72,7 +72,7 @@ def account():
 		form.email.data = current_user.email
 	return render_template("account.html", form=form)
 
-@app.route("/details/<int:item_id>")
+@app.route("/details/<int:item_id>", methods=["GET", "POST"])
 @login_required
 def details(item_id):
 	item = Item.query.get_or_404(item_id)
@@ -80,9 +80,18 @@ def details(item_id):
 	if item.owner != current_user:
 		abort(403)
 
-	entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
+	form = DetailsSearchScopeForm()
+	if form.validate_on_submit():
+		entries = Entry.query.filter(Entry.item_id==item_id\
+									,Entry.timestamp >= form.scope_from.data\
+									,Entry.timestamp <= form.scope_to.data + datetime.timedelta(days=1))\
+									.order_by(Entry.timestamp)
+	else:
+		entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
+
 	all_stats = stats.get_all(entries)
-	return render_template("details.html", item=item, entries=entries, stats=all_stats)
+
+	return render_template("details.html", item=item, entries=entries, stats=all_stats, form=form)
 
 @app.route("/item/add", methods=["POST"])
 @login_required

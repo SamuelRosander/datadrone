@@ -23,7 +23,9 @@
 </form>
 
 <br>
-
+{% if form.validate_on_submit() %}
+  Stats between {{ form.scope_from.data }} and {{ form.scope_to.data }} <a href="{{ url_for('details', item_id=item.item_id) }}" class="link-small">Clear</a><br><br>
+{% endif %}
 First: {{ stats['first'] }}<br>
 Last: {{ stats['last'] }}<br>
 Total: {{ stats['total'] }}<br>

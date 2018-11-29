@@ -85,11 +85,11 @@ def details(item_id):
 		entries = Entry.query.filter(Entry.item_id==item_id\
 									,Entry.timestamp >= form.scope_from.data\
 									,Entry.timestamp <= form.scope_to.data + datetime.timedelta(days=1))\
-									.order_by(Entry.timestamp)
+							  .order_by(Entry.timestamp)
+		all_stats = stats.get_all(entries, form.scope_from.data, form.scope_to.data)
 	else:
 		entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
-
-	all_stats = stats.get_all(entries)
+		all_stats = stats.get_all(entries)
 
 	return render_template("details.html", item=item, entries=entries, stats=all_stats, form=form)
 
@@ -113,7 +113,7 @@ def item_addentry(item_id):
 	if item.owner != current_user:
 		abort(403)
 
-	timestamp = (datetime.datetime.utcnow() + datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
+	timestamp = (datetime.datetime.utcnow() + datetime.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")	# hardcoded to CET
 	if form.geo.data:	#if geo checkbox is checked
 		entry = Entry(item_id = item_id, latitude = form.latitude.data, longitude = form.longitude.data, timestamp = timestamp)	#add entry with geo
 		item.geo_default = True;	#used as a "remember" function for the geo checkbox

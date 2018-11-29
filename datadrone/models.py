@@ -44,6 +44,7 @@ class Entry(db.Model):
 	latitude = db.Column(db.Float)
 	longitude = db.Column(db.Float)
 	entrytags = db.relationship("EntryTag", backref="entry", lazy=True)
+	deleted = db.Column(db.Boolean, default=False)
 
 	def __repr__(self):
 		return f"Entry('{self.entry_id}', '{self.item_id}', '{self.timestamp}')"

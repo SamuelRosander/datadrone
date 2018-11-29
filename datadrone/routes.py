@@ -14,7 +14,7 @@ def index():
 		items = Item.query.filter_by(user_id=current_user.user_id, deleted=False).order_by(Item.item_id)
 		spotlight_stat = {}
 		for item in items:
-			latest_entry = Entry.query.filter_by(item_id=item.item_id).order_by(Entry.timestamp.desc()).first()
+			latest_entry = Entry.query.filter_by(item_id=item.item_id, deleted=False).order_by(Entry.timestamp.desc()).first()
 			if latest_entry:
 				spotlight_stat[item.item_id] = stats.get_days_since_last(latest_entry)
 			else:
@@ -83,12 +83,13 @@ def details(item_id):
 	form = DetailsSearchScopeForm()
 	if form.validate_on_submit():
 		entries = Entry.query.filter(Entry.item_id==item_id\
+									,Entry.deleted == False\
 									,Entry.timestamp >= form.scope_from.data\
 									,Entry.timestamp <= form.scope_to.data + datetime.timedelta(days=1))\
 							  .order_by(Entry.timestamp)
 		all_stats = stats.get_all(entries, form.scope_from.data, form.scope_to.data)
 	else:
-		entries = Entry.query.filter_by(item_id=item_id).order_by(Entry.timestamp)
+		entries = Entry.query.filter_by(item_id=item_id, deleted=False).order_by(Entry.timestamp)
 		all_stats = stats.get_all(entries)
 
 	return render_template("details.html", item=item, entries=entries, stats=all_stats, form=form)
@@ -165,3 +166,14 @@ def entry(entry_id):
 		form.comment.data = entry.comment
 
 	return render_template("entry.html", entry=entry, form=form)
+
+@app.route("/entry/<int:entry_id>/delete")
+def entry_delete(entry_id):
+	entry = Entry.query.get(entry_id)
+	if entry.item.owner != current_user:
+		abort(403)
+	entry.deleted = True
+	db.session.commit()
+
+	flash("Entry has been deleted.", "info")
+	return redirect(url_for("details", item_id=entry.item.item_id))

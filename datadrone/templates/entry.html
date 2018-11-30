@@ -20,9 +20,8 @@
   {% for entrytag in entry.entrytags %}
     {{ entrytag.tag.name }}<br>
   {% endfor %}
-  {{ form.submit }}
 
-</form>
+<br>
 <div id="map"></div>
 <script>
   function initMap() {
@@ -35,16 +34,40 @@
           center: {lat: 0, lng: 0},
         {% endif %}
         mapTypeControl: false,
-        streetViewControl: false
+        streetViewControl: false,
+        clickableIcons: false
     });
 
+    markers = [];
     var marker = new google.maps.Marker({
       position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
       map:map
     });
+    markers.push(marker);
 
+    map.addListener('click', function(e) {
+      for (var i=0; i<markers.length; i++) {
+        markers[i].setMap(null);
+      }
+      placeMarker(e.latLng, map);
+      document.getElementById("latitude").value = e.latLng.lat();
+      document.getElementById("longitude").value = e.latLng.lng();
+    });
+
+    function placeMarker(position, map) {
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map
+      });
+      markers.push(marker);
+    map.panTo(position);
+    }
   }
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCv89Lm44klib2QbXjtUy38jFosKg5ET0g&callback=initMap">
 </script>
+
+{{ form.submit(class="form large-button") }}
+
+</form>
 {% endblock %}

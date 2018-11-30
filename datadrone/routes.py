@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from datadrone import app, db, bcrypt
-from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm
+from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, EditItemForm
 from datadrone.models import User, Item, Entry, Tag, TagLink, EntryTag
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
@@ -143,6 +143,36 @@ def item_addentry(item_id):
 	db.session.commit()	#commit tag changes
 	flash("Entry added!", "info")
 	return redirect(url_for("entry", entry_id=entry.entry_id))
+
+@app.route("/item/<int:item_id>/edit", methods=["GET", "POST"])
+@login_required
+def item_edit(item_id):
+	item = Item.query.get_or_404(item_id)
+
+	if item.owner != current_user:
+		abort(403)
+
+	form = EditItemForm();
+	if form.validate_on_submit():
+		item.itemname = form.itemname.data
+		db.session.commit()
+		flash("Item has been updated!", "info")
+		return redirect(url_for("details", item_id=item.item_id))
+	elif request.method == "GET":
+		form.itemname.data = item.itemname
+
+	return(render_template("item_edit.html", item=item, form=form))
+
+@app.route("/item/<int:item_id>/delete")
+def item_delete(item_id):
+	item = Item.query.get(item_id)
+	if item.owner != current_user:
+		abort(403)
+	item.deleted = True
+	db.session.commit()
+
+	flash("Item has been deleted.", "info")
+	return redirect(url_for("index"))
 
 @app.route("/entry/<int:entry_id>", methods=["GET", "POST"])
 def entry(entry_id):

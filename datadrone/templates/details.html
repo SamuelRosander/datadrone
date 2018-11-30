@@ -2,6 +2,9 @@
 
 {% block body %}
 
+<div class="right">
+  <a href="{{ url_for('item_edit', item_id=item.item_id) }}" class="link-small">Edit</a>
+</div>
 <h3>{{ item.itemname }}</h3>
 
 <form method="POST" action="">
@@ -44,7 +47,8 @@ Total today: {{ stats['total_today'] }}
         zoom: 5,
         center: {lat: 57.367698, lng: 14.265648},
         mapTypeControl: false,
-        streetViewControl: false
+        streetViewControl: false,
+        clickableIcons: false
     });
 
     {% for entry in entries %}

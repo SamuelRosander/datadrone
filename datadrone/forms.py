@@ -55,7 +55,7 @@ class UpdateAccountForm(FlaskForm):
             raise ValidationError("Wrong password.")
 
 class AddItemForm(FlaskForm):
-    itemname = StringField("Itemname", validators=[Length(min=2, max=64)])
+    itemname = StringField("Itemname", validators=[Length(min=1, max=64)])
 
 class AddEntryForm(FlaskForm):
     geo = BooleanField("Geo")
@@ -73,3 +73,7 @@ class DetailsSearchScopeForm(FlaskForm):
     scope_from = DateField("From")
     scope_to = DateField("To")
     submit = SubmitField("->")
+
+class EditItemForm(FlaskForm):
+    itemname = StringField("Itemname", validators=[Length(min=1, max=64)])
+    submit = SubmitField("Update")

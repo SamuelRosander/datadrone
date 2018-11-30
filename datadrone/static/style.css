@@ -28,8 +28,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	padding: 0;
-	margin: 0;
+	margin: 0 0 20px 0;
 }
 
 #banner {
@@ -64,6 +63,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .right {
   float:right;
+}
+
+.entry-label {
+  height: 30px;
+  margin: 2px 0;
+  padding-right: 10px;
+  /* width: 100px; */
+  display: inline-block;
+}
+
+.fixed-width {
+  width: 100px;
 }
 
 .form {

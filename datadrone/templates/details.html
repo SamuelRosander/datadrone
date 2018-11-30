@@ -42,28 +42,40 @@ Total today: {{ stats['total_today'] }}
   function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 5,
-        center: {lat: 57.367698, lng: 14.265648}
+        center: {lat: 57.367698, lng: 14.265648},
+        mapTypeControl: false,
+        streetViewControl: false
     });
 
-    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    var markers = locations.map(function(location, i) {
-      return new google.maps.Marker({
-        position: location,
-        label: labels[i % labels.length]
-      });
-    });
-
-    var markerCluster = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-  }
-
-  var locations = [
     {% for entry in entries %}
       {% if entry.latitude and entry.longitude %}
-        { lat: {{entry.latitude }}, lng: {{ entry.longitude }} },
+        addMarker({ lat: {{ entry.latitude }}, lng: {{ entry.longitude }} }, {{ entry.entry_id }}, "{{ entry.timestamp }}", "{{ entry.comment }}");
       {% endif %}
     {% endfor %}
-  ];
+
+
+    function addMarker(coords, entry_id, timestamp, comment){
+      var marker = new google.maps.Marker({
+        position: coords,
+        map: map
+      });
+
+      if (comment != "None") {
+        var infowindow = new google.maps.InfoWindow({
+          content: "<a href='/entry/" + entry_id + "'>Entry " + entry_id + "</a><br>" + timestamp + "<br>" + comment
+        });
+      }
+      else {
+        var infowindow = new google.maps.InfoWindow({
+          content: "<a href='/entry/" + entry_id + "'>Entry " + entry_id + "</a><br>" + timestamp
+        });
+      }
+
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+    }
+  }
 
 </script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">

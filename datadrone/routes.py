@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from datadrone import app, db, bcrypt
 from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, EditItemForm
-from datadrone.models import User, Item, Entry, Tag, TagLink, EntryTag
+from datadrone.models import User, Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
 import datetime
@@ -19,9 +19,7 @@ def index():
 				spotlight_stat[item.item_id] = stats.get_days_since_last(latest_entry)
 			else:
 				spotlight_stat[item.item_id] = 0
-		tags = Tag.query.filter_by(user_id=current_user.user_id).order_by(Tag.tag_id)
-		taglinks = TagLink.query.filter(Item.user_id == current_user.user_id).all()
-		return render_template("list.html", items=items, tags=tags, taglinks=taglinks, item_form=item_form, entry_form=entry_form, spotlight_stat=spotlight_stat)
+		return render_template("list.html", items=items, item_form=item_form, entry_form=entry_form, spotlight_stat=spotlight_stat)
 	else:
 		return redirect(url_for("login"))
 
@@ -108,7 +106,6 @@ def item_add():
 @login_required
 def item_addentry(item_id):
 	item = Item.query.get_or_404(item_id)
-	taglinks = TagLink.query.filter_by(item_id=item_id).all()
 	form = AddEntryForm()
 
 	if item.owner != current_user:
@@ -132,12 +129,12 @@ def item_addentry(item_id):
 		if f[:4] == "tag-":	#if id is tag-X and it's checked (doesn't show if not checked)
 			checked_tags.append(int(f[4:]))	#add it to the list of checked tags
 
-	for taglink in taglinks:	#loop through all visible tags for the item
-		taglink.is_default = False	#set all as default. will be changed again below if it's checked. Used for saving the "checked"-value
+	for tag in item.tags:	#loop through all visible tags for the item
+		tag.is_default = False	#set all as default. will be changed again below if it's checked. Used for saving the "checked"-value
 
-		if taglink.tag_id in checked_tags:	#if any visible tags (taglinks) are checked
-			taglink.is_default = True	#the tag will now be checked per default in the future
-			entry_tag = EntryTag(entry_id = entry.entry_id, tag_id = taglink.tag_id)	#create an entrytag object...
+		if tag.tag_id in checked_tags:	#if any visible tags (taglinks) are checked
+			tag.is_default = True	#the tag will now be checked per default in the future
+			entry_tag = EntryTag(entry_id = entry.entry_id, tag_id = tag.tag_id)	#create an entrytag object...
 			db.session.add(entry_tag)	#...and add it to the db
 
 	db.session.commit()	#commit tag changes

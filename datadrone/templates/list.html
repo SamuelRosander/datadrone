@@ -17,9 +17,9 @@
       </label>
     </span>
     <span class="tag" id="tag-{{ item.item_id }}" target="{{ item.item_id }}">
-      {% if item.taglinks %}
+      {% if item.tags %}
         {% set ns=namespace(active_tags=False) %}
-        {% for taglink in item.taglinks if taglink.is_default %}
+        {% for tag in item.tags if tag.is_default %}
           {% set ns.active_tags = True %}
         {% endfor %}
 
@@ -37,11 +37,11 @@
   <div class="modal-item-tags" id="modal-item-tags-{{ item.item_id }}">
     <div class="modal-item-tags-container">
       <p>Tags</p>
-      {% for taglink in item.taglinks %}
+      {% for tag in item.tags %}
           <span class="tag-checkbox-label">
             <label>
-              <input type="checkbox" name="tag-{{ taglink.tag.tag_id }}" class="tag-checkbox" target="{{ item.item_id }}" {{ 'checked' if taglink.is_default }}>
-              {{ taglink.tag.name }}
+              <input type="checkbox" name="tag-{{ tag.tag_id }}" class="tag-checkbox" target="{{ item.item_id }}" {{ 'checked' if tag.is_default }}>
+              {{ tag.name }}
             </label>
           </span>
       {% endfor %}

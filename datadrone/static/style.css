@@ -332,15 +332,17 @@ h1, h2, h3, h4, h5, h6 {
 #latest-entries {
   height: 400px;
   overflow: auto;
-  border: 1px solid black;
+  border: 1px solid #bbb;
+  background-color: #ddd;
   padding: 5px 0;
+  box-shadow: 0px 3px 8px #aaa;
 }
 
 .tag-box {
   position: relative;
   top: -4px;
   padding: 4px;
-  background-color: #ddd;
+  background-color: #8ebc4d;
   border-radius: 4px;
   font-size: 0.6em;
   font-family: Courier New;

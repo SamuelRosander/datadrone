@@ -183,14 +183,15 @@ def entry(entry_id):
 
 	form = UpdateEntryForm()
 	if form.validate_on_submit():
-		entry.timestamp = form.timestamp.data
+		entry.timestamp = datetime.datetime.combine(form.date.data, form.time.data)
 		entry.latitude = form.latitude.data
 		entry.longitude = form.longitude.data
 		entry.comment = form.comment.data
 		db.session.commit()
 		flash("Entry has been updated.", "info")
 	elif request.method == "GET":
-		form.timestamp.data = entry.timestamp
+		form.date.data = entry.timestamp.date()
+		form.time.data = entry.timestamp.time()
 		form.latitude.data = entry.latitude
 		form.longitude.data = entry.longitude
 		form.comment.data = entry.comment

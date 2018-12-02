@@ -10,10 +10,36 @@
   {{ form.hidden_tag() }}
 
   <span class="entry-label">Item:</span><a href="{{ url_for('details', item_id=entry.item.item_id) }}">{{ entry.item.itemname }}</a><br>
-  <span class="entry-label">ID:</span>{{ entry.entry_id }}<br>
-  <span class="entry-label fixed-width">Timestamp:</span>{{ form.timestamp(class="form-small") }}<br>
-  <span class="entry-label fixed-width">Latitude:</span>{{ form.latitude(class="form-small") }}<br>
-  <span class="entry-label fixed-width">Longitude:</span>{{ form.longitude(class="form-small") }}<br>
+  <br>
+
+  <span class="entry-label fixed-width">Timestamp:</span>{{ form.date(class="form-small") }}
+  {% if form.date.errors %}
+    {% for error in form.date.errors %}
+      <span class="form-small-flash">{{ error }}</span>
+    {% endfor %}
+  {% endif %}<br>
+
+  <span class="entry-label fixed-width">&nbsp;</span>{{ form.time(class="form-small") }}
+  {% if form.time.errors %}
+    {% for error in form.time.errors %}
+      <span class="form-small-flash">{{ error }}</span>
+    {% endfor %}
+  {% endif %}<br>
+
+  <span class="entry-label fixed-width">Latitude:</span>{{ form.latitude(class="form-small") }}
+  {% if form.latitude.errors %}
+    {% for error in form.latitude.errors %}
+      <span class="form-small-flash">{{ error }}</span>
+    {% endfor %}
+  {% endif %}<br>
+
+  <span class="entry-label fixed-width">Longitude:</span>{{ form.longitude(class="form-small") }}
+  {% if form.longitude.errors %}
+    {% for error in form.longitude.errors %}
+      <span class="form-small-flash">{{ error }}</span>
+    {% endfor %}
+  {% endif %}<br>
+
   <span class="entry-label fixed-width">Comment:</span>{{ form.comment(class="form-small") }}<br>
   <br>
   Tags:<br>
@@ -39,11 +65,13 @@
     });
 
     markers = [];
-    var marker = new google.maps.Marker({
-      position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
-      map:map
-    });
-    markers.push(marker);
+    {% if entry.latitude and entry.longitude %}
+      var marker = new google.maps.Marker({
+        position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
+        map:map
+      });
+      markers.push(marker);
+    {% endif %}
 
     map.addListener('click', function(e) {
       for (var i=0; i<markers.length; i++) {

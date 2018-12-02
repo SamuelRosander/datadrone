@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField
-from wtforms.validators import Length, Email, EqualTo, ValidationError
-from wtforms.fields.html5 import DateField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField, FloatField
+from wtforms.validators import Length, Email, EqualTo, ValidationError, Optional
+from wtforms.fields.html5 import DateField, TimeField
 from datadrone import bcrypt
 from datadrone.models import User
 
@@ -63,9 +63,10 @@ class AddEntryForm(FlaskForm):
     longitude = HiddenField("Longitude")
 
 class UpdateEntryForm(FlaskForm):
-    timestamp = StringField("Timestamp")
-    latitude = StringField("Latitude")
-    longitude = StringField("Longitude")
+    date = DateField("Date")
+    time = TimeField("Time")
+    latitude = FloatField("Latitude", validators=[Optional()])
+    longitude = FloatField("Longitude", validators=[Optional()])
     comment = StringField("Comment")
     submit = SubmitField("Update")
 

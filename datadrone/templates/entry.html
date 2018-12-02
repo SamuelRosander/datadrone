@@ -42,10 +42,20 @@
 
   <span class="entry-label fixed-width">Comment:</span>{{ form.comment(class="form-small") }}<br>
   <br>
-  Tags:<br>
   {% for entrytag in entry.entrytags %}
-    {{ entrytag.tag.name }}<br>
+    {{ entrytag.tag.name }}
   {% endfor %}
+  <br>
+  <h3 class="inline">Tags</h3> <a href="#" class="link-small">Show all</a><br>
+    <div class="tag-container">
+      {% for tag in entry.item.tags %}
+        {% if not tag.deleted %}
+          <label for="tag-{{ tag.tag_id }}" class="tag-box-large">
+            <input type="checkbox" class="tag-label-checkbox" name="tag-{{ tag.tag_id }}" id="tag-{{ tag.tag_id }}"><span class="tag-text-up">{{ tag.name }}</span>
+          </label>
+        {% endif %}
+      {% endfor %}
+    </div>
 
 <br>
 <div id="map"></div>
@@ -94,6 +104,8 @@
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCv89Lm44klib2QbXjtUy38jFosKg5ET0g&callback=initMap">
 </script>
+<script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+<script src="{{url_for('static', filename='js/entry.js')}}"></script>
 
 {{ form.submit(class="form large-button") }}
 

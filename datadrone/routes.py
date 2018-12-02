@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from datadrone import app, db, bcrypt
-from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, EditItemForm
+from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, EditItemForm, AddTagForm
 from datadrone.models import User, Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
@@ -126,7 +126,7 @@ def item_addentry(item_id):
 	checked_tags = []
 	form_data = request.form	#get all form data
 	for f in form_data:
-		if f[:4] == "tag-":	#if id is tag-X and it's checked (doesn't show if not checked)
+		if f[:4] == "tag-":	#if name is tag-X and it's checked (doesn't show if not checked)
 			checked_tags.append(int(f[4:]))	#add it to the list of checked tags
 
 	for tag in item.tags:	#loop through all visible tags for the item
@@ -141,6 +141,23 @@ def item_addentry(item_id):
 	flash("Entry added!", "info")
 	return redirect(url_for("entry", entry_id=entry.entry_id))
 
+@app.route("/item/<int:item_id>/addtag", methods=["POST"])
+@login_required
+def item_addtag(item_id):
+	item = Item.query.get_or_404(item_id)
+	form = AddTagForm()
+
+	if item.owner != current_user:
+		abort(403)
+
+	tag = Tag(item_id=item_id, name=form.tagname.data)
+
+	db.session.add(tag)
+	db.session.commit()
+
+	flash("Tag has been added.", "info")
+	return redirect(url_for("item_edit", item_id=item.item_id))
+
 @app.route("/item/<int:item_id>/edit", methods=["GET", "POST"])
 @login_required
 def item_edit(item_id):
@@ -150,6 +167,8 @@ def item_edit(item_id):
 		abort(403)
 
 	form = EditItemForm();
+	tag_form = AddTagForm();
+
 	if form.validate_on_submit():
 		item.itemname = form.itemname.data
 		db.session.commit()
@@ -158,7 +177,7 @@ def item_edit(item_id):
 	elif request.method == "GET":
 		form.itemname.data = item.itemname
 
-	return(render_template("item_edit.html", item=item, form=form))
+	return(render_template("item_edit.html", item=item, form=form, tag_form=tag_form))
 
 @app.route("/item/<int:item_id>/delete")
 def item_delete(item_id):
@@ -179,11 +198,28 @@ def entry(entry_id):
 		abort(403)
 
 	form = UpdateEntryForm()
+
 	if form.validate_on_submit():
 		entry.timestamp = datetime.datetime.combine(form.date.data, form.time.data)
 		entry.latitude = form.latitude.data
 		entry.longitude = form.longitude.data
 		entry.comment = form.comment.data
+
+		checked_tags = []	# will be populated by all checked tag_ids
+		form_data = request.form	#get all form data
+		for f in form_data:
+			if f[:4] == "tag-":	#if name is tag-X and it's checked (doesn't show if not checked)
+				checked_tags.append(int(f[4:]))	#add it to the list of checked tags
+
+		for tag in entry.item.tags:	# loop through all possible tags for the item
+			if not tag.deleted:	# ignore entrytags for deleted tags
+				if tagentry_already_exists(tag.tag_id, entry.entrytags):	# if there is an entrytag on this entry for this tag already
+					if tag.tag_id not in checked_tags:	# ...and its unchecked
+						EntryTag.query.filter_by(tag_id=tag.tag_id, entry_id=entry.entry_id).delete()	# remove the entrytag
+				elif tag.tag_id in checked_tags:	# if theres NOT an entrytag on this entry for this tag already AND it's checked
+					entry_tag = EntryTag(entry_id = entry.entry_id, tag_id = tag.tag_id)	# create a new entrytag
+					db.session.add(entry_tag)	# ... and add it
+
 		db.session.commit()
 		flash("Entry has been updated.", "info")
 	elif request.method == "GET":
@@ -198,10 +234,32 @@ def entry(entry_id):
 @app.route("/entry/<int:entry_id>/delete")
 def entry_delete(entry_id):
 	entry = Entry.query.get(entry_id)
+
 	if entry.item.owner != current_user:
 		abort(403)
+
 	entry.deleted = True
 	db.session.commit()
 
 	flash("Entry has been deleted.", "info")
 	return redirect(url_for("details", item_id=entry.item.item_id))
+
+@app.route("/tag/<int:tag_id>/delete")
+def tag_delete(tag_id):
+	tag = Tag.query.get(tag_id)
+
+	if tag.item.owner != current_user:
+		abort(403)
+
+	tag.deleted = True
+	db.session.commit()
+
+	flash("Tag has been deleted.", "info")
+	return redirect(url_for("item_edit", item_id=tag.item.item_id))
+
+def tagentry_already_exists(checked_tag_id, existing_entrytags):
+	""" returns True if checked_tag_id already exists in existing_entrytags """
+	for eet in existing_entrytags:
+		if checked_tag_id == eet.tag.tag_id:
+			return True
+	return False

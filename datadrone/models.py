@@ -54,6 +54,7 @@ class Tag(db.Model):
 	item_id = db.Column(db.Integer, db.ForeignKey("dditems.item_id"), nullable=False)
 	name = db.Column(db.String(32), nullable=False)
 	is_default = db.Column(db.Boolean, default=False)
+	deleted = db.Column(db.Boolean, default=False)
 	tagentries = db.relationship("EntryTag", backref="tag", lazy=True)
 
 	def __repr__(self):
@@ -66,4 +67,4 @@ class EntryTag(db.Model):
 	tag_id = db.Column(db.Integer, db.ForeignKey("ddtags.tag_id"), nullable=False)
 
 	def __repr__(self):
-		return f"EntryTag('self.entrytag_id', 'self.entry_id', 'self.tag_id')"
+		return f"EntryTag('{self.entrytag_id}', '{self.entry_id}', '{self.tag_id}', '{self.deleted}')"

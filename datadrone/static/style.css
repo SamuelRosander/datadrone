@@ -151,12 +151,12 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #b2ea62;
   border: 0;
   box-sizing: border-box;
-  width: 30px;
+  /* width: 30px; */
   height: 30px;
   padding: 0 6px;
   margin: 2px 0;
-  position: relative;
-  top: 2px;
+  /* position: relative;
+  top: 2px; */
 }
 
 .btn-small:hover {
@@ -338,6 +338,15 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0px 3px 8px #aaa;
 }
 
+.inline {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.tag-container {
+  /* background-color: #ddd; */
+}
+
 .tag-box {
   position: relative;
   top: -4px;
@@ -346,6 +355,37 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 4px;
   font-size: 0.6em;
   font-family: Courier New;
+}
+
+.tag-box-large {
+  display: inline-block;
+  margin: 2px 0;
+  padding: 10px;
+  background-color: #8ebc4d;
+  border-radius: 10px;
+  font-family: Courier New;
+}
+
+.tag-text-up {
+  position: relative;
+  top: -1px;
+}
+
+.delete {
+  display: inline-block;
+  position: relative;
+  padding: 1px;
+  top: 1px;
+  background-color: #ddd;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  text-align: center;
+}
+
+.delete:hover {
+  background-color: #f44;
+  color: #000;
 }
 
 #latest-entries table tr td {

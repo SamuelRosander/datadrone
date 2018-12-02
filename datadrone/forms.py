@@ -73,8 +73,12 @@ class UpdateEntryForm(FlaskForm):
 class DetailsSearchScopeForm(FlaskForm):
     scope_from = DateField("From")
     scope_to = DateField("To")
-    submit = SubmitField("->")
+    submit = SubmitField("Search")
 
 class EditItemForm(FlaskForm):
     itemname = StringField("Itemname", validators=[Length(min=1, max=64)])
     submit = SubmitField("Update")
+
+class AddTagForm(FlaskForm):
+    tagname = StringField("Tagname", validators=[Length(min=1, max=32)])
+    submit = SubmitField("Add")

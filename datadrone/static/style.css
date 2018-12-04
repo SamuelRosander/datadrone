@@ -28,7 +28,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	margin: 0 0 20px 0;
+	margin: 0 0 10px 0;
 }
 
 #banner {
@@ -343,10 +343,6 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: 10px;
 }
 
-.tag-container {
-  /* background-color: #ddd; */
-}
-
 .tag-box {
   position: relative;
   top: -4px;
@@ -357,6 +353,47 @@ h1, h2, h3, h4, h5, h6 {
   font-family: Courier New;
 }
 
+#link-hide-tags {
+  display: none;
+}
+
+.link-toggle-tags {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-toggle-tags:hover {
+  color: #555;
+}
+
+.tag-label-checkbox {
+  position: absolute;
+  left: -9999px;
+}
+
+.tag-box-label {
+  display: none;
+  margin: 2px 0;
+  padding: 10px;
+  background-color: #ddd;
+  border-radius: 10px;
+  font-family: Courier New;
+  cursor: pointer;
+}
+
+.tag-label-checkbox:checked + .tag-box-label {
+  display: inline-block;
+  background-color: #8ebc4d;
+}
+
+.tag-box-label-enable {
+  pointer-events: all;
+}
+
+.tag-box-label-disable {
+  pointer-events:none;
+}
+
 .tag-box-large {
   display: inline-block;
   margin: 2px 0;
@@ -364,11 +401,6 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #8ebc4d;
   border-radius: 10px;
   font-family: Courier New;
-}
-
-.tag-text-up {
-  position: relative;
-  top: -1px;
 }
 
 .delete {

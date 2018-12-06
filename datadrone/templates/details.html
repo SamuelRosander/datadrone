@@ -36,9 +36,15 @@ Avg/day: {{ stats['average_a_day'] }}<br>
 Max in a day: {{ stats['max_in_a_day'] }} ({{ stats['max_in_a_day-date'] }})<br>
 Longest without: {{ stats['longest_without'] }} ({{ stats['longest_without_start'] }} - {{ stats['longest_without_end'] }})<br>
 Days since last: {{ stats['days_since_last'] }}<br>
-Total today: {{ stats['total_today'] }}
+Total today: {{ stats['total_today'] }}<br>
+<br>
+<h3>Tags</h3>
+{% for tagname, tag_count in stats["nr_of_entrytags"].items() %}
+  {{ tagname }}: {{ tag_count }} ({{ (tag_count/stats["total"]*100)|round|int }}%)<br>
+{% endfor %}
 
-<br><br>
+
+<br>
 
 <div id="map"></div>
 <script>

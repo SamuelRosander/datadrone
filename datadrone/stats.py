@@ -1,4 +1,5 @@
 import datetime
+from collections import defaultdict
 
 def get_days_since_last(entry):
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # hardcoded to CET
@@ -22,6 +23,7 @@ def get_all(entries, scope_from=None, scope_to=None):
     stats["longest_without_end"] = "0000-00-00" # end date for longest_without
     stats["total_today"] = 0    # total nr of entries today
     stats["total_nr_of_days"] = 0   # total nr of days in search scope
+    stats["nr_of_entrytags"] = defaultdict(int)
 
     if entries.count() > 0:
         stats["first"] = entries[0].timestamp
@@ -31,7 +33,6 @@ def get_all(entries, scope_from=None, scope_to=None):
             stats["total_nr_of_days"] = (scope_to - scope_from).days + 1 # +1 to include scope_to
         else:
             stats["total_nr_of_days"] = (now.date() - stats["first"].date()).days + 1 # +1 to iunclude current day
-        print(stats["total_nr_of_days"])
         if stats["total_nr_of_days"] == 0:
             stats["total_nr_of_days"] = 1   # set nr of days to 1 to prevent division by 0
         stats["average_a_day"] = round(stats["total"]/stats["total_nr_of_days"], 2)
@@ -40,6 +41,10 @@ def get_all(entries, scope_from=None, scope_to=None):
         tempdate = 0
         temp_max_in_a_day = 0
         for i,entry in enumerate(entries):
+            for entrytag in entry.entrytags:
+                if not entrytag.tag.deleted:
+                    stats["nr_of_entrytags"][entrytag.tag.name] += 1
+
             # calculates max_in_a_day
             if entry.timestamp.date() == tempdate:
                 temp_max_in_a_day += 1
@@ -68,5 +73,4 @@ def get_all(entries, scope_from=None, scope_to=None):
             stats["longest_without"] = stats["days_since_last"]
             stats["longest_without_start"] = entries[entries.count()-1].timestamp.date()
             stats["longest_without_end"] = now.date()
-
     return stats

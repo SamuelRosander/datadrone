@@ -67,4 +67,4 @@ class EntryTag(db.Model):
 	tag_id = db.Column(db.Integer, db.ForeignKey("ddtags.tag_id"), nullable=False)
 
 	def __repr__(self):
-		return f"EntryTag('{self.entrytag_id}', '{self.entry_id}', '{self.tag_id}', '{self.deleted}')"
+		return f"EntryTag('{self.entrytag_id}', '{self.entry_id}', '{self.tag_id}')"

@@ -5,15 +5,15 @@
 <form method="POST" action="">
 
   {{ form.hidden_tag() }}
-    {{ form.username(class="form", placeholder="Username") }}
+    {{ form.username(class="form form-large", placeholder="Username") }}
     {% if form.username.errors %}
       {% for error in form.username.errors %}
-        <div class="form-flash">{{ error }}</div>
+        <div class="flash-error abs">{{ error }}</div>
       {% endfor %}
     {% endif %}
 
-    {{ form.password(class="form", placeholder="Password") }}
-    <div class="login-flash">
+    {{ form.password(class="form form-large", placeholder="Password") }}
+    <div class="flash-error right">
       {% with messages = get_flashed_messages(category_filter=["error"]) %}
         {% if messages %}
            {% for message in messages %}
@@ -26,14 +26,14 @@
     </div>
     {% if form.password.errors %}
       {% for error in form.password.errors %}
-        <div class="form-flash">{{ error }}</div>
+        <div class="flash-error abs">{{ error }}</div>
       {% endfor %}
     {% endif %}
 
     {{ form.remember(class="form-checkbox") }}
     {{ form.remember.label(class="form-checkbox") }}
 
-    {{ form.submit(class="form large-button") }}
+    {{ form.submit(class="btn btn-large") }}
 </form>
 
 {% endblock%}

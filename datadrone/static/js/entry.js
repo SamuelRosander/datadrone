@@ -10,7 +10,7 @@ $(document).ready(function(){
     $("#link-show-tags").show();
     $("#link-hide-tags").hide();
     $(".tag-box-label").removeClass("tag-box-label-enable").addClass("tag-box-label-disable");
-    $(".tag-label-checkbox:not(:checked) + .tag-box-label").hide();
+    $(".tag-box-checkbox:not(:checked) + .tag-box-label").hide();
   });
 
 });

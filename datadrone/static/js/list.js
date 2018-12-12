@@ -10,14 +10,14 @@ $(document).ready(function(){
     $("#add-item-modal-newitem").hide();
   });
 
-  $(".tag").click(function() {
+  $(".jq-tag-icon").click(function() {
     $("#tags-modal-fade").show();
     $("#modal-item-tags-" + $(this).attr("target")).show();
   });
 
-  $(".tag-button").click(function() {
+  $(".jq-tag-button").click(function() {
     $("#tags-modal-fade").hide();
-    $(".modal-item-tags").hide();
+    $(".modal-item-tags-outer-container").hide();
   });
 
   $(".tag-checkbox").change(function() {

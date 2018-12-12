@@ -10,19 +10,19 @@
 <form method="POST" action="">
   {{ form.hidden_tag() }}
   Search between:<br>
-  {{ form.scope_from(class="form-small", value=form.scope_from.data) }}<br>
+  {{ form.scope_from(class="form form-small", style="margin-bottom: 4px", value=form.scope_from.data) }}<br>
   {% if form.scope_from.errors %}
     {% for error in form.scope_from.errors %}
-      <div class="form-small-flash">{{ error }}</div>
+      <div class="flash-error">{{ error }}</div>
     {% endfor %}
   {% endif %}
-  {{ form.scope_to(class="form-small", value=form.scope_to.data) }}
+  {{ form.scope_to(class="form form-small", value=form.scope_to.data) }}
+  {{ form.submit(class="btn btn-small") }}
   {% if form.scope_to.errors %}
     {% for error in form.scope_to.errors %}
-      <div class="form-small-flash">{{ error }}</div>
+      <div class="flash-error">{{ error }}</div>
     {% endfor %}
   {% endif %}
-  {{ form.submit(class="btn-small") }}
 </form>
 
 <br>
@@ -116,7 +116,7 @@ Total today: {{ stats['total_today'] }}<br>
         <td>
           {% for entrytag in entry.entrytags %}
             {% if not entrytag.tag.deleted %}
-              <span class="tag-box">{{ entrytag.tag.name }}</span>
+              <span class="tag-box tag-box-small">{{ entrytag.tag.name }}</span>
             {% endif %}
           {% endfor %}
         </td>

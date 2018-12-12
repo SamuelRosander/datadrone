@@ -8,15 +8,15 @@
   {{ entry_form.csrf_token() }}
   {{ entry_form.latitude(id="latitude-" ~ item.item_id) }}
   {{ entry_form.longitude(id="longitude-" ~ item.item_id) }}
-  <div class="list-item">
-    <input type="button" class="btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
-    <span class="list-geo-box">
+  <div class="item-container">
+    <input type="button" class="btn btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
+    <span class="item-geo-container">
       {{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}
       <label for="geo_switch-{{ item.item_id }}">
         Toggle
       </label>
     </span>
-    <span class="tag" id="tag-{{ item.item_id }}" target="{{ item.item_id }}">
+    <span class="jq-tag-icon right" id="tag-{{ item.item_id }}" target="{{ item.item_id }}">
       {% if item.tags %}
         {% set ns=namespace(active_tags=False) %}
         {% for tag in item.tags if tag.is_default and not tag.deleted %}
@@ -34,8 +34,8 @@
     <div class="item-spotlight">Days since last: {{ spotlight_stat[item.item_id] }}</div>
   </div>
 
-  <div class="modal-item-tags" id="modal-item-tags-{{ item.item_id }}">
-    <div class="modal-item-tags-container">
+  <div class="modal-item-tags-outer-container" id="modal-item-tags-{{ item.item_id }}">
+    <div class="modal-item-tags-inner-container">
       <p>Tags</p>
       {% for tag in item.tags if not tag.deleted %}
           <span class="tag-checkbox-label">
@@ -46,12 +46,12 @@
           </span>
       {% endfor %}
     </div>
-      <input type="button" class="form large-button tag-button" Value="Save">
+      <input type="button" class="btn btn-large jq-tag-button" Value="Save">
   </div>
 </form>
 {% endfor %}
 
-<input type="button" class="form large-button" value="Add new item" id="add-item-btn">
+<input type="button" class="btn btn-large" value="Add new item" id="add-item-btn">
 
 <div id="tags-modal-fade" class="modal-fade"></div>
 <div id="add-item-modal-fade" class="modal-fade"></div>
@@ -59,8 +59,8 @@
   What do you want to keep track of?
   <form action="{{ url_for('item_add') }}" method="post">
   {{ item_form.hidden_tag() }}
-    <input type="submit" class="btn-plus" Value="Add">
-    {{ item_form.itemname(class="form", id="add-item-input") }}
+    <input type="submit" class="btn btn-plus" Value="Add">
+    {{ item_form.itemname(class="form form-large", id="add-item-input") }}
   </form>
 </div>
 

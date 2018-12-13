@@ -23,7 +23,10 @@ def get_all(entries, scope_from=None, scope_to=None):
     stats["longest_without_end"] = "0000-00-00" # end date for longest_without
     stats["total_today"] = 0    # total nr of entries today
     stats["total_nr_of_days"] = 0   # total nr of days in search scope
-    stats["nr_of_entrytags"] = defaultdict(int)
+    stats["nr_of_entrytags"] = defaultdict(int) # dictionary of all tags and how many of each of them
+    stats["longest_streak"] = 0 # max nr of days in a row with at least 1 entry
+    stats["longest_streak_start"] = "0000-00-00" # start date for longest_streak
+    stats["longest_streak_end"] = "0000-00-00" # end date for longest_streak
 
     if entries.count() > 0:
         stats["first"] = entries[0].timestamp
@@ -36,10 +39,16 @@ def get_all(entries, scope_from=None, scope_to=None):
         if stats["total_nr_of_days"] == 0:
             stats["total_nr_of_days"] = 1   # set nr of days to 1 to prevent division by 0
         stats["average_a_day"] = round(stats["total"]/stats["total_nr_of_days"], 2)
+        stats["longest_streak"] = 1
+        stats["longest_streak_start"] = stats["first"].date()
+        stats["longest_streak_end"] = stats["first"].date()
         stats["days_since_last"] = (now - stats["last"]).days
 
         tempdate = 0
         temp_max_in_a_day = 0
+        temp_longest_streak = 1
+        temp_longest_streak_start = stats["first"].date()
+        temp_longest_streak_end = stats["first"].date()
         for i,entry in enumerate(entries):
             for entrytag in entry.entrytags:
                 if not entrytag.tag.deleted:
@@ -60,13 +69,26 @@ def get_all(entries, scope_from=None, scope_to=None):
             if entry.timestamp.date() == now.date():
                 stats["total_today"] += 1
 
-            # calculates longest_without, skipping the first entry to be able to use i-1
             if i > 0:
+                # calculates longest_without
                 temp_date_diff = (entry.timestamp - entries[i-1].timestamp).days
                 if temp_date_diff > stats["longest_without"]:
                     stats["longest_without"] = temp_date_diff
                     stats["longest_without_start"] = entries[i-1].timestamp.date()
                     stats["longest_without_end"] = entry.timestamp.date()
+
+                # calculates longest_streak
+                if (entry.timestamp.date() - entries[i-1].timestamp.date()).days == 1:  # if last entry was 1 day ago
+                    temp_longest_streak += 1
+                    temp_longest_streak_end = entry.timestamp.date()
+                elif (entry.timestamp.date() - entries[i-1].timestamp.date()).days != 0:    # resets streak unless its multiple entries the same day
+                    temp_longest_streak = 1
+                    temp_longest_streak_start = entry.timestamp.date()
+
+                if temp_longest_streak > stats["longest_streak"]:
+                    stats["longest_streak"] = temp_longest_streak
+                    stats["longest_streak_start"] = temp_longest_streak_start
+                    stats["longest_streak_end"] = temp_longest_streak_end
 
         # if the current streak is longer than the longest streak between two entries
         if stats["days_since_last"] > stats["longest_without"]:

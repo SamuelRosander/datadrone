@@ -1,4 +1,5 @@
 import datetime
+import calendar
 from collections import defaultdict
 
 def get_days_since_last(entry):
@@ -27,6 +28,7 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
     stats["longest_streak"] = 0 # max nr of days in a row with at least 1 entry
     stats["longest_streak_start"] = "0000-00-00" # start date for longest_streak
     stats["longest_streak_end"] = "0000-00-00" # end date for longest_streak
+    stats["weekday"] = { "Monday":0, "Tuesday":0, "Wednesday":0, "Thursday":0, "Friday":0, "Saturday":0, "Sunday":0 } # dictinoary of all weekdays and how many of each of them
 
     if entries.count() > 0:
         stats["first"] = entries[0].timestamp
@@ -51,9 +53,12 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
         temp_longest_streak = 1
         temp_longest_streak_start = stats["longest_streak_start"]
         temp_longest_streak_end = stats["longest_streak_end"]
+
         for i,entry in enumerate(entries):
             entry_date = entry.timestamp.date()
             prev_entry_date = entries[i-1].timestamp.date()
+
+            # calculates nr_of_entrytags
             for entrytag in entry.entrytags:
                 if not entrytag.tag.deleted:
                     stats["nr_of_entrytags"][entrytag.tag.name] += 1
@@ -72,6 +77,10 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
             # calculates total_today
             if entry_date == now_date:
                 stats["total_today"] += 1
+
+            # calculates weekday average
+            print()
+            stats["weekday"][calendar.day_name[entry_date.weekday()]] += 1
 
             if i > 0:
                 # calculates longest_without

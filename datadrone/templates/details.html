@@ -50,6 +50,11 @@ Longest with (days): {{ stats['longest_streak'] }} ({{ stats['longest_streak_sta
 Days since last: {{ stats['days_since_last'] }}<br>
 Total today: {{ stats['total_today'] }}<br>
 <br>
+<h3>Weekday</h3>
+{% for k in stats["weekday"] %}
+  {{ k }}: {{ stats["weekday"][k] }} ({{ (stats["weekday"][k]/stats["total"]*100)|round|int }}%)<br>
+{% endfor %}
+<br>
 <h3>Tags</h3>
 {% for tagname, tag_count in stats["nr_of_entrytags"].items() %}
   {{ tagname }}: {{ tag_count }} ({{ (tag_count/stats["total"]*100)|round|int }}%)<br>

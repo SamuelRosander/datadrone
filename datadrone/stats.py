@@ -6,11 +6,11 @@ def get_days_since_last(entry):
 
     return (now - entry.timestamp).days
 
-def get_all(entries, scope_from=None, scope_to=None):
+def get_all(entries, scope_from=None, scope_to=None, days=None):
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=1) # hardcoded to CET
+    now_date = now.date()
     stats = {}
 
-    stats["now"] = now  # current datetime
     stats["first"] = 0  # first entry (in scope)
     stats["last"] = 0   # last entry (in scope)
     stats["total"] = 0  # total nr of entries (in scope)
@@ -34,8 +34,10 @@ def get_all(entries, scope_from=None, scope_to=None):
         stats["total"] = entries.count()
         if scope_from and scope_to:
             stats["total_nr_of_days"] = (scope_to - scope_from).days + 1 # +1 to include scope_to
+        elif days:
+            stats["total_nr_of_days"] = days
         else:
-            stats["total_nr_of_days"] = (now.date() - stats["first"].date()).days + 1 # +1 to iunclude current day
+            stats["total_nr_of_days"] = (now_date - stats["first"].date()).days + 1 # +1 to iunclude current day
         if stats["total_nr_of_days"] == 0:
             stats["total_nr_of_days"] = 1   # set nr of days to 1 to prevent division by 0
         stats["average_a_day"] = round(stats["total"]/stats["total_nr_of_days"], 2)
@@ -47,18 +49,20 @@ def get_all(entries, scope_from=None, scope_to=None):
         tempdate = 0
         temp_max_in_a_day = 0
         temp_longest_streak = 1
-        temp_longest_streak_start = stats["first"].date()
-        temp_longest_streak_end = stats["first"].date()
+        temp_longest_streak_start = stats["longest_streak_start"]
+        temp_longest_streak_end = stats["longest_streak_end"]
         for i,entry in enumerate(entries):
+            entry_date = entry.timestamp.date()
+            prev_entry_date = entries[i-1].timestamp.date()
             for entrytag in entry.entrytags:
                 if not entrytag.tag.deleted:
                     stats["nr_of_entrytags"][entrytag.tag.name] += 1
 
             # calculates max_in_a_day
-            if entry.timestamp.date() == tempdate:
+            if entry_date == tempdate:
                 temp_max_in_a_day += 1
             else:
-                tempdate = entry.timestamp.date()
+                tempdate = entry_date
                 temp_max_in_a_day = 1
             # sets max_in_a_day and max_in_a_day-date
             if temp_max_in_a_day > stats["max_in_a_day"]:
@@ -66,7 +70,7 @@ def get_all(entries, scope_from=None, scope_to=None):
                 stats["max_in_a_day-date"] = tempdate
 
             # calculates total_today
-            if entry.timestamp.date() == now.date():
+            if entry_date == now_date:
                 stats["total_today"] += 1
 
             if i > 0:
@@ -74,16 +78,16 @@ def get_all(entries, scope_from=None, scope_to=None):
                 temp_date_diff = (entry.timestamp - entries[i-1].timestamp).days
                 if temp_date_diff > stats["longest_without"]:
                     stats["longest_without"] = temp_date_diff
-                    stats["longest_without_start"] = entries[i-1].timestamp.date()
-                    stats["longest_without_end"] = entry.timestamp.date()
+                    stats["longest_without_start"] = prev_entry_date
+                    stats["longest_without_end"] = entry_date
 
                 # calculates longest_streak
-                if (entry.timestamp.date() - entries[i-1].timestamp.date()).days == 1:  # if last entry was 1 day ago
+                if (entry_date - prev_entry_date).days == 1:  # if last entry was 1 day ago
                     temp_longest_streak += 1
-                    temp_longest_streak_end = entry.timestamp.date()
-                elif (entry.timestamp.date() - entries[i-1].timestamp.date()).days != 0:    # resets streak unless its multiple entries the same day
+                    temp_longest_streak_end = entry_date
+                elif (entry_date - prev_entry_date).days != 0:    # resets streak unless its multiple entries the same day
                     temp_longest_streak = 1
-                    temp_longest_streak_start = entry.timestamp.date()
+                    temp_longest_streak_start = entry_date
 
                 if temp_longest_streak > stats["longest_streak"]:
                     stats["longest_streak"] = temp_longest_streak
@@ -94,5 +98,5 @@ def get_all(entries, scope_from=None, scope_to=None):
         if stats["days_since_last"] > stats["longest_without"]:
             stats["longest_without"] = stats["days_since_last"]
             stats["longest_without_start"] = entries[entries.count()-1].timestamp.date()
-            stats["longest_without_end"] = now.date()
+            stats["longest_without_end"] = now_date
     return stats

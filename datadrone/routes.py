@@ -78,19 +78,35 @@ def details(item_id):
 	if item.owner != current_user:
 		abort(403)
 
+	days = 90	# default nr of days that will be checked backwards
+	if request.args.get('days'):
+		if request.args.get('days') == "all":
+			days = "all"	# special case
+		else:
+			days = int(request.args.get('days'))	# nr of days that will be checked backwards taken from url string
+
 	form = DetailsSearchScopeForm()
-	if form.validate_on_submit():
+
+	if form.validate_on_submit():	# if there is a specific search scope
 		entries = Entry.query.filter(Entry.item_id==item_id\
 									,Entry.deleted == False\
 									,Entry.timestamp >= form.scope_from.data\
 									,Entry.timestamp <= form.scope_to.data + datetime.timedelta(days=1))\
 							  .order_by(Entry.timestamp)
 		all_stats = stats.get_all(entries, form.scope_from.data, form.scope_to.data)
-	else:
-		entries = Entry.query.filter_by(item_id=item_id, deleted=False).order_by(Entry.timestamp)
+	elif days == "all":	# if all entries are chosen
+		entries = Entry.query.filter_by(item_id=item_id, deleted = False).order_by(Entry.timestamp)
 		all_stats = stats.get_all(entries)
+	else:	# if entries from the last X days are chosen
+		now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+		scope_from = (now - datetime.timedelta(days=days)).date()
+		entries = Entry.query.filter(Entry.item_id==item_id\
+									,Entry.deleted == False\
+									,Entry.timestamp >= scope_from)\
+							  .order_by(Entry.timestamp)
+		all_stats = stats.get_all(entries, scope_from=scope_from, days=days)
 
-	return render_template("details.html", item=item, entries=entries, stats=all_stats, form=form)
+	return render_template("details.html", item=item, entries=entries, stats=all_stats, form=form, days=days)
 
 @app.route("/item/add", methods=["POST"])
 @login_required

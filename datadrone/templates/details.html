@@ -27,8 +27,19 @@
 
 <br>
 {% if form.validate_on_submit() %}
-  Stats between {{ form.scope_from.data }} and {{ form.scope_to.data }} <a href="{{ url_for('details', item_id=item.item_id) }}" class="link-small">Clear</a><br><br>
+  Showing entries between {{ form.scope_from.data }} and {{ form.scope_to.data }}
+{% elif days == "all" %}
+  Showing all entries
+{% else %}
+  Showing entries from the last {{ days }} days
 {% endif %}
+<br>
+<a href="{{ url_for('details', item_id=item.item_id, days=30) }}" class="link-small">Last 30 days</a>
+<a href="{{ url_for('details', item_id=item.item_id, days=90) }}" class="link-small">Last 90 days</a>
+<a href="{{ url_for('details', item_id=item.item_id, days=180) }}" class="link-small">Last 180 days</a>
+<a href="{{ url_for('details', item_id=item.item_id, days='all') }}" class="link-small">All</a>
+<br><br>
+
 First: {{ stats['first'] }}<br>
 Last: {{ stats['last'] }}<br>
 Total: {{ stats['total'] }}<br>

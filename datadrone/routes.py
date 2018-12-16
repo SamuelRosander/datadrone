@@ -28,7 +28,7 @@ def register():
 	form = RegistrationForm()
 	if form.validate_on_submit():
 		hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
-		user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+		user = User(username=form.username.data, email=form.email.data.lower(), password=hashed_password)
 		db.session.add(user)
 		db.session.commit()
 		flash("Account created.", "info")
@@ -39,7 +39,7 @@ def register():
 def login():
 	form = LoginForm()
 	if form.validate_on_submit():
-		user = User.query.filter_by(username=form.username.data).first()
+		user = User.query.filter_by(email=form.email.data.lower()).first()
 		if user and bcrypt.check_password_hash(user.password, form.password.data):
 			login_user(user, remember=form.remember.data)
 			next_page = request.args.get("next")
@@ -59,7 +59,7 @@ def account():
 	form = UpdateAccountForm()
 	if form.validate_on_submit():
 		current_user.username = form.username.data
-		current_user.email = form.email.data
+		current_user.email = form.email.data.lower()
 		if form.password.data:
 			current_user.password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
 		db.session.commit()

@@ -5,9 +5,9 @@
 <form method="POST" action="">
 
   {{ form.hidden_tag() }}
-    {{ form.username(class="form form-large", placeholder="Username") }}
-    {% if form.username.errors %}
-      {% for error in form.username.errors %}
+    {{ form.email(class="form form-large", placeholder="Email", autofocus=true) }}
+    {% if form.email.errors %}
+      {% for error in form.email.errors %}
         <div class="flash-error abs">{{ error }}</div>
       {% endfor %}
     {% endif %}

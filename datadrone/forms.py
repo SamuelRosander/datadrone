@@ -14,17 +14,17 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField("Sign Up")
 
     def validate_username(self, field):
-        user = User.query.filter_by(username=field.data).first()
+        user = User.query.with_entities(User.username).filter(User.username.ilike(field.data)).all()
         if user:
             raise ValidationError("Username already exists.")
 
     def validate_email(self, field):
-        email = User.query.filter_by(email=field.data).first()
+        email = User.query.filter_by(email=field.data.lower()).first()
         if email:
             raise ValidationError("Email adress already exists.")
 
 class LoginForm(FlaskForm):
-    username = StringField("Username")
+    email = StringField("Email")
     password = PasswordField("Password")
     remember = BooleanField("Remember Me")
     submit = SubmitField("Log In")
@@ -38,14 +38,14 @@ class UpdateAccountForm(FlaskForm):
     submit = SubmitField("Update")
 
     def validate_username(self, field):
-        if current_user.username != field.data:
-            user = User.query.filter_by(username=field.data).first()
+        if current_user.username.lower() != field.data.lower():
+            user = User.query.with_entities(User.username).filter(User.username.ilike(field.data)).all()
             if user:
                 raise ValidationError("Username already exists.")
 
     def validate_email(self, field):
-        if current_user.email != field.data:
-            email = User.query.filter_by(email=field.data).first()
+        if current_user.email.lower() != field.data.lower():
+            email = User.query.filter_by(email=field.data.lower()).first()
             if email:
                 raise ValidationError("Email adress already exists.")
 

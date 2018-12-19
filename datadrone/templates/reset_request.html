@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h3>Request Password Reset</h3>
+<form method="POST" action="">
+
+  {{ form.hidden_tag() }}
+    {{ form.email(class="form form-large", placeholder="Email", autofocus=true) }}
+    {% if form.email.errors %}
+      {% for error in form.email.errors %}
+        <div class="flash-error abs">{{ error }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {{ form.submit(class="btn btn-large") }}
+</form>
+
+{% endblock%}

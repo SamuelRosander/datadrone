@@ -1,9 +1,10 @@
 from flask import render_template, url_for, flash, redirect, request, abort
-from datadrone import app, db, bcrypt
-from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, EditItemForm, AddTagForm
+from datadrone import app, db, bcrypt, mail
+from datadrone.forms import RegistrationForm, LoginForm, UpdateAccountForm, AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, EditItemForm, AddTagForm, RequestResetForm, ResetPasswordForm
 from datadrone.models import User, Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_mail import Message
 import datetime
 
 @app.route("/")
@@ -52,6 +53,35 @@ def login():
 def logout():
 	logout_user()
 	return redirect(url_for("login"))
+
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_request():
+	form = RequestResetForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(email=form.email.data.lower()).first()
+		send_reset_email(user)
+		flash(f"A password reset request has been sent to {user.email}", "info")
+		return redirect(url_for("login"))
+
+	return render_template("reset_request.html", form=form)
+
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_token(token):
+	user = User.verify_reset_token(token)
+	if not user:
+		flash("Invalid or expired token", "warning")
+		return redirect(url_for("reset_request"))
+
+	form = ResetPasswordForm()
+	if form.validate_on_submit():
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+		user.password = hashed_password
+		db.session.commit()
+		flash("Password has been updated.", "info")
+		return redirect(url_for("login"))
+
+	return render_template("reset_token.html", form=form)
+
 
 @app.route("/account", methods=["GET", "POST"])
 @login_required
@@ -279,3 +309,12 @@ def tagentry_already_exists(checked_tag_id, existing_entrytags):
 		if checked_tag_id == eet.tag.tag_id:
 			return True
 	return False
+
+def send_reset_email(user):
+	token = user.get_reset_token()
+	msg = Message("DataDrone Password Reset", sender="noreply@samuelrosander.se", recipients=[user.email])
+	msg.body = f"""To reset your password visit the following link:
+
+{url_for("reset_token", token=token, _external=True)}
+"""
+	mail.send(msg)

@@ -192,6 +192,14 @@ a:hover, .link-small:hover {
   color: red;
   font-size: 0.8em;
 }
+.flash-warning {
+  position: relative;
+  top: -20px;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: orange;
+  color: #000;
+}
 .flash-info {
   position: relative;
   top: -20px;

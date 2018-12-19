@@ -29,6 +29,20 @@ class LoginForm(FlaskForm):
     remember = BooleanField("Remember Me")
     submit = SubmitField("Log In")
 
+class RequestResetForm(FlaskForm):
+    email = StringField("Email", validators=[Email()])
+    submit = SubmitField("Request Password Reset")
+
+    def validate_email(self, field):
+        email = User.query.filter_by(email=field.data.lower()).first()
+        if not email:
+            raise ValidationError("Email not found in database.")
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField("Password", validators=[Length(min=4, max=64)])
+    confirm_password = PasswordField("Confirm Password", validators=[EqualTo("password")])
+    submit = SubmitField("Reset Password")
+
 class UpdateAccountForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=32)])
     email = StringField("Email", validators=[Email()])

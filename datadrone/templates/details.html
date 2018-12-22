@@ -55,6 +55,11 @@ Total today: {{ stats['total_today'] }}<br>
   {{ day }}: {{ stats["weekday"][day] }} ({{ (stats["weekday"][day]/stats["total"]*100)|round|int if stats["total"] > 0 else 0}} %)<br>
 {% endfor %}
 <br>
+<h3>Time of day</h3>
+{% for time in stats["time_of_day"] %}
+  {{ time }}: {{ stats["time_of_day"][time] }} ({{ (stats["time_of_day"][time]/stats["total"]*100)|round|int if stats["total"] > 0 else 0}} %)<br>
+{% endfor %}
+<br>
 <h3>Tags</h3>
 {% for tagname, tag_count in stats["nr_of_entrytags"].items() %}
   {{ tagname }}: {{ tag_count }} ({{ (tag_count/stats["total"]*100)|round|int if stats["total"] > 0 }} %)<br>

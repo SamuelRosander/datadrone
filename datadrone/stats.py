@@ -29,6 +29,7 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
     stats["longest_streak_start"] = "0000-00-00" # start date for longest_streak
     stats["longest_streak_end"] = "0000-00-00" # end date for longest_streak
     stats["weekday"] = { "Monday":0, "Tuesday":0, "Wednesday":0, "Thursday":0, "Friday":0, "Saturday":0, "Sunday":0 } # dictinoary of all weekdays and how many of each of them
+    stats["time_of_day"] = {"00-04": 0, "04-08": 0, "08-12": 0, "12-16": 0, "16-20": 0, "20-24": 0 }
 
     if entries.count() > 0:
         stats["first"] = entries[0].timestamp
@@ -78,9 +79,22 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
             if entry_date == now_date:
                 stats["total_today"] += 1
 
-            # calculates weekday average
-            print()
+            # calculates weekday
             stats["weekday"][calendar.day_name[entry_date.weekday()]] += 1
+
+            #calculates time_of_day
+            if entry.timestamp.hour >= 20:
+                stats["time_of_day"]["20-24"] += 1
+            elif entry.timestamp.hour >= 16:
+                stats["time_of_day"]["16-20"] += 1
+            elif entry.timestamp.hour >= 12:
+                stats["time_of_day"]["12-16"] += 1
+            elif entry.timestamp.hour >= 8:
+                stats["time_of_day"]["08-12"] += 1
+            elif entry.timestamp.hour >= 4:
+                stats["time_of_day"]["04-08"] += 1
+            else:
+                stats["time_of_day"]["00-04"] += 1
 
             if i > 0:
                 # calculates longest_without

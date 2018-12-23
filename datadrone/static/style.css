@@ -32,6 +32,9 @@ h1, h2, h3, h4, h5, h6 {
 .right {
   float:right;
 }
+.left {
+  float: left;
+}
 .abs {
   position: absolute;
 }
@@ -263,9 +266,7 @@ a:hover, .link-small:hover {
   margin: 10px 0 0 10px;
 }
 
-/* page specific */
-
-/* list */
+/* page specific - list **/
 .item-container {
   background-color: #eee;
   height: 50px;
@@ -328,7 +329,29 @@ a:hover, .link-small:hover {
 	width: 24px;
 }
 
-/* entry */
+/* page specific - details **/
+.tbl-stats {
+  width: auto;
+}
+.tbl-stats tr td {
+  padding-right: 10px;
+  white-space: nowrap;
+}
+.tbl-stats tr td:last-child {
+  width: 100%;
+  padding: 0;
+}
+.bar {
+  width: 100%;
+  line-height: 20px;
+}
+.bar span {
+  margin-left: 5px;
+  font-size: 0.7em;
+  position: absolute;
+}
+
+/* page specific - entry **/
 .entry-edit-table td:first-child {
   padding-right: 20px;
 }

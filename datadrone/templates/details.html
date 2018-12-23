@@ -50,22 +50,59 @@ Longest with (days): {{ stats['longest_streak'] }} ({{ stats['longest_streak_sta
 Days since last: {{ stats['days_since_last'] }}<br>
 Total today: {{ stats['total_today'] }}<br>
 <br>
+
 <h3>Weekday</h3>
-{% for day, count in stats["weekday"].items() %}
-  {{ day }}: {{ count }} ({{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0}} %)<br>
-{% endfor %}
+<table class="tbl-stats" cellspacing=0 cellpadding=0>
+  {% for day, count in stats["weekday"].items() %}
+    <tr>
+      <td>
+        {{ day }}
+      </td>
+      <td>
+        <div class="bar left">
+          <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
+          <span>{{ count }} ({{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }} %)</span>
+        </div>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
 <br>
+
 <h3>Time of day</h3>
-{% for time, count in stats["time_of_day"].items() %}
-  {{ time }}: {{ count }} ({{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0}} %)<br>
-{% endfor %}
+<table class="tbl-stats" cellspacing=0 cellpadding=0>
+  {% for time, count in stats["time_of_day"].items() %}
+    <tr>
+      <td>
+        {{ time }}
+      </td>
+      <td>
+        <div class="bar left">
+          <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
+          <span>{{ count }} ({{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }} %)</span>
+        </div>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
 <br>
+
 <h3>Tags</h3>
-{% for tagname, tag_count in stats["nr_of_entrytags"].items() %}
-  {{ tagname }}: {{ tag_count }} ({{ (tag_count/stats["total"]*100)|round|int if stats["total"] > 0 }} %)<br>
-{% endfor %}
-
-
+<table class="tbl-stats" cellspacing=0 cellpadding=0>
+  {% for tagname, count in stats["nr_of_entrytags"].items() %}
+    <tr>
+      <td>
+        {{ tagname }}
+      </td>
+      <td>
+        <div class="bar left">
+          <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
+          <span>{{ count }} ({{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }} %)</span>
+        </div>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
 <br>
 
 <div id="map"></div>

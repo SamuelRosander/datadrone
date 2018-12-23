@@ -191,24 +191,25 @@ def item_addentry(item_id):
 @login_required
 def item_addtag(item_id):
 	item = Item.query.get_or_404(item_id)
-	form = AddTagForm()
-
 	if item.owner != current_user:
 		abort(403)
 
-	tag = Tag(item_id=item_id, name=form.tagname.data)
+	tag_form = AddTagForm()
 
-	db.session.add(tag)
-	db.session.commit()
+	if tag_form.validate_on_submit():
+		tag = Tag(item_id=item_id, name=tag_form.tagname.data)
+		db.session.add(tag)
+		db.session.commit()
+		flash("Tag has been added.", "info")
+	else:
+		flash("Tags needs to be between 1 and 32 characters long.", "error")
 
-	flash("Tag has been added.", "info")
 	return redirect(url_for("item_edit", item_id=item.item_id))
 
 @app.route("/item/<int:item_id>/edit", methods=["GET", "POST"])
 @login_required
 def item_edit(item_id):
 	item = Item.query.get_or_404(item_id)
-
 	if item.owner != current_user:
 		abort(403)
 

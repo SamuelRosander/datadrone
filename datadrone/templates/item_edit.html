@@ -28,8 +28,18 @@
 {% endif %}
 
 <form method="POST" action="{{ url_for('item_addtag', item_id=item.item_id) }}">
+{{ tag_form.hidden_tag() }}
 Add tag: {{ tag_form.tagname(class="form form-small") }}
 {{ tag_form.submit(class="btn btn-small") }}
+{% with messages = get_flashed_messages(category_filter=["error"]) %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="flash-error">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 </form>
 
 

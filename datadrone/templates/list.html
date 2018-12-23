@@ -2,54 +2,58 @@
 
 {% block body %}
 
-{% for item in items %}
+{% if items.all()|length %}
+  {% for item in items %}
 
-<form method="POST" action="{{ url_for('item_addentry', item_id=item.item_id) }}" id="add_entry_form-{{ item.item_id }}">
-  {{ entry_form.csrf_token() }}
-  {{ entry_form.latitude(id="latitude-" ~ item.item_id) }}
-  {{ entry_form.longitude(id="longitude-" ~ item.item_id) }}
-  <div class="item-container">
-    <input type="button" class="btn btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
-    <span class="item-geo-container">
-      {{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}
-      <label for="geo_switch-{{ item.item_id }}">
-        Toggle
-      </label>
-    </span>
-    <span class="jq-tag-icon right" id="tag-{{ item.item_id }}" target="{{ item.item_id }}">
-      {% if item.tags %}
-        {% set ns=namespace(active_tags=False) %}
-        {% for tag in item.tags if tag.is_default and not tag.deleted %}
-          {% set ns.active_tags = True %}
-        {% endfor %}
+  <form method="POST" action="{{ url_for('item_addentry', item_id=item.item_id) }}" id="add_entry_form-{{ item.item_id }}">
+    {{ entry_form.csrf_token() }}
+    {{ entry_form.latitude(id="latitude-" ~ item.item_id) }}
+    {{ entry_form.longitude(id="longitude-" ~ item.item_id) }}
+    <div class="item-container">
+      <input type="button" class="btn btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
+      <span class="item-geo-container">
+        {{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}
+        <label for="geo_switch-{{ item.item_id }}">
+          Toggle
+        </label>
+      </span>
+      <span class="jq-tag-icon right" id="tag-{{ item.item_id }}" target="{{ item.item_id }}">
+        {% if item.tags %}
+          {% set ns=namespace(active_tags=False) %}
+          {% for tag in item.tags if tag.is_default and not tag.deleted %}
+            {% set ns.active_tags = True %}
+          {% endfor %}
 
-        {% if ns.active_tags == True %}
-          <img src="{{ url_for('static', filename='img/tag_active.png') }}" id="tag-img-{{ item.item_id }}">
-        {% else %}
-          <img src="{{ url_for('static', filename='img/tag_inactive.png') }}" id="tag-img-{{ item.item_id }}">
+          {% if ns.active_tags == True %}
+            <img src="{{ url_for('static', filename='img/tag_active.png') }}" id="tag-img-{{ item.item_id }}">
+          {% else %}
+            <img src="{{ url_for('static', filename='img/tag_inactive.png') }}" id="tag-img-{{ item.item_id }}">
+          {% endif %}
         {% endif %}
-      {% endif %}
-    </span>
-    <a href="{{ url_for('details', item_id=item.item_id) }}"><div class="item-title">{{ item.itemname }}</div></a>
-    <div class="item-spotlight">Days since last: {{ spotlight_stat[item.item_id] }}</div>
-  </div>
-
-  <div class="modal-item-tags-outer-container" id="modal-item-tags-{{ item.item_id }}">
-    <div class="modal-item-tags-inner-container">
-      <p>Tags</p>
-      {% for tag in item.tags if not tag.deleted %}
-          <span class="tag-checkbox-label">
-            <label>
-              <input type="checkbox" name="tag-{{ tag.tag_id }}" class="tag-checkbox" target="{{ item.item_id }}" {{ 'checked' if tag.is_default }}>
-              {{ tag.name }}
-            </label>
-          </span>
-      {% endfor %}
+      </span>
+      <a href="{{ url_for('details', item_id=item.item_id) }}"><div class="item-title">{{ item.itemname }}</div></a>
+      <div class="item-spotlight">Days since last: {{ spotlight_stat[item.item_id] }}</div>
     </div>
-      <input type="button" class="btn btn-large jq-tag-button" Value="Save">
-  </div>
-</form>
-{% endfor %}
+
+    <div class="modal-item-tags-outer-container" id="modal-item-tags-{{ item.item_id }}">
+      <div class="modal-item-tags-inner-container">
+        <p>Tags</p>
+        {% for tag in item.tags if not tag.deleted %}
+            <span class="tag-checkbox-label">
+              <label>
+                <input type="checkbox" name="tag-{{ tag.tag_id }}" class="tag-checkbox" target="{{ item.item_id }}" {{ "checked" if tag.is_default }}>
+                {{ tag.name }}
+              </label>
+            </span>
+        {% endfor %}
+      </div>
+        <input type="button" class="btn btn-large jq-tag-button" Value="Save">
+    </div>
+  </form>
+  {% endfor %}
+{% else %}
+  <div class="text-comment" style="margin-bottom:15px">Nothing to keep track of yet...</div>
+{% endif %}
 
 <input type="button" class="btn btn-large" value="Add new item" id="add-item-btn">
 

@@ -46,7 +46,7 @@ def login():
 			next_page = request.args.get("next")
 			return redirect(next_page) if next_page else redirect(url_for("index"))
 		else:
-			flash("Incorrect username or password.", "error")
+			flash("Incorrect email or password.", "error")
 	return render_template("login.html", form=form)
 
 @app.route("/logout")
@@ -60,7 +60,7 @@ def reset_request():
 	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data.lower()).first()
 		send_reset_email(user)
-		flash(f"A password reset request has been sent to {user.email}", "info")
+		flash(f"A password reset request has been sent to {user.email}.", "info")
 		return redirect(url_for("login"))
 
 	return render_template("reset_request.html", form=form)
@@ -69,7 +69,7 @@ def reset_request():
 def reset_token(token):
 	user = User.verify_reset_token(token)
 	if not user:
-		flash("Invalid or expired token", "warning")
+		flash("Invalid or expired token.", "warning")
 		return redirect(url_for("reset_request"))
 
 	form = ResetPasswordForm()
@@ -77,10 +77,10 @@ def reset_token(token):
 		hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
 		user.password = hashed_password
 		db.session.commit()
-		flash("Password has been updated.", "info")
+		flash(f"Password for {user.username} has been updated.", "info")
 		return redirect(url_for("login"))
 
-	return render_template("reset_token.html", form=form)
+	return render_template("reset_token.html", form=form, user=user)
 
 @app.route("/account", methods=["GET", "POST"])
 @login_required

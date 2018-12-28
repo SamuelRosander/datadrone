@@ -20,18 +20,18 @@ $(document).ready(function(){
     $(".modal-item-tags-outer-container").hide();
   });
 
-  $(".tag-checkbox").change(function() {
+  $(".tag-box-checkbox").change(function() {
     var all_checkboxes = $("input:checkbox");
     var target = $(this).attr("target")
     for (var i = all_checkboxes.length-1; i >= 0; i--) {
-      if (all_checkboxes[i].getAttribute("target") != target || all_checkboxes[i].className != "tag-checkbox") {
+      if (all_checkboxes[i].getAttribute("target") != target || all_checkboxes[i].className != "tag-box-checkbox") {
         all_checkboxes.splice(i, 1)
       }
     }
     if (checkedTags(all_checkboxes)) {
-      $("#tag-img-" + target).attr("src", "static/img/tag_active.png")
+      $("#tagswitch-img-" + target).attr("src", "static/img/tag_active.png")
     } else {
-      $("#tag-img-" + target).attr("src", "static/img/tag_inactive.png")
+      $("#tagswitch-img-" + target).attr("src", "static/img/tag_inactive.png")
     }
   });
 });

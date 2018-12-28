@@ -17,7 +17,7 @@
           Toggle
         </label>
       </span>
-      <span class="jq-tag-icon right" id="tag-{{ item.item_id }}" target="{{ item.item_id }}">
+      <span class="jq-tag-icon right" id="tagswitch-{{ item.item_id }}" target="{{ item.item_id }}">
         {% if item.tags %}
           {% set ns=namespace(active_tags=False) %}
           {% for tag in item.tags if tag.is_default and not tag.deleted %}
@@ -25,9 +25,9 @@
           {% endfor %}
 
           {% if ns.active_tags == True %}
-            <img src="{{ url_for('static', filename='img/tag_active.png') }}" id="tag-img-{{ item.item_id }}">
+            <img src="{{ url_for('static', filename='img/tag_active.png') }}" id="tagswitch-img-{{ item.item_id }}">
           {% else %}
-            <img src="{{ url_for('static', filename='img/tag_inactive.png') }}" id="tag-img-{{ item.item_id }}">
+            <img src="{{ url_for('static', filename='img/tag_inactive.png') }}" id="tagswitch-img-{{ item.item_id }}">
           {% endif %}
         {% endif %}
       </span>
@@ -37,14 +37,12 @@
 
     <div class="modal-item-tags-outer-container" id="modal-item-tags-{{ item.item_id }}">
       <div class="modal-item-tags-inner-container">
-        <p>Tags</p>
+        <h3>Tags</h3>
         {% for tag in item.tags if not tag.deleted %}
-            <span class="tag-checkbox-label">
-              <label>
-                <input type="checkbox" name="tag-{{ tag.tag_id }}" class="tag-checkbox" target="{{ item.item_id }}" {{ "checked" if tag.is_default }}>
-                {{ tag.name }}
-              </label>
-            </span>
+        <input type="checkbox" name="tag-{{ tag.tag_id }}" class="tag-box-checkbox" id="tag-{{ tag.tag_id }}" target="{{ item.item_id }}" {{ "checked" if tag.is_default }}>
+        <label for="tag-{{ tag.tag_id }}" class="tag-box-label">
+          {{ tag.name }}
+        </label>
         {% endfor %}
       </div>
         <input type="button" class="btn btn-large jq-tag-button" Value="Save">

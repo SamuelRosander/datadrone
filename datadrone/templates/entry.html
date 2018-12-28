@@ -86,7 +86,7 @@
               {% set ns.has_entrytag = True %}
             {% endfor %}
             <input type="checkbox" class="tag-box-checkbox" name="tag-{{ tag.tag_id }}" id="tag-{{ tag.tag_id }}" {{ 'checked' if ns.has_entrytag }}>
-            <label for="tag-{{ tag.tag_id }}" class="tag-box-label tag-box-label-disable">
+            <label for="tag-{{ tag.tag_id }}" class="tag-box-label tag-box-label-disable hidden">
               {{ tag.name }}
             </label>
           {% endif %}

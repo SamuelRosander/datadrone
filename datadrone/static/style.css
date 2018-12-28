@@ -16,6 +16,7 @@ body {
   padding: 0 10px;
 	margin: 0 auto;
 	max-width: 500px;
+  position: relative;
 }
 .main-container {
   margin: 0;
@@ -41,9 +42,6 @@ h1, h2, h3, h4, h5, h6 {
 .inline {
   display: inline-block;
   margin-right: 10px;
-}
-.hidden {
-  display: none;
 }
 #map {
   width: 100%;
@@ -126,17 +124,6 @@ a:hover, .link-small:hover {
 .jq-tag-icon:hover {
   cursor: pointer;
 }
-.tag-checkbox-label {
-  background-color: #fff;
-  float: left;
-  width: 220px;
-  margin: 10px;
-}
-.tag-checkbox-label label {
-  display: inline-block;
-  width: 100%;
-  padding: 10px;
-}
 .tag-box {
   background-color: #8ebc4d;
   font-family: Courier New;
@@ -159,7 +146,7 @@ a:hover, .link-small:hover {
   left: -9999px;
 }
 .tag-box-label {
-  display: none;
+  display: inline-block;
   margin: 2px 0;
   padding: 10px;
   background-color: #ddd;
@@ -231,39 +218,35 @@ a:hover, .link-small:hover {
 #add-item-modal-newitem {
   display: none;
   position: fixed;
-  width: 500px;
+  width: calc(100% - 20px);
+  max-width: 500px;
   top: 20%;
-  left: 50%;
-  margin-left: -250px;
+  left: 10px;
   z-index: 2;
 }
 #add-item-modal-newitem form {
-  display: hidden;
   box-shadow: 0px 3px 8px #aaa;
 }
 #add-item-modal-newitem input {
   margin: 0;
 }
 #add-item-input {
-  width: 450px;
+  width: calc(100% - 50px);
 }
 
 .modal-item-tags-outer-container {
   display: none;
   position: fixed;
   background-color: #eee;
-  width: 500px;
+  width: calc(100% - 20px);
+  max-width: 500px;
   top: 20%;
-  left: 50%;
-  margin-left: -250px;
+  left: 10px;
   z-index: 2;
   box-shadow: 0px 3px 8px #aaa;
 }
 .modal-item-tags-inner-container {
   padding: 10px;
-}
-.modal-item-tags p {
-  margin: 10px 0 0 10px;
 }
 
 /* page specific - list **/
@@ -378,4 +361,18 @@ a:hover, .link-small:hover {
 }
 #latest-entries table tr td:last-child {
   width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+/* tweaks for large screens */
+@media only screen and (min-width: 540px) {
+  #add-item-modal-newitem {
+    left: calc(50% - 250px);
+  }
+  .modal-item-tags-outer-container {
+    left: calc(50% - 250px);
+  }
 }

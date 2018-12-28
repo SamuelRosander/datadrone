@@ -164,12 +164,12 @@ Total today: {{ stats['total_today'] }}<br>
         </td>
         <td>
           {% if entry.latitude and entry.longitude %}
-            G
+            <img src="{{ url_for('static', filename='img/geo.png') }}" title="Has geo data" class="left">
           {% endif %}
         </td>
         <td>
           {% if entry.comment %}
-            C
+            <img src="{{ url_for('static', filename='img/comment.png') }}" title="{{ entry.comment }}" class="left">
           {% endif %}
         </td>
         <td>

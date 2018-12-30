@@ -321,11 +321,15 @@ a:hover, .link-small:hover {
 
 /* page specific - details **/
 .tbl-stats {
-  width: auto;
+  width: 100%;
+  table-layout: fixed;
 }
 .tbl-stats tr td {
   padding-right: 10px;
   white-space: nowrap;
+}
+.tbl-stats tr td:first-child {
+  width: 100px;
 }
 .tbl-stats tr td:last-child {
   width: 100%;
@@ -339,6 +343,9 @@ a:hover, .link-small:hover {
   margin-left: 5px;
   font-size: 0.7em;
   position: absolute;
+}
+.bar .text-right {
+  right: 10px;
 }
 
 /* page specific - entry **/

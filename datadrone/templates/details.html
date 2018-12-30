@@ -54,6 +54,7 @@ Total today: {{ stats['total_today'] }}<br>
 <h3>Weekday</h3>
 <table class="tbl-stats" cellspacing=0 cellpadding=0>
   {% for day, count in stats["weekday"].items() %}
+  {% set percent=(count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 %}
     <tr>
       <td>
         {{ day }}
@@ -61,7 +62,7 @@ Total today: {{ stats['total_today'] }}<br>
       <td>
         <div class="bar left">
           <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
-          <span>{{ count }} ({{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }} %)</span>
+          <span {{ ' class=text-right' if percent > 85 }}>{{ count }} ({{ percent }} %)</span>
         </div>
       </td>
     </tr>
@@ -72,6 +73,7 @@ Total today: {{ stats['total_today'] }}<br>
 <h3>Time of day</h3>
 <table class="tbl-stats" cellspacing=0 cellpadding=0>
   {% for time, count in stats["time_of_day"].items() %}
+  {% set percent=(count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 %}
     <tr>
       <td>
         {{ time }}
@@ -79,7 +81,7 @@ Total today: {{ stats['total_today'] }}<br>
       <td>
         <div class="bar left">
           <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
-          <span>{{ count }} ({{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }} %)</span>
+          <span {{ ' class=text-right' if percent > 85 }}>{{ count }} ({{ percent }} %)</span>
         </div>
       </td>
     </tr>
@@ -90,6 +92,7 @@ Total today: {{ stats['total_today'] }}<br>
 <h3>Tags</h3>
 <table class="tbl-stats" cellspacing=0 cellpadding=0>
   {% for tagname, count in stats["nr_of_entrytags"].items() %}
+  {% set percent=(count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 %}
     <tr>
       <td>
         {{ tagname }}
@@ -97,7 +100,7 @@ Total today: {{ stats['total_today'] }}<br>
       <td>
         <div class="bar left">
           <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
-          <span>{{ count }} ({{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }} %)</span>
+          <span {{ ' class=text-right' if percent > 85 }}>{{ count }} ({{ percent }} %)</span>
         </div>
       </td>
     </tr>

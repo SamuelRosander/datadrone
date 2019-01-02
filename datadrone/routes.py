@@ -226,8 +226,9 @@ def item_edit(item_id):
 	return(render_template("item_edit.html", item=item, form=form, tag_form=tag_form))
 
 @app.route("/item/<int:item_id>/delete")
+@login_required
 def item_delete(item_id):
-	item = Item.query.get(item_id)
+	item = Item.query.get_or_404(item_id)
 	if item.owner != current_user:
 		abort(403)
 	item.deleted = True
@@ -237,8 +238,9 @@ def item_delete(item_id):
 	return redirect(url_for("index"))
 
 @app.route("/entry/<int:entry_id>", methods=["GET", "POST"])
+@login_required
 def entry(entry_id):
-	entry = Entry.query.get(entry_id)
+	entry = Entry.query.get_or_404(entry_id)
 
 	if entry.item.owner != current_user:
 		abort(403)
@@ -278,8 +280,9 @@ def entry(entry_id):
 	return render_template("entry.html", entry=entry, form=form)
 
 @app.route("/entry/<int:entry_id>/delete")
+@login_required
 def entry_delete(entry_id):
-	entry = Entry.query.get(entry_id)
+	entry = Entry.query.get_or_404(entry_id)
 
 	if entry.item.owner != current_user:
 		abort(403)
@@ -291,8 +294,9 @@ def entry_delete(entry_id):
 	return redirect(url_for("details", item_id=entry.item.item_id))
 
 @app.route("/tag/<int:tag_id>/delete")
+@login_required
 def tag_delete(tag_id):
-	tag = Tag.query.get(tag_id)
+	tag = Tag.query.get_or_404(tag_id)
 
 	if tag.item.owner != current_user:
 		abort(403)

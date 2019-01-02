@@ -40,8 +40,8 @@
 <a href="{{ url_for('details', item_id=item.item_id, days='all') }}" class="link-small">All</a>
 <br><br>
 
-First: {{ stats['first'] }}<br>
-Last: {{ stats['last'] }}<br>
+First: {{ stats['first'].strftime('%Y-%m-%d %H:%M') }}<br>
+Last: {{ stats['last'].strftime('%Y-%m-%d %H:%M') }}<br>
 Total: {{ stats['total'] }}<br>
 Avg/day: {{ stats['average_a_day'] }}<br>
 Max in a day: {{ stats['max_in_a_day'] }} ({{ stats['max_in_a_day-date'] }})<br>
@@ -121,7 +121,7 @@ Total today: {{ stats['total_today'] }}<br>
 
     {% for entry in entries %}
       {% if entry.latitude and entry.longitude %}
-        addMarker({ lat: {{ entry.latitude }}, lng: {{ entry.longitude }} }, {{ entry.entry_id }}, "{{ entry.timestamp }}", "{{ entry.comment }}");
+        addMarker({ lat: {{ entry.latitude }}, lng: {{ entry.longitude }} }, {{ entry.entry_id }}, "{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}", "{{ entry.comment }}");
       {% endif %}
     {% endfor %}
 
@@ -163,7 +163,7 @@ Total today: {{ stats['total_today'] }}<br>
     {% for entry in entries[::-1] %}
       <tr>
         <td>
-          <a href="{{ url_for('entry', entry_id=entry.entry_id)}}">{{ entry.timestamp }}</a>
+          <a href="{{ url_for('entry', entry_id=entry.entry_id)}}">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}</a>
         </td>
         <td>
           {% if entry.latitude and entry.longitude %}

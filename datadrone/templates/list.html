@@ -20,14 +20,19 @@
       </span>
       <span class="jq-tag-icon right" id="tagswitch-{{ item.item_id }}" target="{{ item.item_id }}">
         {% if item.tags %}
-          {% set ns=namespace(active_tags=False) %}
-          {% for tag in item.tags if tag.is_default and not tag.deleted %}
-            {% set ns.active_tags = True %}
+          {% set ns=namespace(active_tags=False, default_tags=False) %}
+          {% for tag in item.tags %}
+            {% if tag.is_default %}
+              {% set ns.default_tags = True %}
+            {% endif %}
+            {% if not tag.deleted %}
+              {% set ns.active_tags = True %}
+            {% endif %}
           {% endfor %}
 
-          {% if ns.active_tags == True %}
+          {% if ns.default_tags %}
             <img src="{{ url_for('static', filename='img/tag_active.png') }}" id="tagswitch-img-{{ item.item_id }}">
-          {% else %}
+          {% elif ns.active_tags %}
             <img src="{{ url_for('static', filename='img/tag_inactive.png') }}" id="tagswitch-img-{{ item.item_id }}">
           {% endif %}
         {% endif %}

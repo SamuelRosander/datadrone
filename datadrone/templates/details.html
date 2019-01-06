@@ -40,8 +40,8 @@
 <a href="{{ url_for('details', item_id=item.item_id, days='all') }}" class="link-small">All</a>
 <br><br>
 
-First: {{ stats['first'].strftime('%Y-%m-%d %H:%M') }}<br>
-Last: {{ stats['last'].strftime('%Y-%m-%d %H:%M') }}<br>
+First: {{ stats['first'].strftime('%Y-%m-%d %H:%M') if not stats['first'] == 0 else 0 }}<br>
+Last: {{ stats['last'].strftime('%Y-%m-%d %H:%M') if not stats['first'] == 0 else 0 }}<br>
 Total: {{ stats['total'] }}<br>
 Avg/day: {{ stats['average_a_day'] }}<br>
 Max in a day: {{ stats['max_in_a_day'] }} ({{ stats['max_in_a_day-date'] }})<br>

@@ -11,14 +11,13 @@
     {{ entry_form.longitude(id="longitude-" ~ item.item_id) }}
     <div class="item-container">
       <input type="button" class="btn btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
-      <span class="item-geo-container">
-        <span class="geo-text">geo</span>
+      <div class="item-geo-container">
         {{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}
-        <label for="geo_switch-{{ item.item_id }}">
+        <label for="geo_switch-{{ item.item_id }}" title="Geo">
           Toggle
         </label>
-      </span>
-      <span class="jq-tag-icon right" id="tagswitch-{{ item.item_id }}" target="{{ item.item_id }}">
+      </div>
+      <span class="jq-tag-icon right" id="tagswitch-{{ item.item_id }}" target="{{ item.item_id }}" title="Tags">
         {% if item.tags %}
           {% set ns=namespace(active_tags=False, default_tags=False) %}
           {% for tag in item.tags %}

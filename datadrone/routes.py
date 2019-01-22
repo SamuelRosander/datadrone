@@ -117,25 +117,28 @@ def details(item_id):
 	form = DetailsSearchScopeForm()
 
 	if form.validate_on_submit():	# if there is a specific search scope
-		entries = Entry.query.filter(Entry.item_id==item_id\
+		entries = Entry.query.filter(Entry.item_id == item_id\
 									,Entry.deleted == False\
 									,Entry.timestamp >= form.scope_from.data\
 									,Entry.timestamp <= form.scope_to.data + datetime.timedelta(days=1))\
 							  .order_by(Entry.timestamp)
-		all_stats = stats.get_all(entries, form.scope_from.data, form.scope_to.data)
+		entries_list = convert_entries_to_list(entries)	# convert the sql result to a list with dict values
+		all_stats = stats.get_all(entries_list, form.scope_from.data, form.scope_to.data)
 	elif days == "all":	# if all entries are chosen
-		entries = Entry.query.filter_by(item_id=item_id, deleted = False).order_by(Entry.timestamp)
-		all_stats = stats.get_all(entries)
+		entries = Entry.query.filter_by(item_id=item_id, deleted=False).order_by(Entry.timestamp)
+		entries_list = convert_entries_to_list(entries)	# convert the sql result to a list with dict values
+		all_stats = stats.get_all(entries_list)
 	else:	# if entries from the last X days are chosen
 		now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
 		scope_from = (now - datetime.timedelta(days=days)).date()
-		entries = Entry.query.filter(Entry.item_id==item_id\
+		entries = Entry.query.filter(Entry.item_id == item_id\
 									,Entry.deleted == False\
 									,Entry.timestamp >= scope_from)\
 							  .order_by(Entry.timestamp)
-		all_stats = stats.get_all(entries, scope_from=scope_from, days=days)
+		entries_list = convert_entries_to_list(entries)	# convert the sql result to a list with dict values
+		all_stats = stats.get_all(entries_list, scope_from=scope_from, days=days)
 
-	return render_template("details.html", item=item, entries=entries, stats=all_stats, form=form, days=days)
+	return render_template("details.html", item=item, entries=entries_list, stats=all_stats, form=form, days=days)
 
 @app.route("/item/add", methods=["POST"])
 @login_required
@@ -325,6 +328,16 @@ def tagentry_already_exists(checked_tag_id, existing_entrytags):
 		if checked_tag_id == eet.tag.tag_id:
 			return True
 	return False
+
+def convert_entries_to_list(sql):
+	""" takes a sql input and converts it to a list with dict values """
+	entries_list = []
+	for row in sql:
+		entrytags = EntryTag.query.filter_by(entry_id=row.entry_id)	# extra query to get all entrytags for the entry
+		entry = row.__dict__	# convert the result to dict
+		entry["entrytags"] = entrytags	# add the entrytags to the dict
+		entries_list.append(entry)
+	return entries_list	# return a list with each value as a dict
 
 def send_reset_email(user):
 	token = user.get_reset_token()

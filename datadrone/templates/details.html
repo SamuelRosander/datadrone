@@ -7,7 +7,7 @@
 </div>
 <h3>{{ item.itemname }}</h3>
 
-<form method="POST" action="">
+<form method="POST" action="{{ url_for('details', item_id=item.item_id) }}">
   {{ form.hidden_tag() }}
   Search between:<br>
   {{ form.scope_from(class="form form-small", style="margin-bottom: 4px", value=form.scope_from.data) }}<br>
@@ -150,8 +150,6 @@ Total today: {{ stats['total_today'] }}<br>
   }
 
 </script>
-<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-</script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCv89Lm44klib2QbXjtUy38jFosKg5ET0g&callback=initMap">
 </script>
 
@@ -163,20 +161,20 @@ Total today: {{ stats['total_today'] }}<br>
     {% for entry in entries[::-1] %}
       <tr>
         <td>
-          <a href="{{ url_for('entry', entry_id=entry.entry_id)}}">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}</a>
+          <a href="{{ url_for('entry', entry_id=entry.entry_id)}}">{{ entry["timestamp"].strftime('%Y-%m-%d %H:%M') }}</a>
         </td>
         <td>
-          {% if entry.latitude and entry.longitude %}
+          {% if entry["latitude"] and entry["longitude"] %}
             <img src="{{ url_for('static', filename='img/geo.png') }}" title="Has geo data" class="left">
           {% endif %}
         </td>
         <td>
-          {% if entry.comment %}
-            <img src="{{ url_for('static', filename='img/comment.png') }}" title="{{ entry.comment }}" class="left">
+          {% if entry["comment"] %}
+            <img src="{{ url_for('static', filename='img/comment.png') }}" title="{{ entry["comment"] }}" class="left">
           {% endif %}
         </td>
         <td>
-          {% for entrytag in entry.entrytags %}
+          {% for entrytag in entry["entrytags"] %}
             {% if not entrytag.tag.deleted %}
               <span class="tag-box tag-box-small">{{ entrytag.tag.name }}</span>
             {% endif %}

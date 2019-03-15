@@ -75,6 +75,7 @@ class AddEntryForm(FlaskForm):
     geo = BooleanField("Geo")
     latitude = HiddenField("Latitude")
     longitude = HiddenField("Longitude")
+    timestamp = HiddenField("Timestamp")
 
 class UpdateEntryForm(FlaskForm):
     date = DateField("Date")

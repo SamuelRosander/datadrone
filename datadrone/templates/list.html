@@ -9,6 +9,7 @@
     {{ entry_form.csrf_token() }}
     {{ entry_form.latitude(id="latitude-" ~ item.item_id) }}
     {{ entry_form.longitude(id="longitude-" ~ item.item_id) }}
+    {{ entry_form.timestamp(id="timestamp-" ~ item.item_id) }}
     <div class="item-container">
       <input type="button" class="btn btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
       <div class="item-geo-container">

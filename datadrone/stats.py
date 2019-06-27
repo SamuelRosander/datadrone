@@ -3,11 +3,12 @@ import calendar
 from collections import defaultdict
 
 def get_days_since_last(entry):
-    now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # hardcoded to CET
+    now = datetime.datetime.utcnow() # + datetime.timedelta(hours=1)  # hardcoded to CET
 
-    return (now - entry.timestamp).days
+    return (now - entry.utc_timestamp).days
 
 def get_all(entries, scope_from=None, scope_to=None, days=None):
+    utcnow = datetime.datetime.utcnow()
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=1) # hardcoded to CET
     now_date = now.date()
     stats = {}
@@ -47,7 +48,7 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
         stats["longest_streak"] = 1
         stats["longest_streak_start"] = stats["first"].date()
         stats["longest_streak_end"] = stats["first"].date()
-        stats["days_since_last"] = (now - stats["last"]).days
+        stats["days_since_last"] = (utcnow - entries[-1]["utc_timestamp"]).days
 
         tempdate = 0
         temp_max_in_a_day = 0

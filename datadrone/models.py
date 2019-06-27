@@ -52,7 +52,8 @@ class Entry(db.Model):
 	__tablename__ = "ddentries"
 	entry_id = db.Column(db.Integer, primary_key=True)
 	item_id = db.Column(db.Integer, db.ForeignKey("dditems.item_id"), nullable=False)
-	timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)
+	timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+	utc_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
 	comment = db.Column(db.String(256))
 	latitude = db.Column(db.Float)
 	longitude = db.Column(db.Float)

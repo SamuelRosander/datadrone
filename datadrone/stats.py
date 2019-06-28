@@ -52,7 +52,11 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
         stats["longest_streak"] = 1
         stats["longest_streak_start"] = stats["first"].date()
         stats["longest_streak_end"] = stats["first"].date()
-        stats["days_since_last"] = (utcnow - entries[-1]["utc_timestamp"]).days
+        if scope_to:
+            scope_end_datetime = datetime.datetime.combine(scope_to, datetime.time(23,59,59))
+            stats["days_since_last"] = (scope_end_datetime - entries[-1]["utc_timestamp"]).days
+        else:
+            stats["days_since_last"] = (utcnow - entries[-1]["utc_timestamp"]).days
 
         tempdate = 0
         temp_max_in_a_day = 0
@@ -101,7 +105,7 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
             else:
                 stats["time_of_day"]["00-04"] += 1
 
-            if i > 0:  # calulations between 2 dates, skip 1st entry to be able to compare with entry[i-1]
+            if i > 0:  # calculations between 2 dates, skip 1st entry to be able to compare with entry[i-1]
                 prev_entry_date = entries[i - 1]["timestamp"].date()
 
                 # calculates longest_without
@@ -124,9 +128,12 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
                     stats["longest_streak_start"] = temp_longest_streak_start
                     stats["longest_streak_end"] = temp_longest_streak_end
 
-        # if the current streak is longer than the longest streak between two entries
+        # if the current without streak is longer than the longest streak between two entries
         if stats["days_since_last"] > stats["longest_without"]:
             stats["longest_without"] = stats["days_since_last"]
             stats["longest_without_start"] = entries[-1]["timestamp"].date()
-            stats["longest_without_end"] = now_date
+            if scope_to:
+                stats["longest_without_end"] = scope_to
+            else:
+                stats["longest_without_end"] = now_date
     return stats

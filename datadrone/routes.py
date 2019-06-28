@@ -269,7 +269,9 @@ def entry(entry_id):
     form = UpdateEntryForm()
 
     if form.validate_on_submit():
+        time_diff = entry.timestamp - datetime.datetime.combine(form.date.data, form.time.data)
         entry.timestamp = datetime.datetime.combine(form.date.data, form.time.data)
+        entry.utc_timestamp = entry.utc_timestamp - time_diff
         entry.latitude = form.latitude.data
         entry.longitude = form.longitude.data
         entry.comment = form.comment.data

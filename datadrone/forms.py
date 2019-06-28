@@ -6,6 +6,7 @@ from wtforms.fields.html5 import DateField, TimeField
 from datadrone import bcrypt
 from datadrone.models import User
 
+
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=32)])
     email = StringField("Email", validators=[Email()])
@@ -23,11 +24,13 @@ class RegistrationForm(FlaskForm):
         if email:
             raise ValidationError("Email adress already exists.")
 
+
 class LoginForm(FlaskForm):
     email = StringField("Email")
     password = PasswordField("Password")
     remember = BooleanField("Remember Me")
     submit = SubmitField("Log In")
+
 
 class RequestResetForm(FlaskForm):
     email = StringField("Email", validators=[Email()])
@@ -38,10 +41,12 @@ class RequestResetForm(FlaskForm):
         if not email:
             raise ValidationError("Email not found in database.")
 
+
 class ResetPasswordForm(FlaskForm):
     password = PasswordField("Password", validators=[Length(min=4, max=64)])
     confirm_password = PasswordField("Confirm Password", validators=[EqualTo("password")])
     submit = SubmitField("Reset password")
+
 
 class UpdateAccountForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=32)])
@@ -68,14 +73,17 @@ class UpdateAccountForm(FlaskForm):
         if not bcrypt.check_password_hash(user.password, field.data):
             raise ValidationError("Wrong password.")
 
+
 class AddItemForm(FlaskForm):
     itemname = StringField("Itemname", validators=[Length(min=1, max=64)])
+
 
 class AddEntryForm(FlaskForm):
     geo = BooleanField("Geo")
     latitude = HiddenField("Latitude")
     longitude = HiddenField("Longitude")
     timestamp = HiddenField("Timestamp")
+
 
 class UpdateEntryForm(FlaskForm):
     date = DateField("Date")
@@ -85,14 +93,17 @@ class UpdateEntryForm(FlaskForm):
     comment = StringField("Comment")
     submit = SubmitField("Update")
 
+
 class DetailsSearchScopeForm(FlaskForm):
     scope_from = DateField("From")
     scope_to = DateField("To")
     submit = SubmitField("Search")
 
+
 class EditItemForm(FlaskForm):
     itemname = StringField("Itemname", validators=[Length(min=1, max=64)])
     submit = SubmitField("Update")
+
 
 class AddTagForm(FlaskForm):
     tagname = StringField("Tagname", validators=[Length(min=1, max=32)])

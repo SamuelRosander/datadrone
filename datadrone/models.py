@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
 	username = db.Column(db.String(32), unique=True, nullable=False)
 	password = db.Column(db.String(60), nullable=False)
 	email = db.Column(db.String(128), unique=True, nullable=False)
-	register_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+	register_date = db.Column(db.DateTime, nullable=False)
 	items = db.relationship("Item", backref="owner", lazy=True)
 
 	def get_reset_token(self, expires_sec=1800):
@@ -52,8 +52,8 @@ class Entry(db.Model):
 	__tablename__ = "ddentries"
 	entry_id = db.Column(db.Integer, primary_key=True)
 	item_id = db.Column(db.Integer, db.ForeignKey("dditems.item_id"), nullable=False)
-	timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
-	utc_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+	timestamp = db.Column(db.DateTime, nullable=False)
+	utc_timestamp = db.Column(db.DateTime, nullable=False)
 	comment = db.Column(db.String(256))
 	latitude = db.Column(db.Float)
 	longitude = db.Column(db.Float)

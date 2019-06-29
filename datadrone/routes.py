@@ -22,7 +22,7 @@ def index():
             if latest_entry:
                 spotlight_stat[item.item_id] = stats.get_days_since_last(latest_entry)
             else:
-                spotlight_stat[item.item_id] = 0
+                spotlight_stat[item.item_id] = "-"
         return render_template("list.html", items=items, item_form=item_form, entry_form=entry_form,
                                spotlight_stat=spotlight_stat)
     else:

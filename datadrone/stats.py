@@ -13,13 +13,13 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
     utcnow = datetime.datetime.utcnow()
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # hardcoded to CET
     now_date = now.date()
-    stats = {}
+    stats = dict()
 
     stats["first"] = 0  # first entry (in scope)
     stats["last"] = 0  # last entry (in scope)
     stats["total"] = 0  # total nr of entries (in scope)
     stats["average_a_day"] = 0  # average nr of entries per day, first and last days are inclusive
-    stats["days_since_last"] = 0  # nr of days since last. Only relevant if no scope is set
+    stats["days_since_last"] = "-"  # nr of days since last. If scope it will use scope_to as last day
     stats["max_in_a_day"] = 0  # max numbers of entries in one day
     stats["max_in_a_day-date"] = "0000-00-00"  # date for max_in_a_day value
     stats["longest_without"] = 0  # longest nr of days without any entry

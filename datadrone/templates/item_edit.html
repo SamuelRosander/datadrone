@@ -45,6 +45,9 @@ Add tag: {{ tag_form.tagname(class="form form-small") }}
   {% endif %}
 {% endwith %}
 </form>
+<br>
+<h3>Misc</h3>
+<a href="{{ url_for('item_download', item_id=item.item_id) }}">Download csv</a>
 
 
 {% endblock %}

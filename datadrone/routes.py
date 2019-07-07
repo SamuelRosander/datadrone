@@ -7,6 +7,7 @@ import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 import datetime
+from flask_csv import send_csv
 
 
 @app.route("/")
@@ -258,6 +259,23 @@ def item_delete(item_id):
     return redirect(url_for("index"))
 
 
+@app.route("/item/<int:item_id>/download")
+@login_required
+def item_download(item_id):
+    item = Item.query.get_or_404(item_id)
+    if item.owner != current_user:
+        abort(403)
+
+    entries = Entry.query.filter_by(item_id=item_id, deleted=False).order_by(Entry.timestamp)
+    entries_list = get_csv_list(entries)
+
+    # for e in entries_list:
+    #     print(e)
+
+    return send_csv(entries_list, item.itemname + ".csv",
+                    ["timestamp", "comment", "longitude", "latitude", "entrytags"])
+
+
 @app.route("/entry/<int:entry_id>", methods=["GET", "POST"])
 @login_required
 def entry(entry_id):
@@ -367,6 +385,25 @@ def convert_entries_to_list(sql):
         entry["entrytags"] = entrytags  # add the entrytags to the dict
         entries_list.append(entry)
     return entries_list  # return a list with each value as a dict
+
+
+def get_csv_list(sql):
+    """ generates a list of entries formatted for csv export """
+    entries_list = []
+    for row in sql:
+        tags_tuple = db.session.query(Tag.name).outerjoin(EntryTag, Tag.tag_id == EntryTag.tag_id) \
+            .filter_by(entry_id=row.entry_id).all()
+        tags = [i[0] for i in tags_tuple]
+
+        entry = row.__dict__
+        entry["entrytags"] = ",".join(tags)
+        del entry["_sa_instance_state"]
+        del entry["utc_timestamp"]
+        del entry["entry_id"]
+        del entry["deleted"]
+        del entry["item_id"]
+        entries_list.append(entry)
+    return entries_list
 
 
 def send_reset_email(user):

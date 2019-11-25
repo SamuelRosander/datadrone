@@ -7,23 +7,39 @@
 </div>
 <h3>{{ item.itemname }}</h3>
 
-<form method="POST" action="{{ url_for('details', item_id=item.item_id) }}">
-  {{ form.hidden_tag() }}
-  Search between:<br>
-  {{ form.scope_from(class="form form-small", style="margin-bottom: 4px", value=form.scope_from.data) }}<br>
-  {% if form.scope_from.errors %}
-    {% for error in form.scope_from.errors %}
-      <div class="flash-error">{{ error }}</div>
-    {% endfor %}
-  {% endif %}
-  {{ form.scope_to(class="form form-small", value=form.scope_to.data) }}
-  {{ form.submit(class="btn btn-small") }}
-  {% if form.scope_to.errors %}
-    {% for error in form.scope_to.errors %}
-      <div class="flash-error">{{ error }}</div>
-    {% endfor %}
-  {% endif %}
-</form>
+<div class="filter-header">
+  Filter
+</div>
+<div class="filter-body">
+  <form method="POST" action="{{ url_for('details', item_id=item.item_id) }}">
+    {{ form.hidden_tag() }}
+    <div class="filter-category">
+      <span class="filter-name">Date</span>
+      from: {{ form.scope_from(class="form form-small", style="margin-bottom: 4px", value=form.scope_from.data) }}
+      {% if form.scope_from.errors %}
+        {% for error in form.scope_from.errors %}
+          <div class="flash-error">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+      to: {{ form.scope_to(class="form form-small", value=form.scope_to.data) }}
+      {% if form.scope_to.errors %}
+        {% for error in form.scope_to.errors %}
+          <div class="flash-error">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="filter-category">
+      <span class="filter-name">Geo location</span>
+      {{ form.filter_geo(class="filter-radio") }}
+    </div>
+    <div class="filter-category">
+      <span class="filter-name">Comment</span>
+      {{ form.filter_comment(class="filter-radio") }}
+    </div>
+
+    {{ form.submit(class="btn btn-small") }}
+  </form>
+</div>
 
 <br>
 {% if form.validate_on_submit() %}
@@ -184,5 +200,8 @@ Total today: {{ stats['total_today'] }}<br>
     {% endfor %}
   </table>
 </div>
+
+<script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+<script src="{{url_for('static', filename='js/details.js')}}"></script>
 
 {% endblock%}

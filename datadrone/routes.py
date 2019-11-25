@@ -129,6 +129,7 @@ def details(item_id):
 
     form = DetailsSearchScopeForm()
 
+
     if form.validate_on_submit():  # if there is a specific search scope
         entries = Entry.query.filter(Entry.item_id == item_id,
                                      Entry.deleted == False,
@@ -136,10 +137,12 @@ def details(item_id):
                                      Entry.timestamp <= form.scope_to.data + datetime.timedelta(days=1)) \
             .order_by(Entry.timestamp)
         entries_list = convert_entries_to_list(entries)  # convert the sql result to a list with dict values
+        filter_entry_list(entries_list, form)
         all_stats = stats.get_all(entries_list, form.scope_from.data, form.scope_to.data)
     elif days == "all":  # if all entries are chosen
         entries = Entry.query.filter_by(item_id=item_id, deleted=False).order_by(Entry.timestamp)
         entries_list = convert_entries_to_list(entries)  # convert the sql result to a list with dict values
+        filter_entry_list(entries_list, form)
         all_stats = stats.get_all(entries_list)
     else:  # if entries from the last X days are chosen
         now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
@@ -148,6 +151,7 @@ def details(item_id):
                                      Entry.deleted == False,
                                      Entry.timestamp >= scope_from).order_by(Entry.timestamp)
         entries_list = convert_entries_to_list(entries)  # convert the sql result to a list with dict values
+        filter_entry_list(entries_list, form)
         all_stats = stats.get_all(entries_list, scope_from=scope_from, days=days)
 
     return render_template("details.html", item=item, entries=entries_list, stats=all_stats, form=form, days=days)
@@ -175,11 +179,11 @@ def item_addentry(item_id):
 
     if form.geo.data:  # if geo checkbox is checked
         entry = Entry(item_id=item_id, latitude=form.latitude.data, longitude=form.longitude.data,
-                      timestamp=form.timestamp.data, utc_timestamp=datetime.datetime.utcnow())  # add entry with geo
+                      timestamp=form.timestamp.data, utc_timestamp=datetime.datetime.utcnow(), deleted=False)  # add entry with geo
         item.geo_default = True  # used as a "remember" function for the geo checkbox
     else:
         entry = Entry(item_id=item_id, timestamp=form.timestamp.data,
-                      utc_timestamp=datetime.datetime.utcnow())  # add entry without geo
+                      utc_timestamp=datetime.datetime.utcnow(), deleted=False)  # add entry without geo
         item.geo_default = False
 
     db.session.add(entry)
@@ -414,3 +418,36 @@ def send_reset_email(user):
 {url_for("reset_token", token=token, _external=True)}
 """
     mail.send(msg)
+
+
+def filter_entry_list(all_entries, form):
+    if form.filter_geo.data == "all":
+        filter_geo = None
+    else:
+        filter_geo = form.filter_geo.data
+
+    if form.filter_comment.data == "all":
+        filter_comment = None
+    else:
+        filter_comment = form.filter_comment.data
+
+    for i in range(len(all_entries)-1, -1, -1):
+        removed = False
+        entry = all_entries[i]
+
+        entry_has_geo = bool(entry.get("longitude") and entry.get("latitude"))
+        if filter_geo:
+            if eval(filter_geo) != entry_has_geo:
+                if not removed:
+                    del all_entries[i]
+                    removed = True
+
+        entry_has_comment = bool(entry.get("comment"))
+        if filter_comment:
+            if eval(filter_comment) != entry_has_comment:
+                if not removed:
+                    del all_entries[i]
+                    removed = True
+
+
+    return all_entries

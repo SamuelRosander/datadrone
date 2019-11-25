@@ -43,6 +43,9 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
   margin-right: 10px;
 }
+.hidden {
+  display: none;
+}
 #map {
   width: 100%;
   height: 400px;
@@ -328,6 +331,41 @@ a:hover, .link-small:hover {
 }
 
 /* page specific - details **/
+.filter-header {
+  background-color: #eee;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.filter-header:after {
+  content: "\25bc";
+}
+.filter-header.is-active:after {
+  content: "\25b2";
+}
+.filter-body {
+  background-color: #f6f6f6;
+  padding: 10px;
+  display: none;
+}
+.filter-body .form {
+  background-color: #fff;
+}
+.filter-category {
+  padding: 5px 0;
+}
+.filter-name {
+  font-weight: normal;
+}
+.filter-radio {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+.filter-radio li {
+  list-style-type: none;
+  display: inline-block;
+}
 .tbl-stats {
   width: 100%;
   table-layout: fixed;

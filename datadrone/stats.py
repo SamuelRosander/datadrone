@@ -3,10 +3,30 @@ import calendar
 from collections import defaultdict
 
 
-def get_days_since_last(entry):
-    now = datetime.datetime.utcnow()  # + datetime.timedelta(hours=1)  # hardcoded to CET
+def get_time_since_last(entry):
+    now = datetime.datetime.utcnow()
 
-    return (now - entry.utc_timestamp).days
+    diff = now - entry.utc_timestamp
+    diffs = diff.seconds
+    diffd = diff.days
+
+    if diffs < 60 and diffd < 1:
+        diff = diffs
+        unit = "second"
+    elif diffs < 3600 and diffd < 1:
+        diff = diffs // 60
+        unit = "minute"
+    elif diffd < 1:
+        diff = diffs // 3600
+        unit = "hour"
+    else:
+        diff = diffd
+        unit = "day"
+
+    if diff > 1:
+        unit += "s"
+
+    return (diff, unit)
 
 
 def get_all(entries, scope_from=None, scope_to=None, days=None):
@@ -137,3 +157,8 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
             else:
                 stats["longest_without_end"] = now_date
     return stats
+
+
+def get_trend(entries):
+    trend = defaultdict(int)
+    # print(entries[0]["timestamp"].year)

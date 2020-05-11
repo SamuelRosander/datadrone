@@ -38,7 +38,7 @@
         {% endif %}
       </span>
       <a href="{{ url_for('details', item_id=item.item_id) }}"><div class="item-title">{{ item.itemname }}</div></a>
-      <div class="item-spotlight">Days since last: {{ spotlight_stat[item.item_id] }}</div>
+      <div class="item-spotlight">Last entry {{ spotlight_stat[item.item_id][0] }} {{ spotlight_stat[item.item_id][1] }} ago</div>
     </div>
 
     <div class="modal-item-tags-outer-container" id="modal-item-tags-{{ item.item_id }}">

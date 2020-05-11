@@ -21,7 +21,7 @@ def index():
             latest_entry = Entry.query.filter_by(item_id=item.item_id, deleted=False).order_by(
                 Entry.timestamp.desc()).first()
             if latest_entry:
-                spotlight_stat[item.item_id] = stats.get_days_since_last(latest_entry)
+                spotlight_stat[item.item_id] = stats.get_time_since_last(latest_entry)
             else:
                 spotlight_stat[item.item_id] = "-"
         return render_template("list.html", items=items, item_form=item_form, entry_form=entry_form,

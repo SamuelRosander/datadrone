@@ -10,23 +10,30 @@ def get_time_since_last(entry):
     diffs = diff.seconds
     diffd = diff.days
 
-    if diffs < 60 and diffd < 1:
-        diff = diffs
-        unit = "second"
-    elif diffs < 3600 and diffd < 1:
-        diff = diffs // 60
-        unit = "minute"
-    elif diffd < 1:
-        diff = diffs // 3600
-        unit = "hour"
+    # handling negative entries (entry is set in the future)
+    if diffd < 0:
+        diffs = diffs - 86400
+        diffd = diffd + 1
+
+    # abs() for handling negative entries
+    # int() instead of floor() for correct rounding on negative entries
+    if abs(diffd) < 1:
+        if abs(diffs) == 1:
+            return str(diffs) + " second ago"
+        elif abs(diffs) < 60:
+            return str(diffs) + " seconds ago"
+        elif abs(diffs) < 120:
+            return str(int(diffs/60)) + " minute ago"
+        elif abs(diffs) < 3600:
+            return str(int(diffs/60)) + " minutes ago"
+        elif abs(diffs) < 7200:
+            return str(int(diffs/3600)) + " hour ago"
+        else:
+            return str(int(diffs/3600)) + " hours ago"
+    elif abs(diffd) < 2:
+        return str(diffd) + " day ago"
     else:
-        diff = diffd
-        unit = "day"
-
-    if diff > 1:
-        unit += "s"
-
-    return (diff, unit)
+        return str(diffd) + " days ago"
 
 
 def get_all(entries, scope_from=None, scope_to=None, days=None):
@@ -157,8 +164,3 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
             else:
                 stats["longest_without_end"] = now_date
     return stats
-
-
-def get_trend(entries):
-    trend = defaultdict(int)
-    # print(entries[0]["timestamp"].year)

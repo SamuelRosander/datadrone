@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField, FloatField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField, FloatField, RadioField, DateField, TimeField
 from wtforms.validators import Length, Email, EqualTo, ValidationError, Optional
-from wtforms.fields.html5 import DateField, TimeField
 from datadrone import bcrypt
 from datadrone.models import User
 

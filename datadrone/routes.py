@@ -8,7 +8,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 import datetime
 from flask_csv import send_csv
-
+from os import environ
 
 @app.route("/")
 def index():
@@ -154,7 +154,9 @@ def details(item_id):
         filter_entry_list(entries_list, form)
         all_stats = stats.get_all(entries_list, scope_from=scope_from, days=days)
 
-    return render_template("details.html", item=item, entries=entries_list, stats=all_stats, form=form, days=days)
+    MAP_KEY = environ.get('DD_GOOGLEMAPS_KEY')
+
+    return render_template("details.html", item=item, entries=entries_list, stats=all_stats, form=form, days=days, map_key=MAP_KEY)
 
 
 @app.route("/item/add", methods=["POST"])
@@ -324,7 +326,9 @@ def entry(entry_id):
         form.longitude.data = entry.longitude
         form.comment.data = entry.comment
 
-    return render_template("entry.html", entry=entry, form=form)
+    MAP_KEY = environ.get('DD_GOOGLEMAPS_KEY')
+
+    return render_template("entry.html", entry=entry, form=form, map_key=MAP_KEY)
 
 
 @app.route("/entry/<int:entry_id>/delete")

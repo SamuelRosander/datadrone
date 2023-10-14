@@ -69,7 +69,12 @@ h1, h2, h3, h4, h5, h6 {
 .gm-style-iw-d {
   overflow: hidden !important;
 }
-
+.small-text {
+  font-size: 0.7em;
+}
+input:focus {
+  outline:none;
+}
 
 /* dropdown menu */
 .dropdown {
@@ -387,6 +392,12 @@ a:hover, .link-small:hover {
 .filter-radio li {
   list-style-type: none;
   display: inline-block;
+}
+.select-lastdays {
+  background-color: #555;
+  width: 50px;
+  border: 0;
+  color: #fff;
 }
 .tbl-stats {
   width: 100%;

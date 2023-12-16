@@ -1,4 +1,7 @@
 __pycache__/
 ignore/
-.idea/
 venv/
+.idea/
+.venv/
+.env
+.flaskenv

@@ -7,6 +7,7 @@ cryptography==41.0.7
 csvalidate==1.1.2
 dnspython==2.4.2
 email-validator==2.1.0.post1
+flake8==6.1.0
 Flask==3.0.0
 Flask-Bcrypt==1.0.1
 Flask-CSV==1.2.1

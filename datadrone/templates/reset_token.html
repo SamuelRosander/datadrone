@@ -4,7 +4,7 @@
 <h3>Reset Password</h3>
 <form method="POST" action="">
 
-<input type="text" name="username" class="form form-large" value="{{ user.username }}" disabled>
+<input type="text" name="username" class="form form-large" value="{{ user.email }}" disabled>
   {{ form.hidden_tag() }}
     {{ form.password(class="form form-large", placeholder="New password", autofocus=true) }}
     {% if form.password.errors %}

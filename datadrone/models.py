@@ -79,6 +79,7 @@ class Tag(db.Model):
         "dditems.item_id"), nullable=False)
     name = db.Column(db.String(32), nullable=False)
     is_default = db.Column(db.Boolean, default=False)
+    archived = db.Column(db.Boolean, default=False)
     deleted = db.Column(db.Boolean, default=False)
     tagentries = db.relationship("EntryTag", backref="tag", lazy=True)
 
@@ -92,8 +93,7 @@ class EntryTag(db.Model):
     entry_id = db.Column(db.Integer, db.ForeignKey(
         "ddentries.entry_id"), nullable=False)
     tag_id = db.Column(
-        db.Integer, db.ForeignKey("ddtags.tag_id"),
-        nullable=False)
+        db.Integer, db.ForeignKey("ddtags.tag_id"), nullable=False)
 
     def __repr__(self):
         return f"EntryTag('{self.entrytag_id}', '{self.entry_id}', \

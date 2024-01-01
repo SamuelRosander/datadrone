@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from .extensions import db, bcrypt, mail
 from .forms import RegistrationForm, LoginForm, UpdateAccountForm, \
     AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, \
-    EditItemForm, AddTagForm, RequestResetForm, ResetPasswordForm
+    EditItemForm, AddTagForm, RequestResetForm, ResetPasswordForm, EditTagForm
 from .models import User, Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
@@ -250,6 +250,23 @@ def create_routes(app):
 
         return redirect(url_for("item_edit", item_id=item.item_id))
 
+    @app.route("/tag/edit/<int:tag_id>", methods=["POST"])
+    @login_required
+    def item_edittag(tag_id):
+        tag = Tag.query.get_or_404(tag_id)
+        form = EditTagForm()
+
+        if tag.item.owner != current_user:
+            abort(403)
+
+        if form.validate_on_submit():
+            tag.name = form.tagname.data
+            tag.archived = form.archived.data
+            db.session.commit()
+            flash("Tag has been updated!", "info")
+
+        return redirect(url_for("item_edit", item_id=tag.item.item_id))
+
     @app.route("/item/<int:item_id>/edit", methods=["GET", "POST"])
     @login_required
     def item_edit(item_id):
@@ -258,7 +275,8 @@ def create_routes(app):
             abort(403)
 
         form = EditItemForm()
-        tag_form = AddTagForm()
+        add_tag_form = AddTagForm()
+        edit_tag_form = EditTagForm()
 
         if form.validate_on_submit():
             item.itemname = form.itemname.data
@@ -269,7 +287,8 @@ def create_routes(app):
             form.itemname.data = item.itemname
 
         return render_template(
-            "item_edit.html", item=item, form=form, tag_form=tag_form)
+            "item_edit.html", item=item, form=form, add_tag_form=add_tag_form,
+            edit_tag_form=edit_tag_form)
 
     @app.route("/item/<int:item_id>/delete")
     @login_required

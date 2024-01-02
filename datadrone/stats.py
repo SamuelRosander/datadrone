@@ -112,7 +112,7 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
 
             # calculates nr_of_entrytags
             for entrytag in entry["entrytags"]:
-                if not entrytag.tag.deleted:
+                if not entrytag.tag.deleted and not entrytag.tag.archived:
                     stats["nr_of_entrytags"][entrytag.tag.name] += 1
 
             # calculates max_in_a_day

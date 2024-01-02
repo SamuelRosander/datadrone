@@ -79,6 +79,7 @@ class Tag(db.Model):
         "dditems.item_id"), nullable=False)
     name = db.Column(db.String(32), nullable=False)
     is_default = db.Column(db.Boolean, default=False)
+    hidden = db.Column(db.Boolean, default=False)
     archived = db.Column(db.Boolean, default=False)
     deleted = db.Column(db.Boolean, default=False)
     tagentries = db.relationship("EntryTag", backref="tag", lazy=True)

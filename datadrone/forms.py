@@ -123,5 +123,6 @@ class AddTagForm(FlaskForm):
 
 class EditTagForm(FlaskForm):
     tagname = StringField("Tagname", validators=[Length(min=1, max=32)])
+    hidden = BooleanField("Hide from new")
     archived = BooleanField("Archived")
     submit = SubmitField("Update")

@@ -22,18 +22,17 @@
 </form>
 <br>
 {% if item.tags %}
-<span class="label-archive">Archive</span>
 <h3>Tags</h3>
 {% for tag in item.tags %}
   {% if not tag.deleted %}
   <form method="POST" action="{{ url_for('item_edittag', tag_id=tag.tag_id) }}" class="edit-tag-form">
     {{ edit_tag_form.hidden_tag() }}
     {{ edit_tag_form.tagname(value=tag.name, class="form form-small") }}
-    {{ edit_tag_form.archived(checked=tag.archived) }}
+    {{ edit_tag_form.hidden(checked=tag.hidden, title="hidden") }}
+    {{ edit_tag_form.archived(checked=tag.archived, title="archived") }}
     {{ edit_tag_form.submit(class="btn btn-small") }}
     <a href="{{ url_for('tag_delete', tag_id=tag.tag_id) }}" onClick="return confirm('Are you sure you want to delete this tag?')"><span class="small-text">Delete</span></a>
   </form>
-    <!-- <div class="tag-box tag-box-large">{{ tag.name }} <a href="{{ url_for('tag_delete', tag_id=tag.tag_id) }}" class="tag-box-delete" onClick="return confirm('Are you sure you want to delete this tag?')">&times;</a></div> -->
   {% endif %}
 {% endfor %}
 <br><br>

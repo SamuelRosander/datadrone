@@ -44,7 +44,7 @@
     <div class="modal-item-tags-outer-container" id="modal-item-tags-{{ item.item_id }}">
       <div class="modal-item-tags-inner-container">
         <h3>Tags</h3>
-        {% for tag in item.tags if not tag.deleted and not tag.archived %}
+        {% for tag in item.tags if not tag.deleted and not tag.hidden and not tag.archived %}
         <input type="checkbox" name="tag-{{ tag.tag_id }}" class="tag-box-checkbox" id="tag-{{ tag.tag_id }}" target="{{ item.item_id }}" {{ "checked" if tag.is_default }}>
         <label for="tag-{{ tag.tag_id }}" class="tag-box-label">
           {{ tag.name }}

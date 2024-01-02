@@ -261,6 +261,7 @@ def create_routes(app):
 
         if form.validate_on_submit():
             tag.name = form.tagname.data
+            tag.hidden = form.hidden.data
             tag.archived = form.archived.data
             db.session.commit()
             flash("Tag has been updated!", "info")

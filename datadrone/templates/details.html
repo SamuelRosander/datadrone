@@ -274,7 +274,7 @@ Total today: {{ stats['total_today'] }}<br>
         </td>
         <td>
           {% for entrytag in entry["entrytags"] %}
-            {% if not entrytag.tag.deleted %}
+            {% if not entrytag.tag.deleted and not entrytag.tag.archived %}
               <span class="tag-box tag-box-small">{{ entrytag.tag.name }}</span>
             {% endif %}
           {% endfor %}

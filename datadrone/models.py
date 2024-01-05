@@ -68,8 +68,8 @@ class Entry(db.Model):
     deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"Entry('{self.entry_id}', '{self.item_id}', \
-'{self.timestamp}')"
+        return f"Entry('{self.entry_id}', '{self.item_id}', " \
+            f"'{self.timestamp}')"
 
 
 class Tag(db.Model):
@@ -97,5 +97,19 @@ class EntryTag(db.Model):
         db.Integer, db.ForeignKey("ddtags.tag_id"), nullable=False)
 
     def __repr__(self):
-        return f"EntryTag('{self.entrytag_id}', '{self.entry_id}', \
-'{self.tag_id}')"
+        return f"EntryTag('{self.entrytag_id}', '{self.entry_id}', " \
+            f"'{self.tag_id}')"
+
+
+class Location(db.Model):
+    __tablename__ = "ddlocations"
+    location_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "ddusers.user_id"), nullable=False)
+    name = db.Column(db.String(64), nullable=False)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+    def __repr__(self):
+        return f"POI('{self.location_id}', '{self.name}', '{self.latitude}', " \
+            f"'{self.longitude}')"

@@ -3,7 +3,7 @@ from .extensions import db, bcrypt, mail
 from .forms import RegistrationForm, LoginForm, UpdateAccountForm, \
     AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, \
     EditItemForm, AddTagForm, RequestResetForm, ResetPasswordForm, EditTagForm
-from .models import User, Item, Entry, Tag, EntryTag
+from .models import User, Item, Entry, Tag, EntryTag, Location
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -368,8 +368,11 @@ def create_routes(app):
 
         MAP_KEY = environ.get('DD_GOOGLEMAPS_KEY')
 
+        locations = Location.query.filter_by(user_id=current_user.user_id)
+
         return render_template(
-            "entry.html", entry=entry, form=form, map_key=MAP_KEY)
+            "entry.html", entry=entry, form=form, map_key=MAP_KEY,
+            locations=locations)
 
     @app.route("/entry/<int:entry_id>/delete")
     @login_required

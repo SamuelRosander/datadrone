@@ -72,6 +72,18 @@
         {{ form.comment(class="form form-small") }}
       </td>
     </tr>
+    <tr>
+      <td>Set location:</td>
+      <td colspan="2">
+        <select id="locations" name="locations" class="form form-small">
+          <option value="0" selected>Set location</option>
+          {% for location in locations %}
+          <option value="{{ location.latitude }},{{ location.longitude }}">{{ location.name }}</option>
+          {% endfor %}
+        </select>
+        <span class="link-small" id="hide-location">Clear</span>
+      </td>
+    </tr>
   </table>
   <br>
   {% if entry.item.tags|length %}
@@ -97,9 +109,9 @@
   <br>
 {% endif %}
 <div id="map"></div>
-<script>
+<script type="module">
   function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
+    const map = new google.maps.Map(document.getElementById('map'), {
         {% if entry.latitude and entry.longitude %}
           zoom: 15,
           center: {lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
@@ -192,36 +204,53 @@
         clickableIcons: false
     });
 
-    markers = [];
+    let marker;
     {% if entry.latitude and entry.longitude %}
-      var marker = new google.maps.Marker({
+      marker = new google.maps.Marker({
         position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
         map:map
       });
-      markers.push(marker);
     {% endif %}
 
     map.addListener('click', function(e) {
-      for (var i=0; i<markers.length; i++) {
-        markers[i].setMap(null);
-      }
-      placeMarker(e.latLng, map);
-      document.getElementById("latitude").value = e.latLng.lat();
-      document.getElementById("longitude").value = e.latLng.lng();
+      placeMarker(e.latLng.lat(), e.latLng.lng());
     });
 
-    function placeMarker(position, map) {
-      var marker = new google.maps.Marker({
-        position: position,
+
+    const locationSelect = document.getElementById("locations");
+    locationSelect.addEventListener('change', function() {
+      if (this.value != 0) {
+        let lat;
+        let long;
+        [lat, long] = this.value.split(",");
+        
+        placeMarker(Number(lat), Number(long));
+        locationSelect.value=0;
+      }
+    });
+
+
+    function placeMarker(lat, long) {
+      if (marker) {
+        marker.setMap(null);
+      }
+
+      document.getElementById("latitude").value = lat;
+      document.getElementById("longitude").value = long;
+
+      marker = new google.maps.Marker({
+        position: {lat: lat, lng: long},
         map: map
       });
-      markers.push(marker);
-    map.panTo(position);
+    map.panTo(marker.position);
     }
   }
+
+  window.initMap = initMap;
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}&callback=initMap">
-</script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}&callback=initMap&v=weekly" defer></script>
 <script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
 <script src="{{url_for('static', filename='js/entry.js')}}"></script>
 

@@ -42,8 +42,6 @@ function sendForm(item_id) {
   if(!$("#geo_switch-" + item_id).is(':checked')) {
     document.getElementById("add_entry_form-" + item_id).submit();
   } else {
-    var ua = navigator.userAgent.toLowerCase(), isAndroid = ua.indexOf("android") > -1, geoTimeout = isAndroid ? '15000' : '1000';
-
     function success(position) {
       $("#latitude-" + item_id).val(position.coords.latitude);
       $("#longitude-" + item_id).val(position.coords.longitude);
@@ -56,7 +54,7 @@ function sendForm(item_id) {
     }
 
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 3000, timeout: geoTimeout});
+      navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 0, timeout: 15000});
     } else {
       alert('Location services must be enabled to use this');
     }

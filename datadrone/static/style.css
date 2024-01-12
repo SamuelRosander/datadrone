@@ -243,7 +243,16 @@ a:hover, .link-small:hover {
   background-color: #f44;
   color: #fff;
 }
-
+.edit-tag-form {
+  margin: 3px 0;
+}
+.edit-tag-form input[type=text] {
+  width: 300px;
+}
+.label-archive {
+  position: absolute;
+  left: 300px;
+}
 /* flashes */
 .flash-error {
   color: red;

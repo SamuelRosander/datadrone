@@ -12,5 +12,8 @@ $(document).ready(function(){
     $(".tag-box-label").removeClass("tag-box-label-enable").addClass("tag-box-label-disable");
     $(".tag-box-checkbox:not(:checked) + .tag-box-label").hide();
   });
-
+  $("#hide-location").click(function() {
+    $("#latitude").val(null);
+    $("#longitude").val(null);
+  });
 });

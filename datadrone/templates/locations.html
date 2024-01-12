@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h3>Add location</h3>
+<form method="POST" action="{{ url_for('locations_add') }}">
+    {{ add_form.hidden_tag() }}
+    <table>
+        <tr>
+            <td>{{ add_form.name.label }}</td>
+            <td>{{ add_form.name(class="form form-small") }}</td>
+        </tr>
+        <tr>
+            <td>{{ add_form.latitude.label }}</td>
+            <td>{{ add_form.latitude(class="form form-small") }}</td>
+        </tr>
+        <tr>
+            <td>{{ add_form.longitude.label }}</td>
+            <td>{{ add_form.longitude(class="form form-small") }}</td>
+        </tr>
+    </table>
+    {{ add_form.submit(class="btn btn-large") }}
+    <br><br>
+
+</form>
+<div id="map"></div>
+<script type="module">
+  function initMap() {
+    const map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 1,
+          center: {lat: 0, lng: 0},
+        styles: [
+          {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+          {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+          {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+          {
+            featureType: 'administrative.locality',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#d59563'}]
+          },
+          {
+            featureType: 'poi',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#d59563'}]
+          },
+          {
+            featureType: 'poi.park',
+            elementType: 'geometry',
+            stylers: [{color: '#263c3f'}]
+          },
+          {
+            featureType: 'poi.park',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#6b9a76'}]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry',
+            stylers: [{color: '#38414e'}]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry.stroke',
+            stylers: [{color: '#212a37'}]
+          },
+          {
+            featureType: 'road',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#9ca5b3'}]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'geometry',
+            stylers: [{color: '#746855'}]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'geometry.stroke',
+            stylers: [{color: '#1f2835'}]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#f3d19c'}]
+          },
+          {
+            featureType: 'transit',
+            elementType: 'geometry',
+            stylers: [{color: '#2f3948'}]
+          },
+          {
+            featureType: 'transit.station',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#d59563'}]
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry',
+            stylers: [{color: '#17263c'}]
+          },
+          {
+            featureType: 'water',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#515c6d'}]
+          },
+          {
+            featureType: 'water',
+            elementType: 'labels.text.stroke',
+            stylers: [{color: '#17263c'}]
+          }
+        ],
+        mapTypeControl: false,
+        streetViewControl: false,
+        clickableIcons: false
+    });
+
+    let marker;
+
+    map.addListener('click', function(e) {
+      placeMarker(e.latLng.lat(), e.latLng.lng());
+    });
+
+    function placeMarker(lat, long) {
+      if (marker) {
+        marker.setMap(null);
+      }
+
+      document.getElementById("latitude").value = lat;
+      document.getElementById("longitude").value = long;
+
+      marker = new google.maps.Marker({
+        position: {lat: lat, lng: long},
+        map: map
+      });
+    map.panTo(marker.position);
+    }
+  }
+
+  window.initMap = initMap;
+</script>
+<br>
+<h3>Edit locations</h3>
+{% for location in locations %}
+    {% if not location.deleted %}
+        <form method="POST" action="{{ url_for('locations_edit', location_id=location.location_id) }}" class="edit-tag-form">
+            {{ edit_form.hidden_tag() }}
+            {{ edit_form.name(value=location.name, class="form form-small edit-tag-form") }}
+            {{ edit_form.latitude(value=location.latitude, class="form form-small edit-tag-form") }}
+            {{ edit_form.longitude(value=location.longitude, class="form form-small edit-tag-form") }}
+            {{ edit_form.submit(class="btn btn-small") }}
+            <a href="{{ url_for('locations_delete', location_id=location.location_id) }}" onClick="return confirm('Are you sure you want to delete this location?')"><span class="small-text">Delete</span></a>
+        </form>
+  {% endif %}
+{% endfor %}
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}&callback=initMap&v=weekly" defer></script>
+
+{% endblock%}

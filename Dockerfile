@@ -5,4 +5,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["python", "datadrone.py"]
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0", "datadrone:create_app()"]

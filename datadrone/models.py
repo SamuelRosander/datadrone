@@ -1,6 +1,8 @@
-from datadrone import db, login_manager, app
+from flask import current_app
+from .extensions import db, login_manager
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
+from itsdangerous import SignatureExpired
 
 
 @login_manager.user_loader
@@ -16,17 +18,18 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(128), unique=True, nullable=False)
     register_date = db.Column(db.DateTime, nullable=False)
     items = db.relationship("Item", backref="owner", lazy=True)
+    locations = db.relationship("Location", backref="owner", lazy=True)
 
-    def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config["SECRET_KEY"], expires_sec)
-        return s.dumps({"user_id": self.user_id}).decode("utf-8")
+    def get_reset_token(self):
+        s = Serializer(current_app.config["SECRET_KEY"])
+        return s.dumps({"user_id": self.user_id})
 
     @staticmethod
     def verify_reset_token(token):
-        s = Serializer(app.config["SECRET_KEY"])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
-            user_id = s.loads(token)["user_id"]
-        except:
+            user_id = s.loads(token, max_age=1800)["user_id"]
+        except SignatureExpired:
             return None
         return User.query.get(user_id)
 
@@ -40,7 +43,8 @@ class User(db.Model, UserMixin):
 class Item(db.Model):
     __tablename__ = "dditems"
     item_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("ddusers.user_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "ddusers.user_id"), nullable=False)
     itemname = db.Column(db.String(64), nullable=False)
     geo_default = db.Column(db.Boolean, default=False)
     deleted = db.Column(db.Boolean, default=False)
@@ -54,7 +58,8 @@ class Item(db.Model):
 class Entry(db.Model):
     __tablename__ = "ddentries"
     entry_id = db.Column(db.Integer, primary_key=True)
-    item_id = db.Column(db.Integer, db.ForeignKey("dditems.item_id"), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey(
+        "dditems.item_id"), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
     utc_timestamp = db.Column(db.DateTime, nullable=False)
     comment = db.Column(db.String(256))
@@ -64,15 +69,19 @@ class Entry(db.Model):
     deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"Entry('{self.entry_id}', '{self.item_id}', '{self.timestamp}')"
+        return f"Entry('{self.entry_id}', '{self.item_id}', " \
+            f"'{self.timestamp}')"
 
 
 class Tag(db.Model):
     __tablename__ = "ddtags"
     tag_id = db.Column(db.Integer, primary_key=True)
-    item_id = db.Column(db.Integer, db.ForeignKey("dditems.item_id"), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey(
+        "dditems.item_id"), nullable=False)
     name = db.Column(db.String(32), nullable=False)
     is_default = db.Column(db.Boolean, default=False)
+    hidden = db.Column(db.Boolean, default=False)
+    archived = db.Column(db.Boolean, default=False)
     deleted = db.Column(db.Boolean, default=False)
     tagentries = db.relationship("EntryTag", backref="tag", lazy=True)
 
@@ -83,8 +92,26 @@ class Tag(db.Model):
 class EntryTag(db.Model):
     __tablename__ = "ddentrytags"
     entrytag_id = db.Column(db.Integer, primary_key=True)
-    entry_id = db.Column(db.Integer, db.ForeignKey("ddentries.entry_id"), nullable=False)
-    tag_id = db.Column(db.Integer, db.ForeignKey("ddtags.tag_id"), nullable=False)
+    entry_id = db.Column(db.Integer, db.ForeignKey(
+        "ddentries.entry_id"), nullable=False)
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey("ddtags.tag_id"), nullable=False)
 
     def __repr__(self):
-        return f"EntryTag('{self.entrytag_id}', '{self.entry_id}', '{self.tag_id}')"
+        return f"EntryTag('{self.entrytag_id}', '{self.entry_id}', " \
+            f"'{self.tag_id}')"
+
+
+class Location(db.Model):
+    __tablename__ = "ddlocations"
+    location_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "ddusers.user_id"), nullable=False)
+    name = db.Column(db.String(64), nullable=False)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    deleted = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f"Location('{self.location_id}', '{self.name}', '{self.latitude}', " \
+            f"'{self.longitude}')"

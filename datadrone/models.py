@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(128), unique=True, nullable=False)
     register_date = db.Column(db.DateTime, nullable=False)
     items = db.relationship("Item", backref="owner", lazy=True)
+    locations = db.relationship("Location", backref="owner", lazy=True)
 
     def get_reset_token(self):
         s = Serializer(current_app.config["SECRET_KEY"])
@@ -109,7 +110,8 @@ class Location(db.Model):
     name = db.Column(db.String(64), nullable=False)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"POI('{self.location_id}', '{self.name}', '{self.latitude}', " \
+        return f"Location('{self.location_id}', '{self.name}', '{self.latitude}', " \
             f"'{self.longitude}')"

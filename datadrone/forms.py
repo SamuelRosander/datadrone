@@ -3,7 +3,7 @@ from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, \
     HiddenField, FloatField, RadioField, DateField, TimeField
 from wtforms.validators import Length, Email, EqualTo, ValidationError, \
-    Optional
+    Optional, DataRequired
 from .extensions import bcrypt
 from .models import User
 
@@ -125,4 +125,18 @@ class EditTagForm(FlaskForm):
     tagname = StringField("Tagname", validators=[Length(min=1, max=32)])
     hidden = BooleanField("Hide from new")
     archived = BooleanField("Archived")
+    submit = SubmitField("Update")
+
+
+class AddLocationForm(FlaskForm):
+    name = StringField("Location name", validators=[Length(min=1, max=64)])
+    latitude = FloatField("Latitude", validators=[DataRequired()])
+    longitude = FloatField("Longitude", validators=[DataRequired()])
+    submit = SubmitField("Add location")
+
+
+class EditLocationForm(FlaskForm):
+    name = StringField("Location name", validators=[Length(min=1, max=64)])
+    latitude = FloatField("Latitude", validators=[DataRequired()])
+    longitude = FloatField("Longitude", validators=[DataRequired()])
     submit = SubmitField("Update")

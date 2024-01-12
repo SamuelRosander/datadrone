@@ -2,7 +2,8 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from .extensions import db, bcrypt, mail
 from .forms import RegistrationForm, LoginForm, UpdateAccountForm, \
     AddItemForm, AddEntryForm, UpdateEntryForm, DetailsSearchScopeForm, \
-    EditItemForm, AddTagForm, RequestResetForm, ResetPasswordForm, EditTagForm
+    EditItemForm, AddTagForm, RequestResetForm, ResetPasswordForm, \
+    EditTagForm, AddLocationForm, EditLocationForm
 from .models import User, Item, Entry, Tag, EntryTag, Location
 import datadrone.stats as stats
 from flask_login import login_user, current_user, logout_user, login_required
@@ -413,6 +414,66 @@ def create_routes(app):
     @app.errorhandler(500)
     def error_500(error):
         return render_template("errors/500.html"), 500
+
+    @app.route("/locations")
+    @login_required
+    def locations():
+        add_form = AddLocationForm()
+        edit_form = EditLocationForm()
+
+        locations = Location.query.all()
+
+        MAP_KEY = environ.get('DD_GOOGLEMAPS_KEY')
+
+        return render_template(
+            "locations.html", add_form=add_form, edit_form=edit_form,
+            map_key=MAP_KEY, locations=locations)
+
+    @app.route("/locations/add", methods=["POST"])
+    @login_required
+    def locations_add():
+        form = AddLocationForm()
+
+        if form.validate_on_submit():
+            location = Location(
+                user_id=current_user.user_id, name=form.name.data,
+                latitude=form.latitude.data, longitude=form.longitude.data)
+
+            db.session.add(location)
+            db.session.commit()
+
+        return redirect(url_for("locations"))
+
+    @app.route("/locations/<int:location_id>/edit", methods=["POST"])
+    @login_required
+    def locations_edit(location_id):
+        location = Location.query.get_or_404(location_id)
+        form = EditLocationForm()
+
+        if location.owner != current_user:
+            abort(403)
+
+        if form.validate_on_submit():
+            location.name = form.name.data
+            location.latitude = form.latitude.data
+            location.longitude = form.longitude.data
+            db.session.commit()
+            flash("Location has been updated!", "info")
+
+        return redirect(url_for("locations"))
+
+    @app.route("/locations/<int:location_id>/delete")
+    def locations_delete(location_id):
+        location = Location.query.get_or_404(location_id)
+
+        if location.owner != current_user:
+            abort(403)
+
+        location.deleted = True
+        db.session.commit()
+
+        flash("Location has been deleted.", "info")
+        return redirect(url_for("locations"))
 
 
 def tagentry_already_exists(checked_tag_id, existing_entrytags):

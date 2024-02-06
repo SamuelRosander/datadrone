@@ -3,7 +3,7 @@ blinker==1.7.0
 cffi==1.16.0
 click==8.1.7
 colorama==0.4.6
-cryptography==41.0.7
+cryptography==42.0.0
 csvalidate==1.1.2
 dnspython==2.4.2
 email-validator==2.1.0.post1

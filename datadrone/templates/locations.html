@@ -2,20 +2,20 @@
 
 {% block body %}
 <h3>Add location</h3>
-<form method="POST" action="{{ url_for('locations_add') }}">
+<form method="POST" action="{{ url_for('locations.add') }}">
     {{ add_form.hidden_tag() }}
     <table>
         <tr>
             <td>{{ add_form.name.label }}</td>
-            <td>{{ add_form.name(class="form form-small") }}</td>
+            <td>{{ add_form.name(class="form form-small", placeholder="Home") }}</td>
         </tr>
         <tr>
             <td>{{ add_form.latitude.label }}</td>
-            <td>{{ add_form.latitude(class="form form-small") }}</td>
+            <td>{{ add_form.latitude(class="form form-small", placeholder="0.0") }}</td>
         </tr>
         <tr>
             <td>{{ add_form.longitude.label }}</td>
-            <td>{{ add_form.longitude(class="form form-small") }}</td>
+            <td>{{ add_form.longitude(class="form form-small", placeholder="0.0") }}</td>
         </tr>
     </table>
     {{ add_form.submit(class="btn btn-large") }}
@@ -141,13 +141,13 @@
 <h3>Edit locations</h3>
 {% for location in locations %}
     {% if not location.deleted %}
-        <form method="POST" action="{{ url_for('locations_edit', location_id=location.location_id) }}" class="edit-tag-form">
+        <form method="POST" action="{{ url_for('locations.edit', location_id=location.location_id) }}" class="edit-tag-form">
             {{ edit_form.hidden_tag() }}
             {{ edit_form.name(value=location.name, class="form form-small edit-tag-form") }}
             {{ edit_form.latitude(value=location.latitude, class="form form-small edit-tag-form") }}
             {{ edit_form.longitude(value=location.longitude, class="form form-small edit-tag-form") }}
             {{ edit_form.submit(class="btn btn-small") }}
-            <a href="{{ url_for('locations_delete', location_id=location.location_id) }}" onClick="return confirm('Are you sure you want to delete this location?')"><span class="small-text">Delete</span></a>
+            <a href="{{ url_for('locations.delete', location_id=location.location_id) }}" onClick="return confirm('Are you sure you want to delete this location?')"><span class="small-text">Delete</span></a>
         </form>
   {% endif %}
 {% endfor %}

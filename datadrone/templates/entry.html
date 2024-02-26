@@ -3,11 +3,11 @@
 {% block body %}
 
 <div>
-  <a href="{{ url_for('details', item_id=entry.item.item_id) }}" class="link-small"><- Back to {{ entry.item.itemname }}</a>
+  <a href="{{ url_for('items.details', item_id=entry.item.item_id) }}" class="link-small"><- Back to {{ entry.item.itemname }}</a>
 </div>
 <br>
 <div class="right">
-  <a href="{{ url_for('entry_delete', entry_id=entry.entry_id) }}" class="link-small" onClick="return confirm('Are you sure you want to delete this entry?')">Delete</a>
+  <a href="{{ url_for('entries.delete', entry_id=entry.entry_id) }}" class="link-small" onClick="return confirm('Are you sure you want to delete this entry?')">Delete</a>
 </div>
 <h3>Entry</h3>
 <form method="POST" action="">

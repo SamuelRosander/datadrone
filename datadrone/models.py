@@ -113,5 +113,5 @@ class Location(db.Model):
     deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"Location('{self.location_id}', '{self.name}', '{self.latitude}', " \
-            f"'{self.longitude}')"
+        return f"Location('{self.location_id}', '{self.name}', " \
+            f"'{self.latitude}', '{self.longitude}')"

@@ -15,17 +15,17 @@
 					<div class="dropdown">
 						<button>{{ current_user.username }}</button>
 						<div class="dropdown-content">
-							<a href="{{ url_for('account') }}">Account</a>
-							<a href="{{ url_for('locations') }}">Locations</a>
-							<a href="{{ url_for('logout') }}">Logout</a>
+							<a href="{{ url_for('main.account') }}">Account</a>
+							<a href="{{ url_for('locations.locations') }}">Locations</a>
+							<a href="{{ url_for('auth.logout') }}">Logout</a>
 						</div>
 					</div>
 					{% else %}
-						<a href="{{ url_for('login') }}">Login</a>
-						<a href="{{ url_for('register') }}">Register</a>
+						<a href="{{ url_for('auth.login') }}">Login</a>
+						<a href="{{ url_for('auth.register') }}">Register</a>
 					{% endif %}
 				</div>
-				<h3><a href="{{ url_for('index') }}">DataDrone</a></h3>
+				<h3><a href="{{ url_for('main.index') }}">DataDrone</a></h3>
 			</div>
 		</div>
 		<div class="wrapper">
@@ -48,7 +48,7 @@
 	           {% endfor %}
 	        {% endif %}
 	      {% endwith %}
-				{% block body %}{% endblock %}
+		{% block body %}{% endblock %}
 		</div>
 		</div>
 	</body>

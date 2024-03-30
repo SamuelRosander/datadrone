@@ -2,259 +2,221 @@
 
 {% block body %}
 
-<div>
-  <a href="{{ url_for('items.details', item_id=entry.item.item_id) }}" class="link-small"><- Back to {{ entry.item.itemname }}</a>
+<div class="heading-grid">
+    <a href="{{ url_for('items.details', item_id=entry.item.item_id) }}" 
+            class="btn icon">
+        <i class='bx bx-arrow-back'></i>
+    </a>
+    <h3>Entry</h3>
+    <a class="btn icon delete"
+        onClick="return confirm('Are you sure you want to delete this entry?')"
+        href="{{ url_for('entries.delete', entry_id=entry.entry_id) }}" >
+        <i class='bx bx-trash'></i>
+    </a>
 </div>
-<br>
-<div class="right">
-  <a href="{{ url_for('entries.delete', entry_id=entry.entry_id) }}" class="link-small" onClick="return confirm('Are you sure you want to delete this entry?')">Delete</a>
-</div>
-<h3>Entry</h3>
+
 <form method="POST" action="">
-  {{ form.hidden_tag() }}
+    <div class="entry-form-grid">
+        {{ form.hidden_tag() }}
 
-  <table class="entry-edit-table">
-    <tr>
-      <td>Timestamp:</td>
-      <td>
-        {{ form.date(class="form form-small") }}
-      </td>
-      <td class="flash-error">
-        {% if form.date.errors %}
-          {% for error in form.date.errors %}
-            {{ error }}
-          {% endfor %}
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>
-        {{ form.time(class="form form-small") }}
-      </td>
-      <td class="flash-error">
-        {% if form.time.errors %}
-          {% for error in form.time.errors %}
-            {{ error }}
-          {% endfor %}
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td>Latitude:</td>
-      <td>
-        {{ form.latitude(class="form form-small") }}
-      </td>
-      <td class="flash-error">
-        {% if form.latitude.errors %}
-          {% for error in form.latitude.errors %}
-            {{ error }}
-          {% endfor %}
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td>Longitude:</td>
-      <td>
-        {{ form.longitude(class="form form-small") }}
-      </td>
-      <td class="flash-error">
-        {% if form.longitude.errors %}
-          {% for error in form.longitude.errors %}
-            {{ error }}
-          {% endfor %}
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td>Comment:</td>
-      <td colspan="2">
-        {{ form.comment(class="form form-small") }}
-      </td>
-    </tr>
-    <tr>
-      <td>Set location:</td>
-      <td colspan="2">
-        <select id="locations" name="locations" class="form form-small">
-          <option value="0" selected>Set location</option>
-          {% for location in locations %}
-          <option value="{{ location.latitude }},{{ location.longitude }}">{{ location.name }}</option>
-          {% endfor %}
-        </select>
-        <a class="link-small" id="hide-location">Clear</a>
-      </td>
-    </tr>
-  </table>
-  <br>
-  {% if entry.item.tags|length %}
-    <h3 class="inline">Tags</h3>
-    <span class="link-small" id="link-show-tags">Edit</span>
-    <span class="link-small hidden" id="link-hide-tags">Edit</span>
-      <div>
-        {% for tag in entry.item.tags %}
-          {% if not tag.deleted and not tag.archived %}
-            {% set ns=namespace(has_entrytag=False) %}
-            {% for entrytag in entry.entrytags if entrytag.tag_id == tag.tag_id %}
-              {% set ns.has_entrytag = True %}
+        {{ form.date.label }}
+        {{ form.time.label }}
+
+        {{ form.date(class="form error" if form.date.errors else "form") }}
+        {{ form.time(class="form error" if form.time.errors else "form") }}
+
+        {{ form.latitude.label }}
+        {{ form.longitude.label }}
+
+        {{ form.latitude(class="form") }}
+        {{ form.longitude(class="form") }}
+
+        Set location:
+        {{ form.comment.label }}
+
+        <select id="locations" name="locations" class="form">
+            <option value="0" selected>Set location</option>
+            {% for location in locations %}
+            <option value="{{ location.latitude }},{{ location.longitude }}">
+                {{ location.name }}
+            </option>
             {% endfor %}
-            {% if not tag.hidden or ns.has_entrytag %}
-            <input type="checkbox" class="tag-box-checkbox" name="tag-{{ tag.tag_id }}" id="tag-{{ tag.tag_id }}" {{ 'checked' if ns.has_entrytag }}>
-            <label for="tag-{{ tag.tag_id }}" class="tag-box-label tag-box-label-disable hidden">
-              {{ tag.name }}
-            </label>
-            {% endif %}
-          {% endif %}
-        {% endfor %}
-      </div>
-  <br>
-{% endif %}
-<div id="map"></div>
-<script type="module">
-  function initMap() {
-    const map = new google.maps.Map(document.getElementById('map'), {
-        {% if entry.latitude and entry.longitude %}
-          zoom: 15,
-          center: {lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
-        {% else %}
-          zoom: 1,
-          center: {lat: 0, lng: 0},
-        {% endif %}
-        styles: [
-          {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-          {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-          {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
-          {
-            featureType: 'administrative.locality',
-            elementType: 'labels.text.fill',
-            stylers: [{color: '#d59563'}]
-          },
-          {
-            featureType: 'poi',
-            elementType: 'labels.text.fill',
-            stylers: [{color: '#d59563'}]
-          },
-          {
-            featureType: 'poi.park',
-            elementType: 'geometry',
-            stylers: [{color: '#263c3f'}]
-          },
-          {
-            featureType: 'poi.park',
-            elementType: 'labels.text.fill',
-            stylers: [{color: '#6b9a76'}]
-          },
-          {
-            featureType: 'road',
-            elementType: 'geometry',
-            stylers: [{color: '#38414e'}]
-          },
-          {
-            featureType: 'road',
-            elementType: 'geometry.stroke',
-            stylers: [{color: '#212a37'}]
-          },
-          {
-            featureType: 'road',
-            elementType: 'labels.text.fill',
-            stylers: [{color: '#9ca5b3'}]
-          },
-          {
-            featureType: 'road.highway',
-            elementType: 'geometry',
-            stylers: [{color: '#746855'}]
-          },
-          {
-            featureType: 'road.highway',
-            elementType: 'geometry.stroke',
-            stylers: [{color: '#1f2835'}]
-          },
-          {
-            featureType: 'road.highway',
-            elementType: 'labels.text.fill',
-            stylers: [{color: '#f3d19c'}]
-          },
-          {
-            featureType: 'transit',
-            elementType: 'geometry',
-            stylers: [{color: '#2f3948'}]
-          },
-          {
-            featureType: 'transit.station',
-            elementType: 'labels.text.fill',
-            stylers: [{color: '#d59563'}]
-          },
-          {
-            featureType: 'water',
-            elementType: 'geometry',
-            stylers: [{color: '#17263c'}]
-          },
-          {
-            featureType: 'water',
-            elementType: 'labels.text.fill',
-            stylers: [{color: '#515c6d'}]
-          },
-          {
-            featureType: 'water',
-            elementType: 'labels.text.stroke',
-            stylers: [{color: '#17263c'}]
-          }
-        ],
-        mapTypeControl: false,
-        streetViewControl: false,
-        clickableIcons: false
-    });
+        </select>
+        {{ form.comment(class="form") }}
+        <button type="button" id="hide-location">Clear</button>
+    </div>
 
-    let marker;
-    {% if entry.latitude and entry.longitude %}
-      marker = new google.maps.Marker({
-        position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
-        map:map
-      });
+    {% if entry.item.tags|length %}
+    <div class="heading-grid">
+        <h3>Tags</h3>
+        <button type="button" class="btn icon" id="edit-tags">
+            <i class='bx bx-label'></i>
+        </button>
+    </div>
+    {% for tag in entry.item.tags if not tag.deleted and not tag.archived %}
+        {% set ns=namespace(has_entrytag=False) %}
+        {% for entrytag in entry.entrytags if entrytag.tag_id == tag.tag_id %}
+            {% set ns.has_entrytag = True %}
+        {% endfor %}
+        {% if not tag.hidden or ns.has_entrytag %}
+            <input type="checkbox" name="tag-{{ tag.tag_id }}" 
+                class="tag-box-checkbox" id="tag-{{ tag.tag_id }}" 
+                {{ 'checked' if ns.has_entrytag }}>
+            <label for="tag-{{ tag.tag_id }}"
+                    class="tag-box-label disabled hidden">
+                {{ tag.name }}
+            </label>
+        {% endif %}
+    {% endfor %}
     {% endif %}
 
-    map.addListener('click', function(e) {
-      placeMarker(e.latLng.lat(), e.latLng.lng());
-    });
+    <div id="map"></div>
+    <script type="module">
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById('map'), {
+            {% if entry.latitude and entry.longitude %}
+            zoom: 15,
+            center: {lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
+            {% else %}
+            zoom: 1,
+            center: {lat: 0, lng: 0},
+            {% endif %}
+            styles: [
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+                featureType: 'administrative.locality',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#d59563'}]
+            },
+            {
+                featureType: 'poi',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#d59563'}]
+            },
+            {
+                featureType: 'poi.park',
+                elementType: 'geometry',
+                stylers: [{color: '#263c3f'}]
+            },
+            {
+                featureType: 'poi.park',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#6b9a76'}]
+            },
+            {
+                featureType: 'road',
+                elementType: 'geometry',
+                stylers: [{color: '#38414e'}]
+            },
+            {
+                featureType: 'road',
+                elementType: 'geometry.stroke',
+                stylers: [{color: '#212a37'}]
+            },
+            {
+                featureType: 'road',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#9ca5b3'}]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'geometry',
+                stylers: [{color: '#746855'}]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'geometry.stroke',
+                stylers: [{color: '#1f2835'}]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#f3d19c'}]
+            },
+            {
+                featureType: 'transit',
+                elementType: 'geometry',
+                stylers: [{color: '#2f3948'}]
+            },
+            {
+                featureType: 'transit.station',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#d59563'}]
+            },
+            {
+                featureType: 'water',
+                elementType: 'geometry',
+                stylers: [{color: '#17263c'}]
+            },
+            {
+                featureType: 'water',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#515c6d'}]
+            },
+            {
+                featureType: 'water',
+                elementType: 'labels.text.stroke',
+                stylers: [{color: '#17263c'}]
+            }
+            ],
+            mapTypeControl: false,
+            streetViewControl: false,
+            clickableIcons: false
+        });
+
+        let marker;
+        {% if entry.latitude and entry.longitude %}
+        marker = new google.maps.Marker({
+            position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
+            map:map
+        });
+        {% endif %}
+
+        map.addListener('click', function(e) {
+        placeMarker(e.latLng.lat(), e.latLng.lng());
+        });
 
 
-    const locationSelect = document.getElementById("locations");
-    locationSelect.addEventListener('change', function() {
-      if (this.value != 0) {
-        let lat;
-        let long;
-        [lat, long] = this.value.split(",");
-        
-        placeMarker(Number(lat), Number(long));
-        locationSelect.value=0;
-      }
-    });
+        const locationSelect = document.getElementById("locations");
+        locationSelect.addEventListener('change', function() {
+        if (this.value != 0) {
+            let lat;
+            let long;
+            [lat, long] = this.value.split(",");
+            
+            placeMarker(Number(lat), Number(long));
+            locationSelect.value=0;
+        }
+        });
 
 
-    function placeMarker(lat, long) {
-      if (marker) {
-        marker.setMap(null);
-      }
+        function placeMarker(lat, long) {
+        if (marker) {
+            marker.setMap(null);
+        }
 
-      document.getElementById("latitude").value = lat;
-      document.getElementById("longitude").value = long;
+        document.getElementById("latitude").value = lat;
+        document.getElementById("longitude").value = long;
 
-      marker = new google.maps.Marker({
-        position: {lat: lat, lng: long},
-        map: map
-      });
-    map.panTo(marker.position);
+        marker = new google.maps.Marker({
+            position: {lat: lat, lng: long},
+            map: map
+        });
+        map.panTo(marker.position);
+        }
     }
-  }
 
-  window.initMap = initMap;
-</script>
+    window.initMap = initMap;
+    </script>
 
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}&callback=initMap&v=weekly" defer></script>
-<script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
-<script src="{{url_for('static', filename='js/entry.js')}}"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}&callback=initMap&v=weekly" defer></script>
+    <script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+    <script src="{{url_for('static', filename='js/entry.js')}}"></script>
 
-{{ form.submit(class="btn btn-large") }}
+    {{ form.submit(class="btn") }}
 
 </form>
 {% endblock %}

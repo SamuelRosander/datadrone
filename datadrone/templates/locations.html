@@ -4,22 +4,19 @@
 <h3>Add location</h3>
 <form method="POST" action="{{ url_for('locations.add') }}">
     {{ add_form.hidden_tag() }}
-    <table>
-        <tr>
-            <td>{{ add_form.name.label }}</td>
-            <td>{{ add_form.name(class="form form-small", placeholder="Home") }}</td>
-        </tr>
-        <tr>
-            <td>{{ add_form.latitude.label }}</td>
-            <td>{{ add_form.latitude(class="form form-small", placeholder="0.0") }}</td>
-        </tr>
-        <tr>
-            <td>{{ add_form.longitude.label }}</td>
-            <td>{{ add_form.longitude(class="form form-small", placeholder="0.0") }}</td>
-        </tr>
-    </table>
-    {{ add_form.submit(class="btn btn-large") }}
-    <br><br>
+
+    {{ add_form.name.label }}
+    {{ add_form.name(class="form", placeholder="Home") }}
+
+    <div class="locations-grid">
+        {{ add_form.latitude.label }}
+        {{ add_form.longitude.label }}
+
+        {{ add_form.latitude(class="form", placeholder="0.0") }}
+        {{ add_form.longitude(class="form", placeholder="0.0") }}
+        
+        {{ add_form.submit(class="btn") }}
+    </div>
 
 </form>
 <div id="map"></div>
@@ -137,19 +134,30 @@
 
   window.initMap = initMap;
 </script>
-<br>
 <h3>Edit locations</h3>
-{% for location in locations %}
-    {% if not location.deleted %}
-        <form method="POST" action="{{ url_for('locations.edit', location_id=location.location_id) }}" class="edit-tag-form">
-            {{ edit_form.hidden_tag() }}
-            {{ edit_form.name(value=location.name, class="form form-small edit-tag-form") }}
-            {{ edit_form.latitude(value=location.latitude, class="form form-small edit-tag-form") }}
-            {{ edit_form.longitude(value=location.longitude, class="form form-small edit-tag-form") }}
-            {{ edit_form.submit(class="btn btn-small") }}
-            <a href="{{ url_for('locations.delete', location_id=location.location_id) }}" onClick="return confirm('Are you sure you want to delete this location?')"><span class="small-text">Delete</span></a>
-        </form>
-  {% endif %}
+{% for location in locations if not location.deleted %}
+<form method="POST" class="edit-tag-form" action="{{ url_for('locations.edit', 
+        location_id=location.location_id) }}">
+    {{ edit_form.hidden_tag() }}
+    {{ edit_form.name.label }}
+    
+    <div class="locations-flexrow">
+        {{ edit_form.name(value=location.name, class="form") }}
+        <a class="btn icon delete" href="{{ url_for('locations.delete', 
+                location_id=location.location_id) }}" 
+                onClick="return confirm('Are you sure you want to delete this location?')">
+            <i class='bx bx-trash'></i>
+        </a>
+    </div>
+    <div class="locations-grid">
+        {{ edit_form.latitude.label }}
+        {{ edit_form.longitude.label }}
+        {{ edit_form.latitude(value=location.latitude, class="form") }}
+        {{ edit_form.longitude(value=location.longitude, class="form") }}
+        {{ edit_form.submit(class="btn") }}
+    </div>
+
+</form>
 {% endfor %}
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>

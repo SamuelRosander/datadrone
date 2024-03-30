@@ -9,12 +9,13 @@ from .models import User
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField("Username", validators=[Length(min=2, max=32)])
-    email = StringField("Email", validators=[Email()])
-    password = PasswordField("Password", validators=[Length(min=4, max=64)])
+    username = StringField("Username", validators=[
+                           Length(min=2, max=32), DataRequired()])
+    email = StringField("Email", validators=[Email(), DataRequired()])
+    password = PasswordField("Password", validators=[Length(min=8)])
     confirm_password = PasswordField(
         "Confirm Password", validators=[EqualTo("password")])
-    submit = SubmitField("Sign Up")
+    submit = SubmitField("Sign up")
 
     def validate_username(self, field):
         user = User.query.with_entities(
@@ -32,7 +33,7 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField("Email")
     password = PasswordField("Password")
-    remember = BooleanField("Remember Me")
+    remember = BooleanField("Remember me")
     submit = SubmitField("Log In")
 
 
@@ -47,34 +48,21 @@ class RequestResetForm(FlaskForm):
 
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField("Password", validators=[Length(min=4, max=64)])
+    password = PasswordField("New password", validators=[
+                             Length(min=8)])
     confirm_password = PasswordField(
-        "Confirm Password", validators=[EqualTo("password")])
+        "Confirm password", validators=[EqualTo("password")])
     submit = SubmitField("Reset password")
 
 
 class UpdateAccountForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=32)])
-    email = StringField("Email", validators=[Email()])
-    password = PasswordField("Password")
+    email = StringField("Email")
+    password = PasswordField("New password", validators=[Length(min=8)])
     confirm_password = PasswordField(
-        "Confirm Password", validators=[EqualTo("password")])
-    current_password = PasswordField("Current Password")
+        "Confirm new password", validators=[EqualTo("password")])
+    current_password = PasswordField("Current password")
     submit = SubmitField("Update")
-
-    def validate_username(self, field):
-        if current_user.username.lower() != field.data.lower():
-            user = User.query.with_entities(
-                User.username).filter(
-                User.username.ilike(field.data)).all()
-            if user:
-                raise ValidationError("Username already exists.")
-
-    def validate_email(self, field):
-        if current_user.email.lower() != field.data.lower():
-            email = User.query.filter_by(email=field.data.lower()).first()
-            if email:
-                raise ValidationError("Email adress already exists.")
 
     def validate_current_password(self, field):
         user = User.query.filter_by(username=current_user.username).first()
@@ -94,8 +82,8 @@ class AddEntryForm(FlaskForm):
 
 
 class UpdateEntryForm(FlaskForm):
-    date = DateField("Date")
-    time = TimeField("Time")
+    date = DateField("Date", validators=[DataRequired()])
+    time = TimeField("Time", validators=[DataRequired()])
     latitude = FloatField("Latitude", validators=[Optional()])
     longitude = FloatField("Longitude", validators=[Optional()])
     comment = StringField("Comment")
@@ -112,31 +100,36 @@ class DetailsSearchScopeForm(FlaskForm):
 
 
 class EditItemForm(FlaskForm):
-    itemname = StringField("Itemname", validators=[Length(min=1, max=64)])
+    itemname = StringField("Name", validators=[
+                           Length(min=1, max=64), DataRequired()])
     submit = SubmitField("Update")
 
 
 class AddTagForm(FlaskForm):
-    tagname = StringField("Tagname", validators=[Length(min=1, max=32)])
+    tagname = StringField("Name", validators=[
+                          Length(min=1, max=32), DataRequired()])
     submit = SubmitField("Add")
 
 
 class EditTagForm(FlaskForm):
-    tagname = StringField("Tagname", validators=[Length(min=1, max=32)])
-    hidden = BooleanField("Hide from new")
+    tagname = StringField("Tagname", validators=[
+                          Length(min=1, max=32), DataRequired()])
+    hidden = BooleanField("Hidden")
     archived = BooleanField("Archived")
     submit = SubmitField("Update")
 
 
 class AddLocationForm(FlaskForm):
-    name = StringField("Location name", validators=[Length(min=1, max=64)])
+    name = StringField("Name", validators=[
+                       Length(min=1, max=64), DataRequired()])
     latitude = FloatField("Latitude", validators=[DataRequired()])
     longitude = FloatField("Longitude", validators=[DataRequired()])
     submit = SubmitField("Add location")
 
 
 class EditLocationForm(FlaskForm):
-    name = StringField("Location name", validators=[Length(min=1, max=64)])
+    name = StringField("Location name", validators=[
+                       Length(min=1, max=64), DataRequired()])
     latitude = FloatField("Latitude", validators=[DataRequired()])
     longitude = FloatField("Longitude", validators=[DataRequired()])
     submit = SubmitField("Update")

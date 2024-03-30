@@ -3,37 +3,35 @@
 {% block body %}
 <h3>Register</h3>
 <form method="POST" action="">
-
-  {{ form.hidden_tag() }}
-    {{ form.username(class="form form-large", placeholder="Username") }}
+    {{ form.hidden_tag() }}
+  
+    {{ form.username.label }}
+    {{ form.username(class="form", placeholder="User1") }}
     {% if form.username.errors %}
-      {% for error in form.username.errors %}
-        <div class="flash-error abs">{{ error }}</div>
-      {% endfor %}
+        {% for error in form.username.errors %}
+        <div class="form-error-label">{{ error }}</div>
+        {% endfor %}
     {% endif %}
 
-    {{ form.email(class="form form-large", placeholder="Email") }}
+    {{ form.email.label }}
+    {{ form.email(class="form", placeholder="user@domain.com") }}
     {% if form.email.errors %}
-      {% for error in form.email.errors %}
-        <div class="flash-error abs">{{ error }}</div>
-      {% endfor %}
+        <div class="form-error-label">{{ form.email.errors[0] }}</div>
     {% endif %}
 
-    {{ form.password(class="form form-large", placeholder="Password") }}
+    {{ form.password.label }}
+    {{ form.password(class="form", placeholder="********") }}
     {% if form.password.errors %}
-      {% for error in form.password.errors %}
-        <div class="flash-error abs">{{ error }}</div>
-      {% endfor %}
+        <div class="form-error-label">{{ form.password.errors[0] }}</div>
     {% endif %}
 
-    {{ form.confirm_password(class="form form-large", placeholder="Confirm Password") }}
+    {{ form.confirm_password.label }}
+    {{ form.confirm_password(class="form", placeholder="********") }}
     {% if form.confirm_password.errors %}
-      {% for error in form.confirm_password.errors %}
-        <div class="flash-error abs">{{ error }}</div>
-      {% endfor %}
+        <div class="form-error-label">{{ form.confirm_password.errors[0] }}</div>
     {% endif %}
 
-    {{ form.submit(class="btn btn-large") }}
+    {{ form.submit(class="btn mt-1") }}
 </form>
 
 {% endblock%}

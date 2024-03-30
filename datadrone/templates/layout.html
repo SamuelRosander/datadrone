@@ -1,55 +1,76 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta charset="utf-8">
-		<title>DataDrone</title>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
-	</head>
-	<body>
-		<div id="banner">
-			<div class="wrapper">
-				<div id="menu" class="right">
-					{% if current_user.is_authenticated %}
-					<div class="dropdown">
-						<button>{{ current_user.username }}</button>
-						<div class="dropdown-content">
-							<a href="{{ url_for('main.account') }}">Account</a>
-							<a href="{{ url_for('locations.locations') }}">Locations</a>
-							<a href="{{ url_for('auth.logout') }}">Logout</a>
-						</div>
-					</div>
-					{% else %}
-						<a href="{{ url_for('auth.login') }}">Login</a>
-						<a href="{{ url_for('auth.register') }}">Register</a>
-					{% endif %}
-				</div>
-				<h3><a href="{{ url_for('main.index') }}">DataDrone</a></h3>
-			</div>
-		</div>
-		<div class="wrapper">
-			<div class="main-container">
-				{% with messages = get_flashed_messages(category_filter=["info"]) %}
-	        {% if messages %}
-	           {% for message in messages %}
-	            <div class="flash-info">
-	              {{ message }}
-	            </div>
-	           {% endfor %}
-	        {% endif %}
-	      {% endwith %}
-				{% with messages = get_flashed_messages(category_filter=["warning"]) %}
-	        {% if messages %}
-	           {% for message in messages %}
-	            <div class="flash-warning">
-	              {{ message }}
-	            </div>
-	           {% endfor %}
-	        {% endif %}
-	      {% endwith %}
-		{% block body %}{% endblock %}
-		</div>
-		</div>
-	</body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' 
+        rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static',
+        filename='style.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+    <title>DataDrone</title>
+</head>
+
+<body>
+    <header class="header">
+        <div class="wrapper">
+            <a href="{{ url_for('main.index') }}" class="logo">DataDrone</a>
+            <i class='bx bx-menu user-icon' id="user-icon" 
+                onClick="toggleUserMenu()"></i>
+        </div>
+    </header>
+    <div class="wrapper">
+        <div class="user-menu" id="user-menu">
+            {% if current_user.is_authenticated %}
+            <span>Logged in as {{ current_user.email }}</span>
+            <a href="{{ url_for('main.index') }}">
+                Home
+                <i class='bx bx-home'></i>
+            </a>
+            <a href="{{ url_for('main.account') }}">
+                Account
+                <i class='bx bx-cog'></i>
+            </a>
+			<a href="{{ url_for('locations.locations') }}">
+                Locations
+                <i class='bx bx-map'></i>
+            </a>
+			<a href="{{ url_for('auth.logout') }}">
+                Log out
+                <i class='bx bx-log-out'></i>
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}">
+                Login
+                <i class='bx bx-log-in'></i>
+            </a>
+			<a href="{{ url_for('auth.register') }}">
+                Register
+                <i class='bx bx-book'></i>
+            </a>
+            {% endif %}
+        </div>
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        <span>
+                            {{ message | safe}}
+                        </span>
+                        <span class="flash-close" onClick="dismiss(this)">
+                            &times;
+                        </span>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{{url_for('static', filename='js/scripts.js')}}"></script>
+</body>
+
 </html>

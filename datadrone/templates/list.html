@@ -32,12 +32,15 @@
                 {% endif %}
             {% endfor %}
 
-            <i class='item-icon bx bx-label {{ "active" if ns.default_tags else "" if ns.active_tags else "" }}' id="tagswitch-img-{{ item.item_id }}"></i>
+            <i class='item-icon bx bx-label {{ "active" if ns.default_tags 
+                else "" if ns.active_tags else "" }}'
+                id="tagswitch-img-{{ item.item_id }}"></i>
         </div>
         {% endif %}
         <label class="item-icon-container" for="geo_switch-{{ item.item_id }}"
                 title="Geo">
-            {{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}
+            {{ entry_form.geo(id="geo_switch-" ~ item.item_id, 
+                checked=item.geo_default) }}
             <i class='item-icon bx bx-map'></i>
         </label>
         <button type="button" class="btn-color" id="add-{{ item.item_id }}"

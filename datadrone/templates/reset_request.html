@@ -6,7 +6,8 @@
     {{ form.hidden_tag() }}
     
     {{ form.email.label }}
-    {{ form.email(class="form", placeholder="user@domain.com", autofocus=true) }}
+    {{ form.email(class="form", placeholder="user@domain.com", 
+        autofocus=true) }}
     {% if form.email.errors %}
         <div class="form-error-label">{{ form.email.errors[0] }}</div>
     {% endif %}

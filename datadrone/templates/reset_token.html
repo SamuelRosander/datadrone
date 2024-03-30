@@ -18,7 +18,9 @@
     {{ form.confirm_password.label }}
     {{ form.confirm_password(class="form", placeholder="********") }}
     {% if form.confirm_password.errors %}
-        <div class="form-error-label">{{ form.confirm_password.errors[0] }}</div>
+        <div class="form-error-label">
+            {{ form.confirm_password.errors[0] }}
+        </div>
     {% endif %}
 
     {{ form.submit(class="btn mt-1") }}

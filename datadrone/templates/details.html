@@ -15,7 +15,8 @@
         Filter
     </div>
     <span class="filter-quickdays">
-        <select class="form small" onchange="document.location.href=this.value">
+        <select class="form small" 
+                onchange="document.location.href=this.value">
             <option value="{{ url_for('items.details', item_id=item.item_id,
                 days=30) }}" {{ 'selected' if days == 30 }}>30</option>
             <option value="{{ url_for('items.details', item_id=item.item_id,

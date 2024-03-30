@@ -17,6 +17,8 @@
     {{ form.submit(class="btn") }}
 </form>
 
-<a href="{{ url_for('auth.reset_request') }}" class="link-small">Forgot password?</a>
+<a href="{{ url_for('auth.reset_request') }}">
+    Forgot password?
+</a>
 
 {% endblock%}

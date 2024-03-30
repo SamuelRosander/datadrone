@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, \
     request, abort
 from datadrone.extensions import db
-from datadrone.forms import AddItemForm, AddEntryForm, \
-    DetailsSearchScopeForm, EditItemForm, AddTagForm, EditTagForm
+from datadrone.forms import AddItemForm, DetailsSearchScopeForm, \
+    EditItemForm, AddTagForm, EditTagForm
 from datadrone.models import Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import current_user, login_required

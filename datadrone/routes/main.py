@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user, login_required
 from datadrone.forms import AddItemForm, AddEntryForm, UpdateAccountForm
 from datadrone.models import Item, Entry

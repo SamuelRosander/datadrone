@@ -436,6 +436,22 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     color: var(--main-color);
 }
 
+.bx-loader-alt {
+    animation-name: spin;
+    animation-duration: 800ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear; 
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+
 /* Page specific - details */
 .filter-header {
     display:flex;
@@ -803,4 +819,3 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
         background: var(--btn-hover-color);
     }
 }
-

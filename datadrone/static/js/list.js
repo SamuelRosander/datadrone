@@ -40,15 +40,17 @@ $(document).ready(function(){
 function sendForm(item_id) {
     $("#timestamp-" + item_id).val(getFormattedDate());
 
+    $("#add-" + item_id).children("i").eq(0).removeClass("bx-plus").addClass("bx-loader-alt")
+
     if(!$("#geo_switch-" + item_id).is(':checked')) {
-        document.getElementById("add_entry_form-" + item_id).submit();
+        $("#add_entry_form-" + item_id).submit();
     }
     else {
         function success(position) {
             $("#latitude-" + item_id).val(position.coords.latitude);
             $("#longitude-" + item_id).val(position.coords.longitude);
 
-            document.getElementById("add_entry_form-" + item_id).submit();
+            $("#add_entry_form-" + item_id).submit();
         }
 
         function error(err) {

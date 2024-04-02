@@ -33,37 +33,30 @@
         </span>
     </span>
 </div>
-<div class="filter-body">
-  <form method="POST" 
-        action="{{ url_for('items.details', item_id=item.item_id) }}">
-    {{ form.hidden_tag() }}
-    <div class="filter-category">
-      <span class="filter-name">Date</span>
-      from: {{ form.scope_from(class="form", value=form.scope_from.data) }}
-      {% if form.scope_from.errors %}
-        {% for error in form.scope_from.errors %}
-          <div class="flash-error">{{ error }}</div>
-        {% endfor %}
-      {% endif %}
-      to: {{ form.scope_to(class="form", value=form.scope_to.data) }}
-      {% if form.scope_to.errors %}
-        {% for error in form.scope_to.errors %}
-          <div class="flash-error">{{ error }}</div>
-        {% endfor %}
-      {% endif %}
-    </div>
-    <div class="filter-category">
-      <span class="filter-name">Geo location</span>
-      {{ form.filter_geo(class="filter-radio") }}
-    </div>
-    <div class="filter-category">
-      <span class="filter-name">Comment</span>
-      {{ form.filter_comment(class="filter-radio") }}
-    </div>
 
-    {{ form.submit(class="btn btn-small") }}
-  </form>
-</div>
+<form method="POST" class="filter-body"
+        action="{{ url_for('items.details', item_id=item.item_id) }}">
+    <div class="filter-grid">
+        {{ form.hidden_tag() }}
+        
+        {{ form.scope_from.label }}
+        {{ form.scope_to.label }}
+
+        <div>
+            {{ form.scope_from(class="form", value=form.scope_from.data) }}
+            {% if form.scope_from.errors %}
+            <div class="form-error-label">{{ form.scope_from.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div>
+            {{ form.scope_to(class="form", value=form.scope_to.data) }}
+            {% if form.scope_to.errors %}
+            <div class="form-error-label">{{ form.scope_to.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {{ form.submit(class="btn") }}
+</form>
 
 <div class="lastdays-label">
     {% if form.validate_on_submit() %}

@@ -512,6 +512,12 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     padding: 1rem;
 }
 
+.filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+}
+
 .lastdays-label {
     margin: 1rem 0;
 }

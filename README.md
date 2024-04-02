@@ -20,12 +20,12 @@ DD_GOOGLEMAPS_KEY = googlemapskey
 
 ### Initial setup
 1.      git clone https://github.com/SamuelRosander/datadrone.git
-2.      cd datadrone
-3.      copy .env.sample .env
-4.      python -m venv .venv
-5.      pip install -r .\requirements.txt
-6. Set values in .env
-7.      python
+        cd datadrone
+        copy .env.sample .env
+        python -m venv .venv
+        pip install -r .\requirements.txt
+2.      Set values in .env
+3.      python
         from datadrone import create_app
         from datadrone.extensions import db
         from dotenv import load_dotenv
@@ -36,7 +36,7 @@ DD_GOOGLEMAPS_KEY = googlemapskey
 
 ### Running locally
 1.      .venv\Scripts\activate
-2.      flask run
+        flask run
 
 ### Docker
 1.      docker build -t datadrone .

@@ -1,0 +1,2 @@
+FLASK_APP=datadrone
+FLASK_ENV=development

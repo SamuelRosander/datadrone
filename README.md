@@ -23,6 +23,7 @@ DD_GOOGLEMAPS_KEY = googlemapskey
         cd datadrone
         copy .env.sample .env
         python -m venv .venv
+        .venv\Scripts\activate
         pip install -r .\requirements.txt
 2. Set values in .env
 3.      python

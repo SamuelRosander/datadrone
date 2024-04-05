@@ -201,7 +201,7 @@ a:hover {
 
 .form:focus {
     outline: none;
-    box-shadow: inset 0 -2px 0 var(--main-color), 0 5px 5px rgba(0,0,0,0.1);;
+    box-shadow: inset 0 -2px 0 var(--main-color), 0 5px 5px rgba(0,0,0,0.1);
 }
 
 .form.error {
@@ -495,6 +495,10 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     margin-left: 1rem;
     transition: var(--animation-speed);
     transform: scaleX(1.5);
+}
+
+.filter-button.active {
+    box-shadow: inset 0 -2px 0 var(--main-color), 0 5px 5px rgba(0,0,0,0.1);
 }
 
 .filter-button.active::after {

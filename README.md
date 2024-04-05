@@ -24,7 +24,7 @@ DD_GOOGLEMAPS_KEY = googlemapskey
         copy .env.sample .env
         python -m venv .venv
         pip install -r .\requirements.txt
-2.      Set values in .env
+2. Set values in .env
 3.      python
         from datadrone import create_app
         from datadrone.extensions import db
@@ -34,7 +34,7 @@ DD_GOOGLEMAPS_KEY = googlemapskey
         create_app().app_context().push()
         db.create_all()
 
-### Running locally
+### Running locally (Windows)
 1.      .venv\Scripts\activate
         flask run
 

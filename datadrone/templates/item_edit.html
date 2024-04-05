@@ -4,7 +4,7 @@
 
 <div class="heading-grid">
     <a href="{{ url_for('items.details', item_id=item.item_id) }}" 
-            class="btn icon">
+            class="heading-a">
         <i class='bx bx-arrow-back'></i>
     </a>
     <h3>Edit item</h3>
@@ -26,9 +26,7 @@
         </button>
     </div>
     {% if form.itemname.errors %}
-        {% for error in form.itemname.errors %}
-        <div class="form-error-label">{{ error }}</div>
-        {% endfor %}
+    <div class="form-error-label">{{ form.itemname.errors[0] }}</div>
     {% endif %}
 </form>
 

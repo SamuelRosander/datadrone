@@ -1,12 +1,13 @@
 name: Publish image to Docker Hub
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
+    types:
+      - closed
 
 jobs:
   publish_image:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: checkout

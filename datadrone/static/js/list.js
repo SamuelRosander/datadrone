@@ -24,7 +24,8 @@ $(document).ready(function(){
         var all_checkboxes = $("input:checkbox");
         var target = $(this).attr("target")
         for (var i = all_checkboxes.length-1; i >= 0; i--) {
-            if (all_checkboxes[i].getAttribute("target") != target || all_checkboxes[i].className != "tag-box-checkbox") {
+            if (all_checkboxes[i].getAttribute("target") != target || 
+                    all_checkboxes[i].className != "tag-box-checkbox") {
                 all_checkboxes.splice(i, 1)
             }
         }
@@ -40,7 +41,8 @@ $(document).ready(function(){
 function sendForm(item_id) {
     $("#timestamp-" + item_id).val(getFormattedDate());
 
-    $("#add-" + item_id).children("i").eq(0).removeClass("bx-plus").addClass("bx-loader-alt")
+    let clickedButton = $("#add-" + item_id).children("i").eq(0)
+    clickedButton.removeClass("bx-plus").addClass("bx-loader-alt")
 
     if(!$("#geo_switch-" + item_id).is(':checked')) {
         $("#add_entry_form-" + item_id).submit();
@@ -55,13 +57,17 @@ function sendForm(item_id) {
 
         function error(err) {
             alert(err.message);
+            clickedButton.removeClass("bx-loader-alt").addClass("bx-plus")
         }
 
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 0, timeout: 15000});
+            navigator.geolocation.getCurrentPosition(
+                success, error, {
+                    enableHighAccuracy: true, maximumAge: 0, timeout: 15000});
         }
         else {
             alert('Location services must be enabled to use this');
+            clickedButton.removeClass("bx-loader-alt").addClass("bx-plus")
         }
     }
 }

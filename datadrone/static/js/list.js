@@ -1,80 +1,91 @@
 $(document).ready(function(){
-  $("#add-item-btn").click(function() {
-    $("#add-item-modal-fade").show();
-    $("#add-item-modal-newitem").show();
-    $("#add-item-input").focus();
-  });
+    $("#add-item-btn").click(function() {
+        $("#add-item-modal-fade").show();
+        $("#add-item-modal-newitem").show();
+        $("#add-item-input").focus();
+    });
 
-  $("#add-item-modal-fade").click(function() {
-    $("#add-item-modal-fade").hide();
-    $("#add-item-modal-newitem").hide();
-  });
+    $("#add-item-modal-fade").click(function() {
+        $("#add-item-modal-fade").hide();
+        $("#add-item-modal-newitem").hide();
+    });
 
-  $(".jq-tag-icon").click(function() {
-    $("#tags-modal-fade").show();
-    $("#modal-item-tags-" + $(this).attr("target")).show();
-  });
+    $(".jq-tag-icon").click(function() {
+        $("#tags-modal-fade").show();
+        $("#modal-item-tags-" + $(this).attr("target")).show();
+    });
 
-  $(".jq-tag-button").click(function() {
-    $("#tags-modal-fade").hide();
-    $(".modal-item-tags-outer-container").hide();
-  });
+    $(".jq-tag-button").click(function() {
+        $("#tags-modal-fade").hide();
+        $(".modal-item-tags-container").hide();
+    });
 
-  $(".tag-box-checkbox").change(function() {
-    var all_checkboxes = $("input:checkbox");
-    var target = $(this).attr("target")
-    for (var i = all_checkboxes.length-1; i >= 0; i--) {
-      if (all_checkboxes[i].getAttribute("target") != target || all_checkboxes[i].className != "tag-box-checkbox") {
-        all_checkboxes.splice(i, 1)
-      }
-    }
-    if (checkedTags(all_checkboxes)) {
-      $("#tagswitch-img-" + target).attr("src", "static/img/tag_active.png")
-    } else {
-      $("#tagswitch-img-" + target).attr("src", "static/img/tag_inactive.png")
-    }
-  });
+    $(".tag-box-checkbox").change(function() {
+        var all_checkboxes = $("input:checkbox");
+        var target = $(this).attr("target")
+        for (var i = all_checkboxes.length-1; i >= 0; i--) {
+            if (all_checkboxes[i].getAttribute("target") != target || 
+                    all_checkboxes[i].className != "tag-box-checkbox") {
+                all_checkboxes.splice(i, 1)
+            }
+        }
+        if (checkedTags(all_checkboxes)) {
+            $("#tagswitch-img-" + target).addClass("active")
+        }
+        else {
+            $("#tagswitch-img-" + target).removeClass("active")
+        }
+    });
 });
 
 function sendForm(item_id) {
-  $("#timestamp-" + item_id).val(getFormattedDate());
+    $("#timestamp-" + item_id).val(getFormattedDate());
 
-  if(!$("#geo_switch-" + item_id).is(':checked')) {
-    document.getElementById("add_entry_form-" + item_id).submit();
-  } else {
-    function success(position) {
-      $("#latitude-" + item_id).val(position.coords.latitude);
-      $("#longitude-" + item_id).val(position.coords.longitude);
+    let clickedButton = $("#add-" + item_id).children("i").eq(0)
+    clickedButton.removeClass("bx-plus").addClass("bx-loader-alt")
 
-      document.getElementById("add_entry_form-" + item_id).submit();
+    if(!$("#geo_switch-" + item_id).is(':checked')) {
+        $("#add_entry_form-" + item_id).submit();
     }
+    else {
+        function success(position) {
+            $("#latitude-" + item_id).val(position.coords.latitude);
+            $("#longitude-" + item_id).val(position.coords.longitude);
 
-    function error(err) {
-      alert(err.message);
-    }
+            $("#add_entry_form-" + item_id).submit();
+        }
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 0, timeout: 15000});
-    } else {
-      alert('Location services must be enabled to use this');
+        function error(err) {
+            alert(err.message);
+            clickedButton.removeClass("bx-loader-alt").addClass("bx-plus")
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                success, error, {
+                    enableHighAccuracy: true, maximumAge: 0, timeout: 15000});
+        }
+        else {
+            alert('Location services must be enabled to use this');
+            clickedButton.removeClass("bx-loader-alt").addClass("bx-plus")
+        }
     }
-  }
 }
 
 /*
 *   Returns true if one or more checkboxes are checked. False if none
 */
 function checkedTags(checkboxes) {
-  for (var i = 0; i < checkboxes.length; i++) {
+for (var i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked) {
-      return true;
+    return true;
     }
-  }
-  return false
+}
+return false
 }
 
 function getFormattedDate() {
-  var date = new Date();
+var date = new Date();
 
     var month = date.getMonth() + 1;
     var day = date.getDate();

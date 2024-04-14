@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, \
     request, abort
 from datadrone.extensions import db
-from datadrone.forms import AddItemForm, AddEntryForm, \
-    DetailsSearchScopeForm, EditItemForm, AddTagForm, EditTagForm
+from datadrone.forms import AddItemForm, DetailsSearchScopeForm, \
+    EditItemForm, AddTagForm, EditTagForm
 from datadrone.models import Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import current_user, login_required
@@ -13,7 +13,7 @@ from os import environ
 bp = Blueprint("items", __name__, url_prefix="/items")
 
 
-@bp.route("/<int:item_id>", methods=["GET", "POST"])
+@bp.route("/<int:item_id>/", methods=["GET", "POST"])
 @login_required
 def details(item_id):
     item = Item.query.get_or_404(item_id)
@@ -92,7 +92,7 @@ def edit(item_id):
     if form.validate_on_submit():
         item.itemname = form.itemname.data
         db.session.commit()
-        flash("Item has been updated!", "info")
+        flash("Item has been updated!", "success")
         return redirect(url_for("items.details", item_id=item.item_id))
     elif request.method == "GET":
         form.itemname.data = item.itemname
@@ -111,7 +111,7 @@ def delete(item_id):
     item.deleted = True
     db.session.commit()
 
-    flash("Item has been deleted.", "info")
+    flash("Item has been deleted.", "warning")
     return redirect(url_for("main.index"))
 
 

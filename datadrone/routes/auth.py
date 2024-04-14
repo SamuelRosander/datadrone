@@ -21,7 +21,7 @@ def register():
                     register_date=datetime.utcnow())
         db.session.add(user)
         db.session.commit()
-        flash("Account created.", "info")
+        flash("Account created.", "success")
         return redirect(url_for("auth.login"))
     return render_template("register.html", form=form)
 
@@ -56,7 +56,7 @@ def reset_request():
         send_reset_email(user)
         flash(
             f"A password reset request has been sent to {user.email}.",
-            "info")
+            "message")
         return redirect(url_for("auth.login"))
 
     return render_template("reset_request.html", form=form)
@@ -66,7 +66,7 @@ def reset_request():
 def reset_token(token):
     user = User.verify_reset_token(token)
     if not user:
-        flash("Invalid or expired token.", "warning")
+        flash("Invalid or expired token.", "error")
         return redirect(url_for("auth.reset_request"))
 
     form = ResetPasswordForm()
@@ -75,7 +75,7 @@ def reset_token(token):
             form.password.data).decode("utf-8")
         user.password = hashed_password
         db.session.commit()
-        flash(f"Password for {user.username} has been updated.", "info")
+        flash(f"Password for {user.username} has been updated.", "message")
         return redirect(url_for("auth.login"))
 
     return render_template("reset_token.html", form=form, user=user)

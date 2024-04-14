@@ -2,130 +2,153 @@
 
 {% block body %}
 
-<div class="right">
-  <a href="{{ url_for('items.edit', item_id=item.item_id) }}" class="link-small">Edit</a>
+<div class="heading-grid">
+    <h3>{{ item.itemname }}</h3>
+    <a href="{{ url_for('items.edit', item_id=item.item_id) }}" 
+            class="heading-a">
+        <i class='bx bx-edit-alt'></i>
+    </a>
 </div>
-<h3>{{ item.itemname }}</h3>
 
 <div class="filter-header">
-  Filter
-</div>
-<div class="filter-body">
-  <form method="POST" action="{{ url_for('items.details', item_id=item.item_id) }}">
-    {{ form.hidden_tag() }}
-    <div class="filter-category">
-      <span class="filter-name">Date</span>
-      from: {{ form.scope_from(class="form form-small", style="margin-bottom: 4px", value=form.scope_from.data) }}
-      {% if form.scope_from.errors %}
-        {% for error in form.scope_from.errors %}
-          <div class="flash-error">{{ error }}</div>
-        {% endfor %}
-      {% endif %}
-      to: {{ form.scope_to(class="form form-small", value=form.scope_to.data) }}
-      {% if form.scope_to.errors %}
-        {% for error in form.scope_to.errors %}
-          <div class="flash-error">{{ error }}</div>
-        {% endfor %}
-      {% endif %}
+    <div class="filter-button" role="button">
+        Filter
     </div>
-    <div class="filter-category">
-      <span class="filter-name">Geo location</span>
-      {{ form.filter_geo(class="filter-radio") }}
-    </div>
-    <div class="filter-category">
-      <span class="filter-name">Comment</span>
-      {{ form.filter_comment(class="filter-radio") }}
-    </div>
-
-    {{ form.submit(class="btn btn-small") }}
-  </form>
+    <span class="filter-quickdays">
+        <select class="form small" 
+                onchange="document.location.href=this.value">
+            <option value="{{ url_for('items.details', item_id=item.item_id,
+                days=30) }}" {{ 'selected' if days == 30 }}>30</option>
+            <option value="{{ url_for('items.details', item_id=item.item_id,
+                days=90) }}" {{ 'selected' if days == 90 }}>90</option>
+            <option value="{{ url_for('items.details', item_id=item.item_id,
+                days=180) }}" {{ 'selected' if days == 180 }}>180</option>
+            <option value="{{ url_for('items.details', item_id=item.item_id,
+                days=365) }}" {{ 'selected' if days == 365 }}>365</option>
+            <option value="{{ url_for('items.details', item_id=item.item_id,
+                days='all') }}" {{ 'selected' if days == 'all' }}>All</option>
+        </select>
+        <span>
+            days
+        </span>
+    </span>
 </div>
 
-<br>
-{% if form.validate_on_submit() %}
-  Showing entries between {{ form.scope_from.data }} and {{ form.scope_to.data }}
-{% elif days == "all" %}
-  Showing all entries
-{% else %}
-  Showing entries from the last {{ days }} days
-{% endif %}
-<br>
-<select class="select-lastdays" name="lastdays" onchange="document.location.href=this.value">
-  <option value="{{ url_for('items.details', item_id=item.item_id, days=30) }}" {{ 'selected' if days == 30 }}>30</option>
-  <option value="{{ url_for('items.details', item_id=item.item_id, days=90) }}" {{ 'selected' if days == 90 }}>90</option>
-  <option value="{{ url_for('items.details', item_id=item.item_id, days=180) }}" {{ 'selected' if days == 180 }}>180</option>
-  <option value="{{ url_for('items.details', item_id=item.item_id, days=365) }}" {{ 'selected' if days == 365 }}>365</option>
-</select> days</span> |
-<a href="{{ url_for('items.details', item_id=item.item_id, days='all') }}" class="link-small">All</a><br>
-<br><br>
+<form method="POST" class="filter-body"
+        action="{{ url_for('items.details', item_id=item.item_id) }}">
+    <div class="filter-grid">
+        {{ form.hidden_tag() }}
+        
+        {{ form.scope_from.label }}
+        {{ form.scope_to.label }}
 
-First: {{ stats['first'].strftime('%Y-%m-%d %H:%M') if not stats['first'] == 0 else 0 }}<br>
-Last: {{ stats['last'].strftime('%Y-%m-%d %H:%M') if not stats['first'] == 0 else 0 }}<br>
-Total: {{ stats['total'] }}<br>
-Avg/day: {{ stats['average_a_day'] }}<br>
-Max in a day: {{ stats['max_in_a_day'] }} ({{ stats['max_in_a_day-date'] }})<br>
-Longest without (days): {{ stats['longest_without'] }} ({{ stats['longest_without_start'] }} - {{ stats['longest_without_end'] }})<br>
-Longest streak (days): {{ stats['longest_streak'] }} ({{ stats['longest_streak_start'] }} - {{ stats['longest_streak_end'] }})<br>
-Days since last: {{ stats['days_since_last'] }}<br>
-Total today: {{ stats['total_today'] }}<br>
-<br>
-
-<h3>Weekday</h3>
-<table class="tbl-stats" cellspacing=0 cellpadding=0>
-  {% for day, count in stats["weekday"].items() %}
-  {% set percent=(count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 %}
-    <tr>
-      <td>
-        {{ day }}
-      </td>
-      <td>
-        <div class="bar left">
-          <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
-          <span {{ ' class=text-right' if percent > 85 }}>{{ count }} ({{ percent }} %)</span>
+        <div>
+            {{ form.scope_from(class="form", value=form.scope_from.data) }}
+            {% if form.scope_from.errors %}
+            <div class="form-error-label">{{ form.scope_from.errors[0] }}</div>
+            {% endif %}
         </div>
-      </td>
-    </tr>
-  {% endfor %}
-</table>
-<br>
-
-<h3>Time of day</h3>
-<table class="tbl-stats" cellspacing=0 cellpadding=0>
-  {% for time, count in stats["time_of_day"].items() %}
-  {% set percent=(count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 %}
-    <tr>
-      <td>
-        {{ time }}
-      </td>
-      <td>
-        <div class="bar left">
-          <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
-          <span {{ ' class=text-right' if percent > 85 }}>{{ count }} ({{ percent }} %)</span>
+        <div>
+            {{ form.scope_to(class="form", value=form.scope_to.data) }}
+            {% if form.scope_to.errors %}
+            <div class="form-error-label">{{ form.scope_to.errors[0] }}</div>
+            {% endif %}
         </div>
-      </td>
-    </tr>
-  {% endfor %}
-</table>
-<br>
+    </div>
+    {{ form.submit(class="btn") }}
+</form>
 
-<h3>Tags</h3>
-<table class="tbl-stats" cellspacing=0 cellpadding=0>
-  {% for tagname, count in stats["nr_of_entrytags"].items() %}
-  {% set percent=(count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 %}
-    <tr>
-      <td>
-        {{ tagname }}
-      </td>
-      <td>
-        <div class="bar left">
-          <img src="{{ url_for('static', filename='img/barbg.png') }}" height="20" width="{{ (count/stats["total"]*100)|round|int if stats["total"] > 0 else 0 }}%" class="left">
-          <span {{ ' class=text-right' if percent > 85 }}>{{ count }} ({{ percent }} %)</span>
-        </div>
-      </td>
-    </tr>
-  {% endfor %}
-</table>
-<br>
+<div class="lastdays-label">
+    {% if form.validate_on_submit() %}
+    Showing entries between {{ form.scope_from.data }} 
+        and {{ form.scope_to.data }}
+    {% elif days == "all" %}
+    Showing all entries
+    {% else %}
+    Showing entries from the last {{ days }} days
+    {% endif %}
+</div>
+
+<div class="details-grid">
+    <div>First:</div>
+    <div>{{ stats['first'].strftime('%Y-%m-%d %H:%M') 
+        if not stats['first'] == 0 else 0 }}</div>
+    <div>Last:</div>
+   <div>{{ stats['last'].strftime('%Y-%m-%d %H:%M') 
+        if not stats['first'] == 0 else 0 }}</div>
+    <div>Total:</div>
+    <div>{{ stats['total'] }}</div>
+    <div>Avg/day:</div>
+    <div>{{ stats['average_a_day'] }}</div>
+    <div>Max in a day:</div>
+    <div>{{ stats['max_in_a_day'] }}
+        <span class="date-info">
+            ({{ stats['max_in_a_day-date'] }})
+        </span>
+    </div>
+    <div title="Longest without">Long. without:</div>
+    <div>{{ stats['longest_without'] }}
+        <span class="date-info">
+            ({{ stats['longest_without_start'] }} - 
+            {{ stats['longest_without_end'] }})
+        </span>
+    </div>
+    <div title="Longest streak">Long. streak:</div>
+    <div>{{ stats['longest_streak'] }}
+        <span class="date-info">
+            ({{ stats['longest_streak_start'] }} - 
+            {{ stats['longest_streak_end'] }})
+        </span>
+    </div>
+    <div>Since last:</div>
+    <div>{{ stats['days_since_last'] }}
+        <span class="small-text">days</span>
+    </div>
+    <div>Total today:</div>
+    <div>{{ stats['total_today'] }}</div>
+
+    <h3>Weekday</h3>
+    {% for day, count in stats["weekday"].items() %}
+    {% set percent=(count/stats["total"]*100)|round|int 
+        if stats["total"] > 0 else 0 %}
+    <div>{{ day }}</div>
+    <div class="bar-bg">
+        <div class="bar" 
+            style="width: {{ (count/stats['total']*100)|round|int 
+            if stats['total'] > 0 else 0 }}%"></div>
+        <span>{{ count }} ({{ percent }}%)</span>
+    </div>
+    {% endfor %}
+
+    <h3>Time of day</h3>
+    {% for time, count in stats["time_of_day"].items() %}
+    {% set percent=(count/stats["total"]*100)|round|int 
+        if stats["total"] > 0 else 0 %}
+    <div>{{ time }}</div>
+    <div class="bar-bg">
+        <div class="bar" 
+            style="width: {{ (count/stats['total']*100)|round|int 
+            if stats['total'] > 0 else 0 }}%"></div>
+        <span>{{ count }} ({{ percent }}%)</span>
+    </div>
+    {% endfor %}
+
+    {% if stats["nr_of_entrytags"]|length %}
+    <h3>Tags</h3>    
+    {% for tagname, count in stats["nr_of_entrytags"].items() %}
+    {% set percent=(count/stats["total"]*100)|round|int 
+        if stats["total"] > 0 else 0 %}
+    <div>{{ tagname }}</div>
+    <div class="bar-bg">
+        <div class="bar" 
+            style="width: {{ (count/stats['total']*100)|round|int 
+            if stats['total'] > 0 else 0 }}%"></div>
+        <span>{{ count }} ({{ percent }}%)</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
 
 <div id="map"></div>
 <script type="module">
@@ -220,7 +243,10 @@ Total today: {{ stats['total_today'] }}<br>
 
     {% for entry in entries %}
       {% if entry.latitude and entry.longitude %}
-        addMarker({ lat: {{ entry.latitude }}, lng: {{ entry.longitude }} }, {{ entry.entry_id }}, "{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}", "{{ entry.comment }}");
+        addMarker({ lat: {{ entry.latitude }}, lng: {{ entry.longitude }} }, 
+            {{ entry.entry_id }}, 
+            "{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}",
+            "{{ entry.comment }}");
       {% endif %}
     {% endfor %}
 
@@ -233,12 +259,14 @@ Total today: {{ stats['total_today'] }}<br>
 
       if (comment != "None") {
         var infowindow = new google.maps.InfoWindow({
-          content: "<a href='/entry/" + entry_id + "'>Entry " + entry_id + "</a><br>" + timestamp + "<br>" + comment
+          content: "<a href='/entry/" + entry_id + "'>Entry " + entry_id + 
+            "</a>" + timestamp + "" + comment
         });
       }
       else {
         var infowindow = new google.maps.InfoWindow({
-          content: "<a href='/entry/" + entry_id + "'>Entry " + entry_id + "</a><br>" + timestamp
+          content: "<a href='/entry/" + entry_id + "'>Entry " + entry_id + 
+            "</a>" + timestamp
         });
       }
 
@@ -251,36 +279,37 @@ Total today: {{ stats['total_today'] }}<br>
   window.initMap = initMap;
 </script>
 
-<br><br>
+
 
 <h3>Entries</h3>
-<div id="latest-entries">
-  <table cellspacing=0, cellpadding=0>
+<div class="entries-list">
     {% for entry in entries[::-1] %}
-      <tr>
-        <td>
-          <a href="{{ url_for('entries.entry', entry_id=entry.entry_id)}}">{{ entry["timestamp"].strftime('%Y-%m-%d %H:%M') }}</a>
-        </td>
-        <td>
-          {% if entry["latitude"] and entry["longitude"] %}
-            <img src="{{ url_for('static', filename='img/geo.png') }}" title="Has geo data" class="left">
-          {% endif %}
-        </td>
-        <td>
-          {% if entry["comment"] %}
-            <img src="{{ url_for('static', filename='img/comment.png') }}" title="{{ entry["comment"] }}" class="left">
-          {% endif %}
-        </td>
-        <td>
-          {% for entrytag in entry["entrytags"] %}
-            {% if not entrytag.tag.deleted and not entrytag.tag.archived %}
-              <span class="tag-box tag-box-small">{{ entrytag.tag.name }}</span>
+        <div>
+            <a href="{{ url_for('entries.entry', entry_id=entry.entry_id)}}">
+                {{ entry["timestamp"].strftime('%Y-%m-%d %H:%M') }}
+            </a>
+        </div>
+        <div>
+            {% if entry["latitude"] and entry["longitude"] %}
+            <i class='item-icon bx bx-map'></i>
             {% endif %}
-          {% endfor %}
-        </td>
-      </tr>
+        </div>
+        <div>
+            {% if entry["comment"] %}
+            <i class='item-icon bx bx-comment grid-c3' 
+                title="{{ entry['comment'] }}"></i>
+            {% endif %}
+        </div>
+        <div class="tags">
+        {% for entrytag in entry["entrytags"] 
+            if not entrytag.tag.deleted and not entrytag.tag.archived %}
+            <span class="tag-box">{{ entrytag.tag.name }}</span>
+        {% endfor %}
+        </div>
     {% endfor %}
-  </table>
+    {% if not entries|length %}
+        <span class="alternative-text">No entries for the period...</span>
+    {% endif %}
 </div>
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>

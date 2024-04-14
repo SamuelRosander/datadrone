@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user, login_required
 from datadrone.forms import AddItemForm, AddEntryForm, UpdateAccountForm
 from datadrone.models import Item, Entry
@@ -37,28 +37,20 @@ def index():
 @login_required
 def account():
     form = UpdateAccountForm()
+
     if form.validate_on_submit():
         current_user.username = form.username.data
-        current_user.email = form.email.data.lower()
         if form.password.data:
             current_user.password = bcrypt.generate_password_hash(
                 form.password.data).decode("utf-8")
         db.session.commit()
-        flash("Account has been updated.", "info")
+        flash("Account has been updated.", "success")
         return redirect(url_for("main.account"))
-    elif request.method == "GET":
+    else:
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template("account.html", form=form)
 
 
-def error_403(error):
-    return render_template("errors/403.html"), 403
-
-
-def error_404(error):
-    return render_template("errors/404.html"), 404
-
-
-def error_500(error):
-    return render_template("errors/500.html"), 500
+def error(error):
+    return render_template("error.html", error=error), error.code

@@ -24,8 +24,12 @@ def create_app(test_config=None):
     app.register_blueprint(tags.bp)
     app.register_blueprint(locations.bp)
 
-    app.register_error_handler(403, main.error_403)
-    app.register_error_handler(404, main.error_404)
-    app.register_error_handler(500, main.error_500)
+    app.register_error_handler(401, main.error)
+    app.register_error_handler(403, main.error)
+    app.register_error_handler(404, main.error)
+    app.register_error_handler(500, main.error)
+
+    app.jinja_env.trim_blocks = True
+    app.jinja_env.lstrip_blocks = True
 
     return app

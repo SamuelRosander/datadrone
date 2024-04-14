@@ -3,76 +3,87 @@
 {% block body %}
 
 {% if items.all()|length %}
-  {% for item in items %}
-
-  <form method="POST" action="{{ url_for('entries.add', item_id=item.item_id) }}" id="add_entry_form-{{ item.item_id }}">
+{% for item in items %}
+<form method="POST" action="{{ url_for('entries.add', item_id=item.item_id) }}"
+        id="add_entry_form-{{ item.item_id }}">
     {{ entry_form.csrf_token() }}
     {{ entry_form.latitude(id="latitude-" ~ item.item_id) }}
     {{ entry_form.longitude(id="longitude-" ~ item.item_id) }}
     {{ entry_form.timestamp(id="timestamp-" ~ item.item_id) }}
     <div class="item-container">
-      <input type="button" class="btn btn-plus" value="+1" onClick="sendForm({{item.item_id}})">
-      <div class="item-geo-container">
-        {{ entry_form.geo(id="geo_switch-" ~ item.item_id, checked=item.geo_default) }}
-        <label for="geo_switch-{{ item.item_id }}" title="Geo">
-          Toggle
-        </label>
-      </div>
-      <span class="jq-tag-icon right" id="tagswitch-{{ item.item_id }}" target="{{ item.item_id }}" title="Tags">
+        <a class="item-labels" 
+                href="{{ url_for('items.details', item_id=item.item_id) }}">
+            <div>{{ item.itemname }}</div>
+            <div class="spotlight-label"
+                    title="Last entry {{ spotlight_stat[item.item_id] }}">
+                Last entry {{ spotlight_stat[item.item_id] }}
+            </div>
+        </a>
         {% if item.tags %}
-          {% set ns=namespace(active_tags=False, default_tags=False) %}
-          {% for tag in item.tags %}
-            {% if tag.is_default %}
-              {% set ns.default_tags = True %}
-            {% endif %}
-            {% if not tag.deleted %}
-              {% set ns.active_tags = True %}
-            {% endif %}
-          {% endfor %}
+        <div class="item-icon-container jq-tag-icon" 
+                target="{{ item.item_id }}" title="Tags">
+            {% set ns=namespace(active_tags=False, default_tags=False) %}
+            {% for tag in item.tags %}
+                {% if tag.is_default %}
+                    {% set ns.default_tags = True %}
+                {% endif %}
+                {% if not tag.deleted %}
+                    {% set ns.active_tags = True %}
+                {% endif %}
+            {% endfor %}
 
-          {% if ns.default_tags %}
-            <img src="{{ url_for('static', filename='img/tag_active.png') }}" id="tagswitch-img-{{ item.item_id }}">
-          {% elif ns.active_tags %}
-            <img src="{{ url_for('static', filename='img/tag_inactive.png') }}" id="tagswitch-img-{{ item.item_id }}">
-          {% endif %}
+            <i class='item-icon bx bx-label {{ "active" if ns.default_tags 
+                else "" if ns.active_tags else "" }}'
+                id="tagswitch-img-{{ item.item_id }}"></i>
+        </div>
         {% endif %}
-      </span>
-      <a href="{{ url_for('items.details', item_id=item.item_id) }}"><div class="item-title">{{ item.itemname }}</div></a>
-      <div class="item-spotlight">Last entry {{ spotlight_stat[item.item_id] }}</div>
+        <label class="item-icon-container" for="geo_switch-{{ item.item_id }}"
+                title="Geo">
+            {{ entry_form.geo(id="geo_switch-" ~ item.item_id, 
+                checked=item.geo_default) }}
+            <i class='item-icon bx bx-map'></i>
+        </label>
+        <button type="button" class="btn-color" id="add-{{ item.item_id }}"
+                title="Add entry"  onClick="sendForm({{ item.item_id }})">
+            <i class='item-icon bx bx-plus'></i>
+        </button>
     </div>
 
-    <div class="modal-item-tags-outer-container" id="modal-item-tags-{{ item.item_id }}">
-      <div class="modal-item-tags-inner-container">
+    <div class="modal-item-tags-container" 
+            id="modal-item-tags-{{ item.item_id }}">
         <h3>Tags</h3>
-        {% for tag in item.tags if not tag.deleted and not tag.hidden and not tag.archived %}
-        <input type="checkbox" name="tag-{{ tag.tag_id }}" class="tag-box-checkbox" id="tag-{{ tag.tag_id }}" target="{{ item.item_id }}" {{ "checked" if tag.is_default }}>
+        {% for tag in item.tags 
+            if not tag.deleted and not tag.hidden and not tag.archived %}
+        <input type="checkbox" name="tag-{{ tag.tag_id }}" 
+            id="tag-{{ tag.tag_id }}" class="tag-box-checkbox"
+            target="{{ item.item_id }}" {{ "checked" if tag.is_default }}>
         <label for="tag-{{ tag.tag_id }}" class="tag-box-label">
-          {{ tag.name }}
+            {{ tag.name }}
         </label>
         {% endfor %}
-      </div>
-        <input type="button" class="btn btn-large jq-tag-button" Value="Save">
+        <input type="button" class="btn btn-color jq-tag-button mt-1" 
+            Value="Save">
     </div>
-  </form>
-  {% endfor %}
+</form>
+{% endfor %}
 {% else %}
-  <div class="text-comment" style="margin-bottom:15px">Nothing to keep track of yet...</div>
+<div class="alternative-text">Nothing to keep track of yet...</div>
 {% endif %}
 
-<input type="button" class="btn btn-large" value="Add new item" id="add-item-btn">
+<input type="button" class="btn" value="Add new item" id="add-item-btn">
 
 <div id="tags-modal-fade" class="modal-fade"></div>
 <div id="add-item-modal-fade" class="modal-fade"></div>
 <div id="add-item-modal-newitem">
   What do you want to keep track of?
-  <form action="{{ url_for('items.add') }}" method="post">
+  <form action="{{ url_for('items.add') }}" method="post" class="flex">
   {{ item_form.hidden_tag() }}
-    <input type="submit" class="btn btn-plus" Value="Add">
-    {{ item_form.itemname(class="form form-large", id="add-item-input") }}
+  {{ item_form.itemname(class="form", id="add-item-input") }}
+  <input type="submit" class="btn btn-color" Value="Add">
   </form>
 </div>
 
 <script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
-<script src="{{url_for('static', filename='js/list.js')}}"></script>
+<script src="{{ url_for('static', filename='js/list.js') }}"></script>
 
 {% endblock %}

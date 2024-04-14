@@ -33,6 +33,8 @@ def add():
 
         db.session.add(location)
         db.session.commit()
+    else:
+        flash(form.name.errors[0], "error")
 
     return redirect(url_for("locations.locations"))
 
@@ -51,7 +53,7 @@ def edit(location_id):
         location.latitude = form.latitude.data
         location.longitude = form.longitude.data
         db.session.commit()
-        flash("Location has been updated!", "info")
+        flash("Location has been updated!", "success")
 
     return redirect(url_for("locations.locations"))
 
@@ -66,5 +68,5 @@ def delete(location_id):
     location.deleted = True
     db.session.commit()
 
-    flash("Location has been deleted.", "info")
+    flash("Location has been deleted.", "warning")
     return redirect(url_for("locations.locations"))

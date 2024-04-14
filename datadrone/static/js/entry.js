@@ -1,19 +1,19 @@
 $(document).ready(function(){
-  $("#link-show-tags").click(function() {
-    $("#link-show-tags").hide();
-    $("#link-hide-tags").show();
-    $(".tag-box-label").css("display" , "inline-block");
-    $(".tag-box-label").removeClass("tag-box-label-disable").addClass("tag-box-label-enable");
-  });
+    $(".tag-box-checkbox:checked + .tag-box-label").removeClass("hidden")
 
-  $("#link-hide-tags").click(function() {
-    $("#link-show-tags").show();
-    $("#link-hide-tags").hide();
-    $(".tag-box-label").removeClass("tag-box-label-enable").addClass("tag-box-label-disable");
-    $(".tag-box-checkbox:not(:checked) + .tag-box-label").hide();
-  });
-  $("#hide-location").click(function() {
-    $("#latitude").val(null);
-    $("#longitude").val(null);
-  });
+    $("#hide-location").click(function() {
+        $("#latitude").val(null);
+        $("#longitude").val(null);
+    });
+    $("#edit-tags").click(function() {
+        $("#edit-tags").toggleClass("active")
+        if ($("#edit-tags").hasClass("active")) {
+            $(".tag-box-label").removeClass("disabled");
+            $(".tag-box-label").removeClass("hidden")
+        }
+        else {
+            $(".tag-box-label").addClass("disabled");
+            $(".tag-box-checkbox:not(:checked) + .tag-box-label").addClass("hidden")
+        }
+    });
 });

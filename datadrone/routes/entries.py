@@ -10,7 +10,7 @@ from os import environ
 bp = Blueprint("entries", __name__, url_prefix="/entries")
 
 
-@bp.route("/<int:entry_id>", methods=["GET", "POST"])
+@bp.route("/<int:entry_id>/", methods=["GET", "POST"])
 @login_required
 def entry(entry_id):
     entry = Entry.query.get_or_404(entry_id)
@@ -49,7 +49,7 @@ def entry(entry_id):
                     db.session.add(entry_tag)
 
         db.session.commit()
-        flash("Entry has been updated.", "info")
+        flash("Entry has been updated.", "success")
     elif request.method == "GET":
         form.date.data = entry.timestamp.date()
         form.time.data = entry.timestamp.time()
@@ -109,7 +109,7 @@ def add(item_id):
             db.session.add(entry_tag)
 
     db.session.commit()
-    flash("Entry added!", "info")
+    flash("Entry added!", "success")
     return redirect(url_for("entries.entry", entry_id=entry.entry_id))
 
 
@@ -124,7 +124,7 @@ def delete(entry_id):
     entry.deleted = True
     db.session.commit()
 
-    flash("Entry has been deleted.", "info")
+    flash("Entry has been deleted.", "warning")
     return redirect(url_for("items.details", item_id=entry.item.item_id))
 
 

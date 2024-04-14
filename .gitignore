@@ -4,4 +4,4 @@ venv/
 .idea/
 .venv/
 .env
-.flaskenv
+instance/

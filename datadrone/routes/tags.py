@@ -21,7 +21,7 @@ def add(item_id):
         tag = Tag(item_id=item_id, name=form.tagname.data)
         db.session.add(tag)
         db.session.commit()
-        flash("Tag has been added.", "info")
+        flash("Tag has been added.", "success")
     else:
         flash("Tags needs to be between 1 and 32 characters long.",
               "error")
@@ -43,7 +43,7 @@ def edit(tag_id):
         tag.hidden = form.hidden.data
         tag.archived = form.archived.data
         db.session.commit()
-        flash("Tag has been updated!", "info")
+        flash("Tag has been updated!", "success")
 
     return redirect(url_for("items.edit", item_id=tag.item.item_id))
 
@@ -59,5 +59,5 @@ def delete(tag_id):
     tag.deleted = True
     db.session.commit()
 
-    flash("Tag has been deleted.", "info")
+    flash("Tag has been deleted.", "warning")
     return redirect(url_for("items.edit", item_id=tag.item.item_id))

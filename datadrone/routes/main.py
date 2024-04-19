@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
-from flask_login import current_user, login_required
-from datadrone.forms import AddItemForm, AddEntryForm, UpdateAccountForm
+from flask import Blueprint, render_template, redirect, url_for
+from flask_login import current_user
+from datadrone.forms import AddItemForm, AddEntryForm
 from datadrone.models import Item, Entry
-from datadrone.extensions import bcrypt, db
 import datadrone.stats as stats
 
 bp = Blueprint("main", __name__)
@@ -31,25 +30,6 @@ def index():
             entry_form=entry_form, spotlight_stat=spotlight_stat)
     else:
         return redirect(url_for("auth.login"))
-
-
-@bp.route("/account", methods=["GET", "POST"])
-@login_required
-def account():
-    form = UpdateAccountForm()
-
-    if form.validate_on_submit():
-        current_user.username = form.username.data
-        if form.password.data:
-            current_user.password = bcrypt.generate_password_hash(
-                form.password.data).decode("utf-8")
-        db.session.commit()
-        flash("Account has been updated.", "success")
-        return redirect(url_for("main.account"))
-    else:
-        form.username.data = current_user.username
-        form.email.data = current_user.email
-    return render_template("account.html", form=form)
 
 
 def error(error):

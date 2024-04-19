@@ -5,16 +5,9 @@
 <form method="POST" action="">
     {{ form.hidden_tag() }}
   
-    {{ form.username.label }}
-    {{ form.username(class="form", placeholder="User1") }}
-    {% if form.username.errors %}
-        {% for error in form.username.errors %}
-        <div class="form-error-label">{{ error }}</div>
-        {% endfor %}
-    {% endif %}
-
     {{ form.email.label }}
-    {{ form.email(class="form", placeholder="user@domain.com") }}
+    {{ form.email(class="form", placeholder="user@domain.com", 
+        autofocus=true) }}
     {% if form.email.errors %}
         <div class="form-error-label">{{ form.email.errors[0] }}</div>
     {% endif %}
@@ -36,4 +29,4 @@
     {{ form.submit(class="btn mt-1") }}
 </form>
 
-{% endblock%}
+{% endblock %}

@@ -1,6 +1,6 @@
 from flask import Flask
 from .extensions import db, login_manager, bcrypt, mail
-from .routes import main, auth, locations, items, entries, tags
+from .routes import main, user, auth, locations, items, entries, tags
 
 
 def create_app(test_config=None):
@@ -18,6 +18,7 @@ def create_app(test_config=None):
     mail.init_app(app)
 
     app.register_blueprint(main.bp)
+    app.register_blueprint(user.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(items.bp)
     app.register_blueprint(entries.bp)

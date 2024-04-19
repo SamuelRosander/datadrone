@@ -51,6 +51,10 @@
     position: relative;
 }
 
+*:focus-visible {
+    outline: 2px solid var(--main-color);
+}
+
 .p-05 {
     padding: 0.5rem;
 }
@@ -61,6 +65,10 @@
 
 .mb-1 {
     margin-bottom: 1rem !important;
+}
+
+.ml-1 {
+    margin-left: 1rem !important;
 }
 
 html {
@@ -226,7 +234,12 @@ a:hover {
 }
 
 input[type="checkbox"] {
-    display: none;
+    opacity: 0;
+    position: absolute;
+}
+
+input[type="checkbox"]:focus-visible + label:before {
+    outline: 2px solid var(--main-color);
 }
 
 input[type="checkbox"]:checked + .tag-box-label {
@@ -266,17 +279,28 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-color);
     font-family: 'Poppins', sans-serif;
     padding: 1rem;
-    margin: 0 0 1rem 0;
+    margin-bottom: 1rem;
     font-size: 1rem;
     box-shadow: 0 5px 5px rgba(0,0,0,0.1);
     transition: var(--animation-speed);
-    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn.outline {
+    background-color: var(--bg-color);
+    border: 2px solid var(--form-color);
+    padding: calc(1rem - 2px);
 }
 
 .btn.icon {
-    font-size: 1.5rem;
     padding: 0.5rem 1rem;
     margin-bottom: 0;
+}
+
+.btn i {
+    font-size: 1.5rem;
 }
 
 .btn.icon:hover {
@@ -286,6 +310,7 @@ h1, h2, h3, h4, h5, h6 {
 .btn:hover {
     cursor: pointer;
     background-color: var(--btn-hover-color);
+    color: var(--text-color);
 }
 
 .btn.delete {
@@ -307,6 +332,11 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
 }
 
+.flexrow {
+    display: flex;
+    justify-content: space-between;
+}
+
 .flex {
     display: flex;
     gap: 5px;
@@ -323,7 +353,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .heading-grid {
     display: grid;
-    grid-template-columns: 4rem 1fr 4rem;
+    grid-template-columns: 3.5rem 1fr 3.5rem;
     align-items: start;
     grid-gap: 1rem;
     margin-bottom: 2rem;
@@ -333,6 +363,10 @@ h1, h2, h3, h4, h5, h6 {
     grid-column: 2;
     align-self: center;
     margin: 0;
+}
+
+.heading-grid .btn {
+    height: 3rem;
 }
 
 .small-text {

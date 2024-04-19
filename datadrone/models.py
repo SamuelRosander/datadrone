@@ -3,6 +3,7 @@ from .extensions import db, login_manager
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from itsdangerous import SignatureExpired
+from datetime import datetime, timezone
 
 
 @login_manager.user_loader
@@ -13,10 +14,11 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     __tablename__ = "ddusers"
     user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(32), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+    local_login = db.Column(db.Boolean, default=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    register_date = db.Column(db.DateTime, nullable=False)
+    register_date = db.Column(db.DateTime, nullable=False,
+                              default=datetime.now(timezone.utc))
     items = db.relationship("Item", backref="owner", lazy=True)
     locations = db.relationship("Location", backref="owner", lazy=True)
 
@@ -34,7 +36,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.user_id}', '{self.username}', '{self.email}')"
+        return f"User('{self.user_id}', '{self.email}')"
 
     def get_id(self):
         return self.user_id
@@ -43,8 +45,8 @@ class User(db.Model, UserMixin):
 class Item(db.Model):
     __tablename__ = "dditems"
     item_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(
-        "ddusers.user_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("ddusers.user_id"),
+                        nullable=False)
     itemname = db.Column(db.String(64), nullable=False)
     geo_default = db.Column(db.Boolean, default=False)
     deleted = db.Column(db.Boolean, default=False)

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<h3>Login</h3>
+<h3>Log in</h3>
 <form method="POST" action="">
     {{ form.hidden_tag() }}
     {{ form.email.label }}
@@ -17,8 +17,16 @@
     {{ form.submit(class="btn") }}
 </form>
 
-<a href="{{ url_for('auth.reset_request') }}">
-    Forgot password?
+<div class="flexrow">
+    <a href="{{ url_for('user.register') }}">Register</a>
+    <a href="{{ url_for('user.reset_request') }}">Forgot password</a>
+</div>
+
+<a class="btn outline mt-1" 
+        href="{{ url_for('auth.oauth2_authorize', provider='google') }}">
+    Log in with Google
+    <i class='bx bxl-google ml-1'></i>
 </a>
 
-{% endblock%}
+
+{% endblock %}

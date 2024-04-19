@@ -9,20 +9,11 @@ from .models import User
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField("Username", validators=[
-                           Length(min=2, max=32), DataRequired()])
     email = StringField("Email", validators=[Email(), DataRequired()])
     password = PasswordField("Password", validators=[Length(min=8)])
     confirm_password = PasswordField(
         "Confirm Password", validators=[EqualTo("password")])
     submit = SubmitField("Sign up")
-
-    def validate_username(self, field):
-        user = User.query.with_entities(
-            User.username).filter(
-            User.username.ilike(field.data)).all()
-        if user:
-            raise ValidationError("Username already exists.")
 
     def validate_email(self, field):
         email = User.query.filter_by(email=field.data.lower()).first()
@@ -34,7 +25,7 @@ class LoginForm(FlaskForm):
     email = StringField("Email")
     password = PasswordField("Password")
     remember = BooleanField("Remember me")
-    submit = SubmitField("Log In")
+    submit = SubmitField("Log in")
 
 
 class RequestResetForm(FlaskForm):
@@ -56,7 +47,6 @@ class ResetPasswordForm(FlaskForm):
 
 
 class UpdateAccountForm(FlaskForm):
-    username = StringField("Username", validators=[Length(min=2, max=32)])
     email = StringField("Email")
     password = PasswordField("New password", validators=[Length(min=8)])
     confirm_password = PasswordField(
@@ -65,7 +55,7 @@ class UpdateAccountForm(FlaskForm):
     submit = SubmitField("Update")
 
     def validate_current_password(self, field):
-        user = User.query.filter_by(username=current_user.username).first()
+        user = User.query.filter_by(email=current_user.email).first()
         if not bcrypt.check_password_hash(user.password, field.data):
             raise ValidationError("Wrong password.")
 

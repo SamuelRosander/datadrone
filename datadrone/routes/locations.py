@@ -14,7 +14,7 @@ def locations():
     add_form = AddLocationForm()
     edit_form = EditLocationForm()
     locations = Location.query.all()
-    MAP_KEY = environ.get('DD_GOOGLEMAPS_KEY')
+    MAP_KEY = environ.get('GOOGLEMAPS_KEY')
 
     return render_template(
         "locations.html", add_form=add_form, edit_form=edit_form,

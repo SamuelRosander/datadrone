@@ -57,7 +57,7 @@ def entry(entry_id):
         form.longitude.data = entry.longitude
         form.comment.data = entry.comment
 
-    MAP_KEY = environ.get('DD_GOOGLEMAPS_KEY')
+    MAP_KEY = environ.get('GOOGLEMAPS_KEY')
 
     locations = Location.query.filter_by(
         user_id=current_user.user_id, deleted=False)

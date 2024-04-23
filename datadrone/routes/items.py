@@ -59,7 +59,7 @@ def details(item_id):
         all_stats = stats.get_all(
             entries_list, scope_from=scope_from, days=days)
 
-    MAP_KEY = environ.get('DD_GOOGLEMAPS_KEY')
+    MAP_KEY = environ.get('GOOGLEMAPS_KEY')
 
     return render_template(
         "details.html", item=item, entries=entries_list, stats=all_stats,

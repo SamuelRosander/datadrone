@@ -1,13 +1,13 @@
 from os import environ
 
-SECRET_KEY = environ.get('DD_SECRET_KEY')
-SQLALCHEMY_DATABASE_URI = environ.get('DD_DATABASE_URI')
+SECRET_KEY = environ.get('SECRET_KEY')
+SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URI')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 MAIL_SERVER = "smtp.googlemail.com"
 MAIL_PORT = 587
 MAIL_USE_TLS = True
-MAIL_USERNAME = environ.get('DD_MAIL_USERNAME')
-MAIL_PASSWORD = environ.get('DD_MAIL_PASSWORD')
+MAIL_USERNAME = environ.get('MAIL_USERNAME')
+MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
 OAUTH2_PROVIDERS = {
     # Google OAuth 2.0 documentation:
     # https://developers.google.com/identity/protocols/oauth2/web-server#httprest

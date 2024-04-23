@@ -24,7 +24,7 @@ def login():
         if user is None:
             flash("User does not exist.", "error")
         elif not user.local_login:
-            flash("Local login not activated.", "error")
+            flash("Local login not activated. Use Google instead.", "error")
         elif not bcrypt.check_password_hash(user.password, form.password.data):
             flash("Incorrect password.", "error")
         elif user.password is None:

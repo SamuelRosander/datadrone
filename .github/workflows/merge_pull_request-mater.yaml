@@ -1,4 +1,4 @@
-name: Publish image to Docker Hub
+name: Merge pull request - master
 on:
   pull_request:
     branches: ["master"]
@@ -8,6 +8,7 @@ on:
 jobs:
   publish_image:
     if: github.event.pull_request.merged == true
+    name: Publish docker image latest
     runs-on: ubuntu-latest
     steps:
       - name: checkout

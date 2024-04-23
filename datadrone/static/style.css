@@ -467,6 +467,11 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     -webkit-tap-highlight-color: transparent;
 }
 
+.item-icon-container > input[type="checkbox"]:focus-visible + i {
+    outline: 2px solid var(--main-color);
+    outline-offset: 0.7rem;
+}
+
 .item-container > button {
     flex-basis: 3rem;
 }

@@ -80,13 +80,15 @@ def add(item_id):
     if form.geo.data:
         entry = Entry(
             item_id=item_id, latitude=form.latitude.data,
-            longitude=form.longitude.data, timestamp=form.timestamp.data,
+            longitude=form.longitude.data,
+            timestamp=datetime.fromisoformat(form.timestamp.data),
             utc_timestamp=datetime.utcnow(),
             deleted=False)
         item.geo_default = True
     else:
         entry = Entry(
-            item_id=item_id, timestamp=form.timestamp.data,
+            item_id=item_id,
+            timestamp=datetime.fromisoformat(form.timestamp.data),
             utc_timestamp=datetime.utcnow(),
             deleted=False)
         item.geo_default = False

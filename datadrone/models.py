@@ -3,7 +3,7 @@ from .extensions import db, login_manager
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from itsdangerous import SignatureExpired
-from datetime import datetime, timezone
+from datetime import datetime
 
 
 @login_manager.user_loader
@@ -17,8 +17,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128), nullable=False)
     local_login = db.Column(db.Boolean, default=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    register_date = db.Column(db.DateTime, nullable=False,
-                              default=datetime.now(timezone.utc))
+    register_date = db.Column(
+        db.DateTime, nullable=False, default=datetime.utcnow())
     items = db.relationship("Item", backref="owner", lazy=True)
     locations = db.relationship("Location", backref="owner", lazy=True)
 

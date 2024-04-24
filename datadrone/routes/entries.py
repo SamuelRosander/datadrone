@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, \
     request, abort
-from datadrone.extensions import db
+from datadrone.extensions import db, cache
 from datadrone.forms import UpdateEntryForm, AddEntryForm
 from datadrone.models import Entry, EntryTag, Location, Item
 from flask_login import current_user, login_required
@@ -49,6 +49,7 @@ def entry(entry_id):
                     db.session.add(entry_tag)
 
         db.session.commit()
+        cache.clear()
         flash("Entry has been updated.", "success")
     elif request.method == "GET":
         form.date.data = entry.timestamp.date()
@@ -93,6 +94,7 @@ def add(item_id):
     db.session.add(entry)
     db.session.add(item)
     db.session.commit()
+    cache.clear()
 
     checked_tags = []
     for f in request.form:
@@ -123,6 +125,7 @@ def delete(entry_id):
 
     entry.deleted = True
     db.session.commit()
+    cache.clear()
 
     flash("Entry has been deleted.", "warning")
     return redirect(url_for("items.details", item_id=entry.item.item_id))

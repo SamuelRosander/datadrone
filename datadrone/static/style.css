@@ -48,7 +48,6 @@
     box-sizing: border-box;
     text-decoration: none;
     border: none;
-    position: relative;
     transition: var(--animation-speed);
 }
 
@@ -99,6 +98,7 @@ a:hover {
     background: var(--form-color);
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     z-index: 15;
+    position: relative;
 }
 
 .header .wrapper {
@@ -387,13 +387,23 @@ h1, h2, h3, h4, h5, h6 {
     overflow: hidden !important;
 }
 
+.gm-style-cc {
+    display: none !important;
+}
+
+#map a {
+    display: none !important;
+}
+
 /* page specific - login */
 
 .login-checkbox-label {
     user-select: none;
+    position: relative;
 }
 
 .login-checkbox-label::before {
+    position: relative;
     display: inline-block;
     content: "";
     width: 18px;
@@ -599,6 +609,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     background: var(--form-color-third);
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .bar-bg > span {
@@ -718,6 +729,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     font-size: 0.6rem;
     user-select: none;
     cursor: pointer;
+    position: relative;
 }
 
 .edit_item-checkbox-container::before {

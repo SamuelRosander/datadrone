@@ -143,7 +143,7 @@
     
     <div class="locations-flexrow">
         {{ edit_form.name(value=location.name, class="form") }}
-        <a class="btn icon delete" href="{{ url_for('locations.delete', 
+        <a class="btn delete" href="{{ url_for('locations.delete', 
                 location_id=location.location_id) }}" 
                 onClick="return confirm('Are you sure you want to delete this location?')">
             <i class='bx bx-trash'></i>

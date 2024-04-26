@@ -137,7 +137,6 @@ a:hover {
     z-index: 10;
     overflow: hidden;
     transform: translateY(-3rem);
-
 }
 
 .user-menu.visible {
@@ -177,6 +176,7 @@ a:hover {
 .wrapper {
     max-width: var(--max-width);
     margin: 0 auto;
+    position: relative;
 }
 
 .container {
@@ -277,13 +277,13 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 1rem;
     font-size: 1rem;
     box-shadow: 0 5px 5px rgba(0,0,0,0.1);
-    display: inline-flex;
+    display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .btn:hover {
-    cursor: pointer;
     background-color: var(--btn-hover-color);
     color: var(--text-color);
 }
@@ -301,30 +301,21 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn.delete {
     background-color: var(--btn-delete-color);
+    margin-bottom: 0;
 }
 
 .btn.delete:hover {
     background-color: var(--btn-delete-hover-color);
 }
 
-.btn-color {
+.btn.color {
     background: var(--main-color);
     color: var(--bg-color);
 }
 
-.btn-color:hover {
+.btn.color:hover {
     background: var(--main-color-hover);
     color: var(--bg-color);
-    cursor: pointer;
-}
-
-.btn.icon {
-    padding: 0.5rem 1rem;
-    margin-bottom: 0;
-}
-
-.btn.icon:hover {
-    color: var(--text-color);
 }
 
 .btn i {
@@ -552,6 +543,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 
 .filter-quickdays {
     flex-shrink: 0;
+    position: relative;
 }
 
 .filter-quickdays > select {

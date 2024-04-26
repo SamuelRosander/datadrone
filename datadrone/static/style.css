@@ -49,6 +49,11 @@
     text-decoration: none;
     border: none;
     position: relative;
+    transition: var(--animation-speed);
+}
+
+*:focus-visible {
+    outline: 2px solid var(--main-color);
 }
 
 .p-05 {
@@ -61,6 +66,10 @@
 
 .mb-1 {
     margin-bottom: 1rem !important;
+}
+
+.ml-1 {
+    margin-left: 1rem !important;
 }
 
 html {
@@ -80,7 +89,6 @@ body > .wrapper {
 
 a {
     color: var(--main-color);
-    transition: var(--animation-speed);
 }
 
 a:hover {
@@ -88,7 +96,6 @@ a:hover {
 }
 
 .header {
-    position: relative;
     background: var(--form-color);
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     z-index: 15;
@@ -109,7 +116,6 @@ a:hover {
     font-size: 1.5rem;
     padding: 1rem;
     color: var(--text-color);
-    transition: var(--animation-speed);
     margin-right: 0.7rem;
     -webkit-tap-highlight-color: transparent;
 }
@@ -129,7 +135,6 @@ a:hover {
     border-radius: 0 0 0.5rem 0.5rem;
     text-align: right;
     z-index: 10;
-    transition: var(--animation-speed);
     overflow: hidden;
     transform: translateY(-3rem);
 
@@ -182,7 +187,6 @@ a:hover {
     font-style: italic;
     opacity: 0.5;
     background: none !important;
-    margin-bottom: 1rem;
 }
 
 .form {
@@ -226,7 +230,12 @@ a:hover {
 }
 
 input[type="checkbox"] {
-    display: none;
+    opacity: 0;
+    position: absolute;
+}
+
+input[type="checkbox"]:focus-visible + label:before {
+    outline: 2px solid var(--main-color);
 }
 
 input[type="checkbox"]:checked + .tag-box-label {
@@ -249,7 +258,6 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
     padding: 0.5rem 1rem;
     font-size: 1.5rem;
-    transition: var(--animation-speed);
     text-align: center;
     color: var(--text-color);
     opacity: 0.5;
@@ -266,25 +274,28 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-color);
     font-family: 'Poppins', sans-serif;
     padding: 1rem;
-    margin: 0 0 1rem 0;
+    margin-bottom: 1rem;
     font-size: 1rem;
     box-shadow: 0 5px 5px rgba(0,0,0,0.1);
-    transition: var(--animation-speed);
-    text-align: center;
-}
-
-.btn.icon {
-    font-size: 1.5rem;
-    padding: 0.5rem 1rem;
-    margin-bottom: 0;
-}
-
-.btn.icon:hover {
-    color: var(--text-color);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn:hover {
     cursor: pointer;
+    background-color: var(--btn-hover-color);
+    color: var(--text-color);
+}
+
+.btn.outline {
+    background-color: var(--bg-color);
+    border: 2px solid var(--form-color);
+    padding: calc(1rem - 2px);
+}
+
+.btn.outline:hover {
+    border: 2px solid var(--btn-hover-color);
     background-color: var(--btn-hover-color);
 }
 
@@ -307,6 +318,24 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
 }
 
+.btn.icon {
+    padding: 0.5rem 1rem;
+    margin-bottom: 0;
+}
+
+.btn.icon:hover {
+    color: var(--text-color);
+}
+
+.btn i {
+    font-size: 1.5rem;
+}
+
+.flexrow {
+    display: flex;
+    justify-content: space-between;
+}
+
 .flex {
     display: flex;
     gap: 5px;
@@ -323,7 +352,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .heading-grid {
     display: grid;
-    grid-template-columns: 4rem 1fr 4rem;
+    grid-template-columns: 3.5rem 1fr 3.5rem;
     align-items: start;
     grid-gap: 1rem;
     margin-bottom: 2rem;
@@ -333,6 +362,10 @@ h1, h2, h3, h4, h5, h6 {
     grid-column: 2;
     align-self: center;
     margin: 0;
+}
+
+.heading-grid .btn {
+    height: 3rem;
 }
 
 .small-text {
@@ -361,7 +394,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .login-checkbox-label::before {
-    position: relative;
     display: inline-block;
     content: "";
     width: 18px;
@@ -435,6 +467,11 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     -webkit-tap-highlight-color: transparent;
 }
 
+.item-icon-container > input[type="checkbox"]:focus-visible + i {
+    outline: 2px solid var(--main-color);
+    outline-offset: 0.7rem;
+}
+
 .item-container > button {
     flex-basis: 3rem;
 }
@@ -493,7 +530,6 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     display: inline-block;
     position: absolute;
     margin-left: 1rem;
-    transition: var(--animation-speed);
     transform: scaleX(1.5);
 }
 
@@ -743,7 +779,7 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
     left: 0.8rem;
     right: 0.8rem;
     max-width: calc(var(--max-width) - 1.6rem);
-    top: 30%;
+    top: 20%;
     z-index: 25;
     margin: 0 auto;
 }
@@ -755,7 +791,7 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
     left: 0.8rem;
     right: 0.8rem;
     max-width: calc(var(--max-width) - 1.6rem);
-    top: 30%;
+    top: 20%;
     z-index: 25;
     margin: 0 auto;
     padding: 1rem;

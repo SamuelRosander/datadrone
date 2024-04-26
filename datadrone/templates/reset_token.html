@@ -6,7 +6,7 @@
     {{ form.hidden_tag() }}
 
     Email
-    <input type="text" name="username" class="form" value="{{ user.email }}" 
+    <input type="text" name="email" class="form" value="{{ user.email }}" 
         disabled>
     
     {{ form.password.label }}
@@ -26,4 +26,4 @@
     {{ form.submit(class="btn mt-1") }}
 </form>
 
-{% endblock%}
+{% endblock %}

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, \
     request, abort
-from datadrone.extensions import db
+from datadrone.extensions import db, cache
 from datadrone.forms import AddItemForm, DetailsSearchScopeForm, \
     EditItemForm, AddTagForm, EditTagForm
 from datadrone.models import Item, Entry, Tag, EntryTag
@@ -14,6 +14,7 @@ bp = Blueprint("items", __name__, url_prefix="/items")
 
 
 @bp.route("/<int:item_id>/", methods=["GET", "POST"])
+@cache.cached(query_string=True)
 @login_required
 def details(item_id):
     item = Item.query.get_or_404(item_id)
@@ -59,7 +60,7 @@ def details(item_id):
         all_stats = stats.get_all(
             entries_list, scope_from=scope_from, days=days)
 
-    MAP_KEY = environ.get('DD_GOOGLEMAPS_KEY')
+    MAP_KEY = environ.get('GOOGLEMAPS_KEY')
 
     return render_template(
         "details.html", item=item, entries=entries_list, stats=all_stats,

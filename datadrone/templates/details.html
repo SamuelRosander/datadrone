@@ -68,45 +68,73 @@
     Showing entries from the last {{ days }} days
     {% endif %}
 </div>
+  <div class="details-grid-stats">
+    <div class="statsbox">
+      <div class="label">First</div>
+      {{ stats['first'].strftime('%Y-%m-%d %H:%M') 
+        if not stats['first'] == 0 else 0 }}
+    </div>
 
-<div class="details-grid">
-    <div>First:</div>
-    <div>{{ stats['first'].strftime('%Y-%m-%d %H:%M') 
-        if not stats['first'] == 0 else 0 }}</div>
-    <div>Last:</div>
-   <div>{{ stats['last'].strftime('%Y-%m-%d %H:%M') 
-        if not stats['first'] == 0 else 0 }}</div>
-    <div>Total:</div>
-    <div>{{ stats['total'] }}</div>
-    <div>Avg/day:</div>
-    <div>{{ stats['average_a_day'] }}</div>
-    <div>Max in a day:</div>
-    <div>{{ stats['max_in_a_day'] }}
-        <span class="date-info">
+    <div class="statsbox">
+      <div class="label">Last</div>
+      {{ stats['last'].strftime('%Y-%m-%d %H:%M') 
+        if not stats['first'] == 0 else 0 }}
+    </div>
+
+    <div class="statsbox">
+      <div class="label">Total</div>
+      {{ stats['total'] }}
+    </div>
+
+    <div class="statsbox">
+      <div class="label">Avg/day</div>
+      {{ stats['average_a_day'] }}
+    </div>
+
+    <div class="statsbox">
+      <div class="label" title="Longest without">Longest without</div>
+      <i class='bx bx-info-circle'></i>
+      {{ stats['longest_without'] }}
+      <div class="date-info">
+          ({{ stats['longest_without_start'] }} - 
+          {{ stats['longest_without_end'] }})
+        </div>
+    </div>
+
+    <div class="statsbox">
+      <div class="label" title="Longest streak">Longest streak</div>
+      <div class="flexrow">
+          {{ stats['longest_streak'] }}
+          <i class='bx bx-info-circle'></i>
+          <div class="date-info">
+              ({{ stats['longest_streak_start'] }} - 
+              {{ stats['longest_streak_end'] }})
+          </div>
+        </div>
+    </div>
+
+    <div class="statsbox">
+      <div class="label">Max in a day</div>
+      <div class="flexrow">
+        {{ stats['max_in_a_day'] }}
+        <i class='bx bx-info-circle'></i>
+        <div class="date-info">
             ({{ stats['max_in_a_day-date'] }})
-        </span>
+        </div>
+      </div>
     </div>
-    <div title="Longest without">Long. without:</div>
-    <div>{{ stats['longest_without'] }}
-        <span class="date-info">
-            ({{ stats['longest_without_start'] }} - 
-            {{ stats['longest_without_end'] }})
-        </span>
-    </div>
-    <div title="Longest streak">Long. streak:</div>
-    <div>{{ stats['longest_streak'] }}
-        <span class="date-info">
-            ({{ stats['longest_streak_start'] }} - 
-            {{ stats['longest_streak_end'] }})
-        </span>
-    </div>
-    <div>Since last:</div>
-    <div>{{ stats['days_since_last'] }}
-        <span class="small-text">days</span>
-    </div>
-    <div>Total today:</div>
-    <div>{{ stats['total_today'] }}</div>
 
+    <div class="statsbox">
+      <div class="label">Days since last</div>
+      {{ stats['days_since_last'] }}          
+    </div>
+
+    <div class="statsbox">
+      <div class="label">Total today</div>
+      {{ stats['total_today'] }}
+    </div>
+</div>
+<div class="details-grid-bars">
     <h3>Weekday</h3>
     {% for day, count in stats["weekday"].items() %}
     {% set percent=(count/stats["total"]*100)|round|int 

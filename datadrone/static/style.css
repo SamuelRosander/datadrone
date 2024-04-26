@@ -517,7 +517,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 .filter-header {
     display:flex;
     justify-content: space-between;
-    gap: 2px;
+    gap: 5px;
 }
 
 .filter-button {
@@ -587,7 +587,34 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     margin: 1rem 0;
 }
 
-.details-grid {
+.details-grid-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+    margin-bottom: 1rem;
+}
+
+.statsbox {
+    padding: 0.5rem;
+    background-color: var(--form-color);
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.statsbox .label {
+    font-size: 0.7rem;
+    opacity: 0.5;
+}
+
+.statsbox i {
+    opacity: 0.5;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.details-grid-bars {
     display: grid;
     grid-template-columns: auto 1fr;
     grid-column-gap: 1rem;
@@ -596,11 +623,24 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 .date-info {
-    opacity: 0.5;
     font-size: 0.7rem;
+    position: absolute;
+    background-color: var(--form-color-secondary);
+    right: 0.5rem;
+    /* bottom: 0.5rem; */
+    /* left: 0.5rem; */
+    bottom: -1rem;
+    padding: 5px;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);;
+    opacity: 0;
+    z-index: 10;
 }
 
-.details-grid > h3 {
+.statsbox:hover .date-info {
+    opacity: 1;
+}
+
+.details-grid-bars > h3 {
     grid-column: span 2;
     margin-top: 1rem;
 }

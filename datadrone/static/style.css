@@ -63,6 +63,10 @@
     margin-top: 1rem !important;
 }
 
+.mb-0 {
+    margin-bottom: 0rem !important;
+}
+
 .mb-1 {
     margin-bottom: 1rem !important;
 }
@@ -264,7 +268,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .heading-a:hover {
-    color: var(--main-color);
+    color: var(--text-color);
     opacity: 1;
 }
 
@@ -316,6 +320,11 @@ h1, h2, h3, h4, h5, h6 {
 .btn.color:hover {
     background: var(--main-color-hover);
     color: var(--bg-color);
+}
+
+.btn.add {
+    margin-bottom: 0;
+    width: 3rem;
 }
 
 .btn i {

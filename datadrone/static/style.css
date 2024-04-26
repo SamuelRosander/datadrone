@@ -403,7 +403,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .login-checkbox-label::before {
-    position: relative;
     display: inline-block;
     content: "";
     width: 18px;

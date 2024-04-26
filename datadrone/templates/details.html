@@ -190,6 +190,9 @@
         mapId: "30ebffeb949e0a6c"
     });
 
+    const markerIcon = 
+            "{{ url_for('static', filename='img/markerIcon.png' )}}";
+
     {% for entry in entries %}
       {% if entry.latitude and entry.longitude %}
         addMarker({ lat: {{ entry.latitude }}, lng: {{ entry.longitude }} }, 
@@ -203,7 +206,8 @@
     function addMarker(coords, entry_id, timestamp, comment){
       var marker = new google.maps.Marker({
         position: coords,
-        map: map
+        map: map,
+        icon: markerIcon
       });
 
       if (comment != "None") {

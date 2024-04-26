@@ -75,11 +75,12 @@
     function initMap() {
         const map = new google.maps.Map(document.getElementById('map'), {
             {% if entry.latitude and entry.longitude %}
-            zoom: 15,
-            center: {lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
+                zoom: 15,
+                center: {lat: {{ entry.latitude }}, 
+                         lng: {{ entry.longitude }}},
             {% else %}
-            zoom: 1,
-            center: {lat: 0, lng: 0},
+                zoom: 1,
+                center: {lat: 0, lng: 0},
             {% endif %}
             mapTypeControl: false,
             streetViewControl: false,
@@ -87,45 +88,51 @@
             mapId: "30ebffeb949e0a6c"
         });
 
+        const markerIcon = 
+            "{{ url_for('static', filename='img/markerIcon.png' )}}";
+
         let marker;
         {% if entry.latitude and entry.longitude %}
-        marker = new google.maps.Marker({
-            position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
-            map:map
-        });
+            marker = new google.maps.Marker({
+                position:{lat: {{ entry.latitude }}, 
+                          lng: {{ entry.longitude }}},
+                map:map,
+                icon: markerIcon
+            });
         {% endif %}
 
         map.addListener('click', function(e) {
-        placeMarker(e.latLng.lat(), e.latLng.lng());
+            placeMarker(e.latLng.lat(), e.latLng.lng());
         });
 
 
         const locationSelect = document.getElementById("locations");
         locationSelect.addEventListener('change', function() {
-        if (this.value != 0) {
-            let lat;
-            let long;
-            [lat, long] = this.value.split(",");
-            
-            placeMarker(Number(lat), Number(long));
-            locationSelect.value=0;
-        }
+            if (this.value != 0) {
+                let lat;
+                let long;
+                [lat, long] = this.value.split(",");
+                
+                placeMarker(Number(lat), Number(long));
+                locationSelect.value=0;
+            }
         });
 
-
+    
         function placeMarker(lat, long) {
-        if (marker) {
-            marker.setMap(null);
-        }
+            if (marker) {
+                marker.setMap(null);
+            }
 
-        document.getElementById("latitude").value = lat;
-        document.getElementById("longitude").value = long;
+            document.getElementById("latitude").value = lat;
+            document.getElementById("longitude").value = long;
 
-        marker = new google.maps.Marker({
-            position: {lat: lat, lng: long},
-            map: map
-        });
-        map.panTo(marker.position);
+            marker = new google.maps.Marker({
+                position: {lat: lat, lng: long},
+                map: map,
+                icon: markerIcon
+            });
+            map.panTo(marker.position);
         }
     }
 

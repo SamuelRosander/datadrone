@@ -31,6 +31,9 @@
           mapId: "30ebffeb949e0a6c"
     });
 
+    const markerIcon = 
+            "{{ url_for('static', filename='img/markerIcon.png' )}}";
+
     let marker;
 
     map.addListener('click', function(e) {
@@ -47,9 +50,10 @@
 
       marker = new google.maps.Marker({
         position: {lat: lat, lng: long},
-        map: map
+        map: map,
+        icon: markerIcon
       });
-    map.panTo(marker.position);
+      map.panTo(marker.position);
     }
   }
 

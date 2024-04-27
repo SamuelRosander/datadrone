@@ -322,11 +322,6 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--bg-color);
 }
 
-.btn.add {
-    margin-bottom: 0;
-    width: 3rem;
-}
-
 .btn i {
     font-size: 1.5rem;
 }
@@ -439,7 +434,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 
 /* Page specific - list */
 .item-container {
-    margin: 0 0 1rem 0;
+    margin-bottom: 1rem;
     background: var(--form-color);
     display: flex;
     gap: 0.5rem;
@@ -483,7 +478,8 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 .item-container > button {
-    flex-basis: 3rem;
+    width: 3rem;
+    margin-bottom: 0;
 }
 
 .item-icon-container input[type="checkbox"]:checked + i {

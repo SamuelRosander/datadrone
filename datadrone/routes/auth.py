@@ -16,7 +16,6 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
-    print(generate_random_password())
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data.lower()).first()
@@ -54,6 +53,11 @@ def oauth2_authorize(provider):
     if provider_data is None:
         abort(404)
 
+    if request.args.get("remember") == "true":
+        session['remember_login'] = True
+    else:
+        session['remember_login'] = False
+
     session['oauth2_state'] = secrets.token_urlsafe(16)
 
     qs = urlencode({
@@ -65,7 +69,6 @@ def oauth2_authorize(provider):
         'state': session['oauth2_state'],
     })
 
-    session["next_url"] = request.referrer
     return redirect(provider_data['authorize_url'] + '?' + qs)
 
 
@@ -120,7 +123,7 @@ def oauth2_callback(provider):
         db.session.add(user)
         db.session.commit()
 
-    login_user(user)
+    login_user(user, remember=session.get('remember_login'))
 
     return redirect(url_for('main.index'))
 

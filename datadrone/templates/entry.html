@@ -8,7 +8,7 @@
         <i class='bx bx-arrow-back'></i>
     </a>
     <h3>Entry</h3>
-    <a class="btn icon delete"
+    <a class="btn delete"
         onClick="return confirm('Are you sure you want to delete this entry?')"
         href="{{ url_for('entries.delete', entry_id=entry.entry_id) }}" >
         <i class='bx bx-trash'></i>
@@ -49,7 +49,7 @@
     {% if entry.item.tags|length %}
     <div class="heading-grid">
         <h3>Tags</h3>
-        <button type="button" class="btn icon" id="edit-tags">
+        <button type="button" class="btn" id="edit-tags">
             <i class='bx bx-label'></i>
         </button>
     </div>
@@ -75,136 +75,64 @@
     function initMap() {
         const map = new google.maps.Map(document.getElementById('map'), {
             {% if entry.latitude and entry.longitude %}
-            zoom: 15,
-            center: {lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
+                zoom: 15,
+                center: {lat: {{ entry.latitude }}, 
+                         lng: {{ entry.longitude }}},
             {% else %}
-            zoom: 1,
-            center: {lat: 0, lng: 0},
+                zoom: 1,
+                center: {lat: 0, lng: 0},
             {% endif %}
-            styles: [
-            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
-            {
-                featureType: 'administrative.locality',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#d59563'}]
-            },
-            {
-                featureType: 'poi',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#d59563'}]
-            },
-            {
-                featureType: 'poi.park',
-                elementType: 'geometry',
-                stylers: [{color: '#263c3f'}]
-            },
-            {
-                featureType: 'poi.park',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#6b9a76'}]
-            },
-            {
-                featureType: 'road',
-                elementType: 'geometry',
-                stylers: [{color: '#38414e'}]
-            },
-            {
-                featureType: 'road',
-                elementType: 'geometry.stroke',
-                stylers: [{color: '#212a37'}]
-            },
-            {
-                featureType: 'road',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#9ca5b3'}]
-            },
-            {
-                featureType: 'road.highway',
-                elementType: 'geometry',
-                stylers: [{color: '#746855'}]
-            },
-            {
-                featureType: 'road.highway',
-                elementType: 'geometry.stroke',
-                stylers: [{color: '#1f2835'}]
-            },
-            {
-                featureType: 'road.highway',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#f3d19c'}]
-            },
-            {
-                featureType: 'transit',
-                elementType: 'geometry',
-                stylers: [{color: '#2f3948'}]
-            },
-            {
-                featureType: 'transit.station',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#d59563'}]
-            },
-            {
-                featureType: 'water',
-                elementType: 'geometry',
-                stylers: [{color: '#17263c'}]
-            },
-            {
-                featureType: 'water',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#515c6d'}]
-            },
-            {
-                featureType: 'water',
-                elementType: 'labels.text.stroke',
-                stylers: [{color: '#17263c'}]
-            }
-            ],
             mapTypeControl: false,
             streetViewControl: false,
-            clickableIcons: false
+            clickableIcons: false,
+            mapId: "30ebffeb949e0a6c"
         });
+
+        const markerIcon = 
+            "{{ url_for('static', filename='img/markerIcon.png' )}}";
 
         let marker;
         {% if entry.latitude and entry.longitude %}
-        marker = new google.maps.Marker({
-            position:{lat: {{ entry.latitude }}, lng: {{ entry.longitude }}},
-            map:map
-        });
+            marker = new google.maps.Marker({
+                position:{lat: {{ entry.latitude }}, 
+                          lng: {{ entry.longitude }}},
+                map:map,
+                icon: markerIcon
+            });
         {% endif %}
 
         map.addListener('click', function(e) {
-        placeMarker(e.latLng.lat(), e.latLng.lng());
+            placeMarker(e.latLng.lat(), e.latLng.lng());
         });
 
 
         const locationSelect = document.getElementById("locations");
         locationSelect.addEventListener('change', function() {
-        if (this.value != 0) {
-            let lat;
-            let long;
-            [lat, long] = this.value.split(",");
-            
-            placeMarker(Number(lat), Number(long));
-            locationSelect.value=0;
-        }
+            if (this.value != 0) {
+                let lat;
+                let long;
+                [lat, long] = this.value.split(",");
+                
+                placeMarker(Number(lat), Number(long));
+                locationSelect.value=0;
+            }
         });
 
-
+    
         function placeMarker(lat, long) {
-        if (marker) {
-            marker.setMap(null);
-        }
+            if (marker) {
+                marker.setMap(null);
+            }
 
-        document.getElementById("latitude").value = lat;
-        document.getElementById("longitude").value = long;
+            document.getElementById("latitude").value = lat;
+            document.getElementById("longitude").value = long;
 
-        marker = new google.maps.Marker({
-            position: {lat: lat, lng: long},
-            map: map
-        });
-        map.panTo(marker.position);
+            marker = new google.maps.Marker({
+                position: {lat: lat, lng: long},
+                map: map,
+                icon: markerIcon
+            });
+            map.panTo(marker.position);
         }
     }
 

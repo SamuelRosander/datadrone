@@ -22,11 +22,12 @@
     <a href="{{ url_for('user.reset_request') }}">Forgot password</a>
 </div>
 
-<a class="btn outline mt-1" 
+<a id="login-google-btn" class="btn outline mt-1" 
         href="{{ url_for('auth.oauth2_authorize', provider='google') }}">
     Log in with Google
     <i class='bx bxl-google ml-1'></i>
 </a>
 
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
 
 {% endblock %}

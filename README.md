@@ -20,28 +20,28 @@ GOOGLE_CLIENT_SECRET=your_google_secret
 
 ### Initial setup
 
-1.        git clone https://github.com/SamuelRosander/datadrone.git
-        cd datadrone
-        copy .env.sample .env
-        python -m venv .venv
-        .venv\Scripts\activate
-        pip install -r .\requirements.txt
+1.     git clone https://github.com/SamuelRosander/datadrone.git
+       cd datadrone
+       copy .env.sample .env
+       python -m venv .venv
+       .venv\Scripts\activate
+       pip install -r .\requirements.txt
 2.  Set values in .env
-3.        python
-        from datadrone import create_app
-        from datadrone.extensions import db
-        from dotenv import load_dotenv
+3.     python
+       from datadrone import create_app
+       from datadrone.extensions import db
+       from dotenv import load_dotenv
 
-        load_dotenv()
-        create_app().app_context().push()
-        db.create_all()
+       load_dotenv()
+       create_app().app_context().push()
+       db.create_all()
 
 ### Running locally (Windows)
 
-1.        .venv\Scripts\activate
-        flask run
+1.     .venv\Scripts\activate
+       flask run
 
 ### Docker
 
-1.        docker build -t datadrone .
-2.        docker run -e DATABASE_URI=postgresql://user:password@192.168.0.10:5432/datadrone -e MAIL_PASSWORD=SrHfE2VSujSTBRL -e MAIL_USERNAME=example.noreply@gmail.com -e SECRET_KEY=728d6d6793e295996aafbb6f741542 -e GOOGLEMAPS_KEY=AIheiDdij223JH2si92S_R82iaxNW292Nqo09xs -p 8000:8000 datadrone
+1.     docker build -t datadrone .
+2.     docker run -e DATABASE_URI=postgresql://user:password@192.168.0.10:5432/datadrone -e MAIL_PASSWORD=SrHfE2VSujSTBRL -e MAIL_USERNAME=example.noreply@gmail.com -e SECRET_KEY=728d6d6793e295996aafbb6f741542 -e GOOGLEMAPS_KEY=AIheiDdij223JH2si92S_R82iaxNW292Nqo09xs -p 8000:8000 datadrone

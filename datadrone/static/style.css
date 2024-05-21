@@ -843,7 +843,7 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
     background-color: var(--form-color-third);
     left: 0.8rem;
     right: 0.8rem;
-    max-width: calc(var(--max-width) -.flash 1.6rem);
+    max-width: calc(var(--max-width) - 1.6rem);
     top: 20%;
     z-index: 25;
     margin: 0 auto;

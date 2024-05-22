@@ -1,0 +1,22 @@
+name: Manual docker image deploy
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag"
+        default: "latest"
+
+jobs:
+  publish_image:
+    name: Publish docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: build
+        run: |
+          docker build . -t squamsh/datadrone:${{ github.event.inputs.name }}
+      - name: publish
+        run: |
+          docker login -u squamsh -p ${{ secrets.DOCKER_HUB_TOKEN }}
+          docker push squamsh/datadrone:${{ github.event.inputs.name }}

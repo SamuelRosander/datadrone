@@ -7,7 +7,7 @@ def test_config():
                        "SQLALCHEMY_DATABASE_URI": "sqlite://"}).testing
 
 
-def test_login_page(client):
+def test_login(client):
     response = client.get("/auth/login")
 
     assert response.status_code == 200

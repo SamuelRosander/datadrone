@@ -15,13 +15,12 @@ for (let i=0; i<flashes.length; i++) {
     }) 
 }
 
-function toggleUserMenu() {
+function toggleMenu() {
     document.getElementById("user-menu").classList.toggle("visible");
-    document.getElementById("user-icon").classList.toggle("active");
 }
 
-function toggleMenu() {
-    document.getElementById("user-menu").classList.remove("visible");
+function toggleHeadingMenu() {
+    document.getElementById("heading-menu").classList.toggle("visible");
 }
 
 document.onmouseup = function(e) {
@@ -29,6 +28,10 @@ document.onmouseup = function(e) {
     if ((e.target.id != "user-icon")
             && (e.target.parentElement.id != "user-menu")) {
         document.getElementById("user-menu").classList.remove("visible");
-        document.getElementById("user-icon").classList.remove("active");
+    }
+    
+    if ((e.target.id != "heading-icon")
+            && (e.target.parentElement.id != "heading-menu")) {
+        document.getElementById("heading-menu").classList.remove("visible");
     }
 }

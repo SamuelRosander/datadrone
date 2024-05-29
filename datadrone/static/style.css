@@ -98,6 +98,16 @@ a:hover {
     color: var(--main-color-hover);
 }
 
+a.delete {
+    background-color: var(--btn-delete-color);
+    color: var(--text-color) !important;
+}
+
+a.delete:hover {
+    background-color: var(--btn-delete-hover-color);
+    color: var(--text-color) !important;
+}
+
 .header {
     background: var(--form-color);
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
@@ -145,7 +155,7 @@ a:hover {
     transform: translateY(-3rem);
 }
 
-.user-menu.visible {
+.user-menu.visible, #heading-menu.visible {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -166,7 +176,6 @@ a:hover {
     color: var(--text-color);
     align-items: center;
     justify-content: right;
-
 }
 
 .user-menu a:hover {
@@ -260,20 +269,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 0 1rem 0;
 }
 
-.heading-a {
-    font-family: 'Poppins', sans-serif;
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem;
-    text-align: center;
-    color: var(--text-color);
-    opacity: 0.5;
-}
-
-.heading-a:hover {
-    color: var(--text-color);
-    opacity: 1;
-}
-
 .btn {
     width: 100%;
     background-color: var(--form-color);
@@ -354,6 +349,7 @@ h1, h2, h3, h4, h5, h6 {
     align-items: start;
     grid-gap: 1rem;
     margin-bottom: 2rem;
+    position: relative;
 }
 
 .heading-grid > h3 {
@@ -364,6 +360,53 @@ h1, h2, h3, h4, h5, h6 {
 
 .heading-grid .btn {
     height: 3rem;
+}
+
+.heading-icon {
+    font-family: 'Poppins', sans-serif;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    color: var(--text-color);
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.heading-icon:hover {
+    color: var(--text-color);
+    opacity: 1;
+}
+
+#heading-menu {
+    position: absolute;
+    background-color: var(--navbar-color);
+    right: 0;
+    top: 3rem;
+    z-index: 20;
+    transition: var(--animation-speed);
+    opacity: 0;
+    visibility: hidden;
+    right: -0.5rem;
+    background: var(--navbar-color);
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+    text-align: right;
+    z-index: 10;
+    overflow: hidden;
+    transform: translateY(-3rem);
+}
+
+#heading-menu a {
+    font-size: 1rem;
+    display: flex;
+    padding: 1rem;
+    padding-left: 3rem;
+    color: var(--text-color);
+    align-items: center;
+    justify-content: right;
+}
+
+#heading-menu a:hover {
+    color: var(--main-color);
 }
 
 .small-text {

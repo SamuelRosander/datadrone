@@ -4,8 +4,9 @@
 
 <div class="heading-grid">
     <h3>{{ item.itemname }}</h3>
-    <i id ="heading-icon" class='bx bx-dots-horizontal heading-icon'
-        onclick="toggleHeadingMenu()"></i>
+    <button class="btn-invis" onclick="toggleHeadingMenu()">
+        <i id ="heading-icon" class='bx bx-dots-horizontal heading-icon'></i>
+    </button>
     <div id="heading-menu">
         <a href="#">Edit name</a>
         <a href="{{ url_for('items.edit', item_id=item.item_id) }}">

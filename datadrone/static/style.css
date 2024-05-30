@@ -121,6 +121,10 @@ a.delete:hover {
     align-items: center;
 }
 
+.header .btn-invis {
+    margin-right: 0.7rem;
+}
+
 .logo {
     font-size: 1.1rem;
     padding: 1rem;
@@ -131,7 +135,6 @@ a.delete:hover {
     padding: 1rem;
     color: var(--text-color);
     transition: var(--animation-speed);
-    margin-right: 0.7rem;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -250,7 +253,7 @@ input[type="checkbox"] {
     position: absolute;
 }
 
-input[type="checkbox"]:focus-visible + label:before {
+input[type="checkbox"]:focus-visible + label {
     outline: 2px solid var(--main-color);
 }
 
@@ -319,6 +322,13 @@ h1, h2, h3, h4, h5, h6 {
 .btn.color:hover {
     background: var(--main-color-hover);
     color: var(--bg-color);
+}
+
+.btn-invis {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
 }
 
 .btn i {
@@ -508,6 +518,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 .item-icon-container {
+    background: none;
     flex-basis: 3rem;
     display: flex;
     cursor: pointer;

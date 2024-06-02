@@ -30,7 +30,7 @@ document.onmouseup = function(e) {
         document.getElementById("user-menu").classList.remove("visible");
     }
     
-    if ((e.target.id != "heading-icon")
+    if ((e.target.id != "heading-menu-icon")
             && (e.target.parentElement.id != "heading-menu")) {
         document.getElementById("heading-menu").classList.remove("visible");
     }

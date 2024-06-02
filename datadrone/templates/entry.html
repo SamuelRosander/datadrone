@@ -8,11 +8,15 @@
         <i class='bx bx-arrow-back'></i>
     </a>
     <h3>Entry</h3>
-    <a class="btn delete"
-        onClick="return confirm('Are you sure you want to delete this entry?')"
-        href="{{ url_for('entries.delete', entry_id=entry.entry_id) }}" >
-        <i class='bx bx-trash'></i>
-    </a>
+    <button class="btn-invis heading-icon" onclick="toggleHeadingMenu()">
+        <i id ="heading-menu-icon" class='bx bx-dots-horizontal'></i>
+    </button>
+    <div id="heading-menu">
+        <a class="delete"
+            onClick="return confirm('Are you sure you want to delete this entry?')"
+            href="{{ url_for('entries.delete', entry_id=entry.entry_id) }}" >
+            Delete entry</a>
+    </div>
 </div>
 
 <form method="POST" action="">

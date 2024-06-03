@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, \
-    request, abort, current_app
+    request, abort
 from datadrone.extensions import db, cache
 from datadrone.forms import AddItemForm, DetailsSearchScopeForm, \
     EditItemForm, AddTagForm, EditTagForm

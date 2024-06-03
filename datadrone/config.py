@@ -3,7 +3,7 @@ from os import environ
 SECRET_KEY = environ.get('SECRET_KEY')
 SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URI')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-CACHE_TYPE = "SimpleCache"
+CACHE_TYPE = environ.get("CACHE_TYPE", "SimpleCache")
 CACHE_DEFAULT_TIMEOUT = 3600
 MAIL_SERVER = "smtp.googlemail.com"
 MAIL_PORT = 587

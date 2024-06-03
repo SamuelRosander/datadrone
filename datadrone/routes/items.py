@@ -14,9 +14,7 @@ bp = Blueprint("items", __name__, url_prefix="/items")
 
 
 @bp.route("/<int:item_id>/", methods=["GET", "POST"])
-@cache.cached(query_string=True,
-              unless=lambda: current_app.config.
-              get("DEBUG") or current_user.is_anonymous)
+@cache.cached(query_string=True, unless=lambda: current_user.is_anonymous)
 @login_required
 def details(item_id):
     item = Item.query.get_or_404(item_id)

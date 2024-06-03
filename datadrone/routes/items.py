@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, \
-    request, abort
+    request, abort, current_app
 from datadrone.extensions import db, cache
 from datadrone.forms import AddItemForm, DetailsSearchScopeForm, \
     EditItemForm, AddTagForm, EditTagForm
@@ -14,7 +14,9 @@ bp = Blueprint("items", __name__, url_prefix="/items")
 
 
 @bp.route("/<int:item_id>/", methods=["GET", "POST"])
-@cache.cached(query_string=True)
+@cache.cached(query_string=True,
+              unless=lambda: current_app.config.
+              get("DEBUG") or current_user.is_anonymous)
 @login_required
 def details(item_id):
     item = Item.query.get_or_404(item_id)

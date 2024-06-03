@@ -26,7 +26,7 @@ def add(item_id):
         flash("Tags needs to be between 1 and 32 characters long.",
               "error")
 
-    return redirect(url_for("items.edit", item_id=item_id))
+    return redirect(url_for("items.tags", item_id=item_id))
 
 
 @bp.route("/<int:tag_id>/edit", methods=["POST"])
@@ -45,7 +45,7 @@ def edit(tag_id):
         db.session.commit()
         flash("Tag has been updated!", "success")
 
-    return redirect(url_for("items.edit", item_id=tag.item.item_id))
+    return redirect(url_for("items.tags", item_id=tag.item.item_id))
 
 
 @bp.route("/<int:tag_id>/delete")
@@ -60,4 +60,4 @@ def delete(tag_id):
     db.session.commit()
 
     flash("Tag has been deleted.", "warning")
-    return redirect(url_for("items.edit", item_id=tag.item.item_id))
+    return redirect(url_for("items.tags", item_id=tag.item.item_id))

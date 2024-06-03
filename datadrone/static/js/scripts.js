@@ -5,7 +5,7 @@ function confirmDelete(name, url) {
 }
 
 function dismiss(element){
-    element.parentNode.classList.add("hidden");
+    element.parentNode.classList.add("invisible");
 };
 
 flashes = document.getElementsByClassName("flash");

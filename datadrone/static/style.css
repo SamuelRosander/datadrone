@@ -74,6 +74,14 @@
     margin-left: 1rem !important;
 }
 
+.hidden {
+    display: none !important;
+}
+
+.invisible {
+    visibility: hidden !important;
+}
+
 html {
     font-size: 120%;
 }
@@ -333,6 +341,10 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 1.5rem;
 }
 
+.btn span {
+    font-size: 1.75rem;
+}
+
 .flexrow {
     display: flex;
     justify-content: space-between;
@@ -361,14 +373,20 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
 }
 
-.heading-grid > h3 {
+.heading-grid > h3, .heading-grid > input[type="text"] {
     grid-column: 2;
     align-self: center;
     margin: 0;
+    text-align: center;
 }
 
 .heading-grid .btn {
     height: 3rem;
+}
+
+.heading-grid .form-error-label {
+    bottom: 0;
+    margin-bottom: -1.2rem;
 }
 
 .heading-icon {
@@ -413,6 +431,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #heading-menu a:hover {
+    color: var(--main-color);
+}
+
+#heading-menu button {
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    padding: 1rem;
+    padding-left: 3rem;
+    color: var(--text-color);
+    cursor: pointer;
+    width: 100%;
+    text-align: right;
+}
+
+#heading-menu button:hover {
     color: var(--main-color);
 }
 
@@ -780,10 +813,6 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     opacity: 0.5;
 }
 
-.tag-box-label.hidden {
-    display: none;
-}
-
 /* page specific - locations */
 .locations-grid {
     display: grid;
@@ -943,10 +972,6 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
     margin: -1rem;
     align-self: baseline;
     user-select: none;
-}
-
-.flash.hidden {
-    opacity: 0;
 }
 
 

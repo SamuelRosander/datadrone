@@ -10,21 +10,6 @@
     <h3>Edit item</h3>
 </div>
 
-<form method="POST" action="">
-    {{ form.hidden_tag() }}
-    {{ form.itemname.label }}
-
-    <div class="flex mb-1">
-        {{ form.itemname(class="form") }}
-        <button type="submit" class="btn mb-0">
-            <i class='bx bx-save'></i>
-        </button>
-    </div>
-    {% if form.itemname.errors %}
-    <div class="form-error-label">{{ form.itemname.errors[0] }}</div>
-    {% endif %}
-</form>
-
 {% if item.tags %}
 <h3>Tags</h3>
 {% for tag in item.tags if not tag.deleted %}

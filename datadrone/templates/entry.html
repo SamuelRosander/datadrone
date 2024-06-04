@@ -13,8 +13,9 @@
     </button>
     <div id="heading-menu">
         <a class="delete"
-            onClick="return confirm('Are you sure you want to delete this entry?')"
-            href="{{ url_for('entries.delete', entry_id=entry.entry_id) }}" >
+                onClick="return confirm('Are you sure you want to delete this entry?')"
+                href="{{ url_for('entries.delete', 
+                    entry_id=entry.entry_id) }}">
             Delete entry</a>
     </div>
 </div>

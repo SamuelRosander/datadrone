@@ -80,6 +80,7 @@
 
 .invisible {
     visibility: hidden !important;
+    opacity: 0;
 }
 
 html {
@@ -153,8 +154,6 @@ a.delete:hover {
 
 .user-menu {
     transition: var(--animation-speed);
-    opacity: 0;
-    visibility: hidden;
     position: absolute;
     right: 0;
     background: var(--navbar-color);
@@ -162,15 +161,11 @@ a.delete:hover {
     border-radius: 0 0 0.5rem 0.5rem;
     text-align: right;
     z-index: 10;
-    transform: translateY(-3rem);
-    pointer-events: none;
 }
 
-.user-menu.visible, #heading-menu.visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: all;
+.user-menu.invisible, #heading-menu.invisible  {
+    transform: translateY(-3rem);
+    pointer-events: none;
 }
 
 .user-menu span {
@@ -410,14 +405,10 @@ h1, h2, h3, h4, h5, h6 {
     top: 3rem;
     right: -0.5rem;
     transition: var(--animation-speed);
-    opacity: 0;
-    visibility: hidden;
     background: var(--navbar-color);
     box-shadow: 0 5px 5px rgba(0,0,0,0.1);
     text-align: right;
     z-index: 10;
-    transform: translateY(-3rem);
-    pointer-events: none;
 }
 
 #heading-menu a {

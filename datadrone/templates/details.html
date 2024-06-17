@@ -5,11 +5,11 @@
 <div class="heading-grid">
     <h3>{{ item.itemname }}</h3>
     
-    <button class="btn-invis heading-icon" onclick="toggleHeadingMenu()">
+    <button class="btn-invis heading-icon" onClick="toggleHeadingMenu()">
         <i id ="heading-menu-icon" class='bx bx-dots-horizontal'></i>
     </button>
 
-    <div id="heading-menu">
+    <div id="heading-menu" class="invisible">
         <button class="btn-invis edit-itemname-toggle">Edit name</button>
         <a href="{{ url_for('items.tags', item_id=item.item_id) }}">
             Edit tags</a>

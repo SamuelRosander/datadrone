@@ -11,7 +11,7 @@
     <button class="btn-invis heading-icon" onclick="toggleHeadingMenu()">
         <i id ="heading-menu-icon" class='bx bx-dots-horizontal'></i>
     </button>
-    <div id="heading-menu">
+    <div id="heading-menu" class="invisible">
         <a class="delete"
                 onClick="return confirm('Are you sure you want to delete this entry?')"
                 href="{{ url_for('entries.delete', 

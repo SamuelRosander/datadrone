@@ -16,11 +16,11 @@ for (let i=0; i<flashes.length; i++) {
 }
 
 function toggleMenu() {
-    document.getElementById("user-menu").classList.toggle("visible");
+    document.getElementById("user-menu").classList.toggle("invisible");
 }
 
 function toggleHeadingMenu() {
-    document.getElementById("heading-menu").classList.toggle("visible");
+    document.getElementById("heading-menu").classList.toggle("invisible");
 }
 
 document.onmouseup = function(e) {

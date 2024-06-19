@@ -23,15 +23,15 @@ function toggleHeadingMenu() {
     document.getElementById("heading-menu").classList.toggle("invisible");
 }
 
-document.onmouseup = function(e) {
-    e.preventDefault()
+document.onclick = function(e) {
     if ((e.target.id != "user-icon")
             && (e.target.parentElement.id != "user-menu")) {
-        document.getElementById("user-menu").classList.remove("visible");
+        document.getElementById("user-menu").classList.add("invisible");
     }
     
-    if ((e.target.id != "heading-menu-icon")
+    if ((e.target.id != "heading-menu-btn")
+            && (e.target.parentElement.id != "heading-menu-btn")
             && (e.target.parentElement.id != "heading-menu")) {
-        document.getElementById("heading-menu").classList.remove("visible");
+        document.getElementById("heading-menu").classList.add("invisible");
     }
 }

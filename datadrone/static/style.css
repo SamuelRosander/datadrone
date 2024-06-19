@@ -163,7 +163,7 @@ a.delete:hover {
     z-index: 10;
 }
 
-.user-menu.invisible, #heading-menu.invisible  {
+.user-menu.invisible, #heading-menu.invisible {
     transform: translateY(-3rem);
     pointer-events: none;
 }
@@ -254,6 +254,7 @@ a.delete:hover {
 input[type="checkbox"] {
     opacity: 0;
     position: absolute;
+    pointer-events: none;
 }
 
 input[type="checkbox"]:focus-visible + label {

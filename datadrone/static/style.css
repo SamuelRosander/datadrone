@@ -74,6 +74,15 @@
     margin-left: 1rem !important;
 }
 
+.hidden {
+    display: none !important;
+}
+
+.invisible {
+    visibility: hidden !important;
+    opacity: 0;
+}
+
 html {
     font-size: 120%;
 }
@@ -98,6 +107,16 @@ a:hover {
     color: var(--main-color-hover);
 }
 
+a.delete {
+    background-color: var(--btn-delete-color);
+    color: var(--text-color) !important;
+}
+
+a.delete:hover {
+    background-color: var(--btn-delete-hover-color);
+    color: var(--text-color) !important;
+}
+
 .header {
     background: var(--form-color);
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
@@ -111,6 +130,10 @@ a:hover {
     align-items: center;
 }
 
+.header .btn-invis {
+    margin-right: 0.7rem;
+}
+
 .logo {
     font-size: 1.1rem;
     padding: 1rem;
@@ -121,7 +144,6 @@ a:hover {
     padding: 1rem;
     color: var(--text-color);
     transition: var(--animation-speed);
-    margin-right: 0.7rem;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -132,8 +154,6 @@ a:hover {
 
 .user-menu {
     transition: var(--animation-speed);
-    opacity: 0;
-    visibility: hidden;
     position: absolute;
     right: 0;
     background: var(--navbar-color);
@@ -141,14 +161,11 @@ a:hover {
     border-radius: 0 0 0.5rem 0.5rem;
     text-align: right;
     z-index: 10;
-    overflow: hidden;
-    transform: translateY(-3rem);
 }
 
-.user-menu.visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+.user-menu.invisible, #heading-menu.invisible {
+    transform: translateY(-3rem);
+    pointer-events: none;
 }
 
 .user-menu span {
@@ -166,7 +183,6 @@ a:hover {
     color: var(--text-color);
     align-items: center;
     justify-content: right;
-
 }
 
 .user-menu a:hover {
@@ -238,9 +254,10 @@ a:hover {
 input[type="checkbox"] {
     opacity: 0;
     position: absolute;
+    pointer-events: none;
 }
 
-input[type="checkbox"]:focus-visible + label:before {
+input[type="checkbox"]:focus-visible + label {
     outline: 2px solid var(--main-color);
 }
 
@@ -258,20 +275,6 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     font-weight: 400;
     margin: 0 0 1rem 0;
-}
-
-.heading-a {
-    font-family: 'Poppins', sans-serif;
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem;
-    text-align: center;
-    color: var(--text-color);
-    opacity: 0.5;
-}
-
-.heading-a:hover {
-    color: var(--text-color);
-    opacity: 1;
 }
 
 .btn {
@@ -325,8 +328,17 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--bg-color);
 }
 
+.btn-invis {
+    background: none;
+    border: 0;
+}
+
 .btn i {
     font-size: 1.5rem;
+}
+
+.btn span {
+    font-size: 1.75rem;
 }
 
 .flexrow {
@@ -338,6 +350,10 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     gap: 5px;
     margin-bottom: 5px;
+}
+
+.flex.nogap {
+    gap: 0;
 }
 
 .flex input {
@@ -354,16 +370,79 @@ h1, h2, h3, h4, h5, h6 {
     align-items: start;
     grid-gap: 1rem;
     margin-bottom: 2rem;
+    position: relative;
 }
 
-.heading-grid > h3 {
+.heading-grid > h3, .heading-grid > input[type="text"] {
     grid-column: 2;
     align-self: center;
     margin: 0;
+    text-align: center;
 }
 
 .heading-grid .btn {
     height: 3rem;
+}
+
+.heading-grid .form-error-label {
+    bottom: 0;
+    margin-bottom: -1.2rem;
+}
+
+.heading-icon {
+    font-family: 'Poppins', sans-serif;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    color: var(--text-color);
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.heading-icon:hover {
+    color: var(--text-color);
+    opacity: 1;
+}
+
+#heading-menu {
+    position: absolute;
+    background-color: var(--navbar-color);
+    top: 3rem;
+    right: -0.5rem;
+    transition: var(--animation-speed);
+    background: var(--navbar-color);
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+    text-align: right;
+    z-index: 10;
+}
+
+#heading-menu a {
+    font-size: 1rem;
+    display: flex;
+    padding: 1rem;
+    padding-left: 3rem;
+    color: var(--text-color);
+    align-items: center;
+    justify-content: right;
+}
+
+#heading-menu a:hover {
+    color: var(--main-color);
+}
+
+#heading-menu button {
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    padding: 1rem;
+    padding-left: 3rem;
+    color: var(--text-color);
+    cursor: pointer;
+    width: 100%;
+    text-align: right;
+}
+
+#heading-menu button:hover {
+    color: var(--main-color);
 }
 
 .small-text {
@@ -466,6 +545,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 .item-icon-container {
+    background: none;
     flex-basis: 3rem;
     display: flex;
     cursor: pointer;
@@ -729,10 +809,6 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     opacity: 0.5;
 }
 
-.tag-box-label.hidden {
-    display: none;
-}
-
 /* page specific - locations */
 .locations-grid {
     display: grid;
@@ -893,11 +969,6 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
     align-self: baseline;
     user-select: none;
 }
-
-.flash.hidden {
-    opacity: 0;
-}
-
 
 
 @media (max-width: 767px) {

@@ -4,15 +4,21 @@
 
 <div class="heading-grid">
     <a href="{{ url_for('items.details', item_id=entry.item.item_id) }}" 
-            class="heading-a">
+            class="heading-icon">
         <i class='bx bx-arrow-back'></i>
     </a>
     <h3>Entry</h3>
-    <a class="btn delete"
-        onClick="return confirm('Are you sure you want to delete this entry?')"
-        href="{{ url_for('entries.delete', entry_id=entry.entry_id) }}" >
-        <i class='bx bx-trash'></i>
-    </a>
+    <button id="heading-menu-btn" class="btn-invis heading-icon" 
+            onclick="toggleHeadingMenu()">
+        <i class='bx bx-dots-horizontal'></i>
+    </button>
+    <div id="heading-menu" class="invisible">
+        <a class="delete"
+                onClick="return confirm('Are you sure you want to delete this entry?')"
+                href="{{ url_for('entries.delete', 
+                    entry_id=entry.entry_id) }}">
+            Delete entry</a>
+    </div>
 </div>
 
 <form method="POST" action="">

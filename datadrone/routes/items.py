@@ -14,7 +14,7 @@ bp = Blueprint("items", __name__, url_prefix="/items")
 
 
 @bp.route("/<int:item_id>/", methods=["GET", "POST"])
-@cache.cached(query_string=True)
+@cache.cached(query_string=True, unless=lambda: current_user.is_anonymous)
 @login_required
 def details(item_id):
     item = Item.query.get_or_404(item_id)
@@ -30,6 +30,7 @@ def details(item_id):
             days = int(request.args.get('days'))
 
     form = DetailsSearchScopeForm()
+    edit_name_form = EditItemForm()
 
     if form.validate_on_submit():
         entries = Entry.query.filter(
@@ -64,7 +65,7 @@ def details(item_id):
 
     return render_template(
         "details.html", item=item, entries=entries_list, stats=all_stats,
-        form=form, days=days, map_key=MAP_KEY)
+        form=form, days=days, map_key=MAP_KEY, edit_name_form=edit_name_form)
 
 
 @bp.route("/add", methods=["POST"])
@@ -79,9 +80,39 @@ def add():
     return redirect(url_for("main.index"))
 
 
-@bp.route("/<int:item_id>/edit", methods=["GET", "POST"])
+@bp.route("/<int:item_id>/edit", methods=["POST"])
 @login_required
 def edit(item_id):
+    item = Item.query.get_or_404(item_id)
+    if item.owner != current_user:
+        abort(403)
+
+    form = EditItemForm()
+
+    if form.validate_on_submit():
+        item.itemname = form.itemname.data
+        db.session.commit()
+        cache.clear()
+
+    return redirect(url_for("items.details", item_id=item.item_id))
+
+
+@bp.route("/<int:item_id>/delete")
+@login_required
+def delete(item_id):
+    item = Item.query.get_or_404(item_id)
+    if item.owner != current_user:
+        abort(403)
+    item.deleted = True
+    db.session.commit()
+
+    flash("Item has been deleted.", "warning")
+    return redirect(url_for("main.index"))
+
+
+@bp.route("/<int:item_id>/tags", methods=["GET", "POST"])
+@login_required
+def tags(item_id):
     item = Item.query.get_or_404(item_id)
     if item.owner != current_user:
         abort(403)
@@ -101,19 +132,6 @@ def edit(item_id):
     return render_template(
         "item_edit.html", item=item, form=form, add_tag_form=add_tag_form,
         edit_tag_form=edit_tag_form)
-
-
-@bp.route("/<int:item_id>/delete")
-@login_required
-def delete(item_id):
-    item = Item.query.get_or_404(item_id)
-    if item.owner != current_user:
-        abort(403)
-    item.deleted = True
-    db.session.commit()
-
-    flash("Item has been deleted.", "warning")
-    return redirect(url_for("main.index"))
 
 
 @bp.route("/<int:item_id>/download")

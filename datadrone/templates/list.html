@@ -20,7 +20,7 @@
             </div>
         </a>
         {% if item.tags %}
-        <div class="item-icon-container jq-tag-icon" 
+        <button type="button" class="item-icon-container jq-tag-icon" 
                 target="{{ item.item_id }}" title="Tags">
             {% set ns=namespace(active_tags=False, default_tags=False) %}
             {% for tag in item.tags %}
@@ -35,7 +35,22 @@
             <i class='item-icon bx bx-label {{ "active" if ns.default_tags 
                 else "" if ns.active_tags else "" }}'
                 id="tagswitch-img-{{ item.item_id }}"></i>
-        </div>
+        </button>
+        <div class="modal-item-tags-container" 
+            id="modal-item-tags-{{ item.item_id }}">
+        <h3>Tags</h3>
+        {% for tag in item.tags 
+            if not tag.deleted and not tag.hidden and not tag.archived %}
+        <input type="checkbox" name="tag-{{ tag.tag_id }}" 
+            id="tag-{{ tag.tag_id }}"
+            target="{{ item.item_id }}" {{ "checked" if tag.is_default }}>
+        <label for="tag-{{ tag.tag_id }}" class="tag-box-label">
+            {{ tag.name }}
+        </label>
+        {% endfor %}
+        <input type="button" class="btn color jq-tag-button mt-1" 
+            Value="Save">
+    </div>
         {% endif %}
         <label class="item-icon-container" for="geo_switch-{{ item.item_id }}"
                 title="Geo">
@@ -49,21 +64,7 @@
         </button>
     </div>
 
-    <div class="modal-item-tags-container" 
-            id="modal-item-tags-{{ item.item_id }}">
-        <h3>Tags</h3>
-        {% for tag in item.tags 
-            if not tag.deleted and not tag.hidden and not tag.archived %}
-        <input type="checkbox" name="tag-{{ tag.tag_id }}" 
-            id="tag-{{ tag.tag_id }}" class="tag-box-checkbox"
-            target="{{ item.item_id }}" {{ "checked" if tag.is_default }}>
-        <label for="tag-{{ tag.tag_id }}" class="tag-box-label">
-            {{ tag.name }}
-        </label>
-        {% endfor %}
-        <input type="button" class="btn color jq-tag-button mt-1" 
-            Value="Save">
-    </div>
+    
 </form>
 {% endfor %}
 {% else %}
@@ -76,7 +77,7 @@
 <div id="add-item-modal-fade" class="modal-fade"></div>
 <div id="add-item-modal-newitem">
   What do you want to keep track of?
-  <form action="{{ url_for('items.add') }}" method="post" class="flex">
+  <form action="{{ url_for('items.add') }}" method="post" class="flex nogap">
   {{ item_form.hidden_tag() }}
   {{ item_form.itemname(class="form", id="add-item-input") }}
   <input type="submit" class="btn color" Value="Add">

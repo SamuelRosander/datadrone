@@ -5,7 +5,7 @@ function confirmDelete(name, url) {
 }
 
 function dismiss(element){
-    element.parentNode.classList.add("hidden");
+    element.parentNode.classList.add("invisible");
 };
 
 flashes = document.getElementsByClassName("flash");
@@ -15,20 +15,23 @@ for (let i=0; i<flashes.length; i++) {
     }) 
 }
 
-function toggleUserMenu() {
-    document.getElementById("user-menu").classList.toggle("visible");
-    document.getElementById("user-icon").classList.toggle("active");
-}
-
 function toggleMenu() {
-    document.getElementById("user-menu").classList.remove("visible");
+    document.getElementById("user-menu").classList.toggle("invisible");
 }
 
-document.onmouseup = function(e) {
-    e.preventDefault()
+function toggleHeadingMenu() {
+    document.getElementById("heading-menu").classList.toggle("invisible");
+}
+
+document.onclick = function(e) {
     if ((e.target.id != "user-icon")
             && (e.target.parentElement.id != "user-menu")) {
-        document.getElementById("user-menu").classList.remove("visible");
-        document.getElementById("user-icon").classList.remove("active");
+        document.getElementById("user-menu").classList.add("invisible");
+    }
+    
+    if ((e.target.id != "heading-menu-btn")
+            && (e.target.parentElement.id != "heading-menu-btn")
+            && (e.target.parentElement.id != "heading-menu")) {
+        document.getElementById("heading-menu").classList.add("invisible");
     }
 }

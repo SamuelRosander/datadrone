@@ -4,11 +4,46 @@
 
 <div class="heading-grid">
     <h3>{{ item.itemname }}</h3>
-    <a href="{{ url_for('items.edit', item_id=item.item_id) }}" 
-            class="heading-a">
-        <i class='bx bx-edit-alt'></i>
-    </a>
+    
+    <button id="heading-menu-btn" class="btn-invis heading-icon"
+            onClick="toggleHeadingMenu()">
+        <i class='bx bx-dots-horizontal'></i>
+    </button>
+
+    <div id="heading-menu" class="invisible">
+        <button class="btn-invis edit-itemname-toggle">Edit name</button>
+        <a href="{{ url_for('items.tags', item_id=item.item_id) }}">
+            Edit tags</a>
+        <a href="{{ url_for('items.download', item_id=item.item_id) }}">
+            Download CSV</a>
+        <a class="delete"
+            onClick="return confirm('Are you sure you want to delete this item and all of its entries?')"
+            href="{{ url_for('items.delete', item_id=item.item_id) }}" >
+            Delete item</a>
+    </div>
 </div>
+
+<form method="POST" action="{{ url_for('items.edit', item_id=item.item_id) }}"
+        class="heading-grid hidden" id="heading-form">
+    {{ edit_name_form.hidden_tag() }}
+
+    <button type="button" class="btn mb-0 edit-itemname-toggle"
+            title="Cancel">
+        <span>&times;</span>
+    </button>
+
+    {{ edit_name_form.itemname(class="form", value=item.itemname) }}
+        
+    <button type="submit" class="btn color mb-0" title="Save">
+        <i class='bx bx-save'></i>
+    </button>
+
+    {% if edit_name_form.itemname.errors %}
+        <div class="form-error-label">
+            {{ edit_name_form.itemname.errors[0] }}
+        </div>
+    {% endif %}
+</form>
 
 <div class="filter-header">
     <div class="filter-button" role="button">

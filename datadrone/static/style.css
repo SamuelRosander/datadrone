@@ -352,6 +352,10 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 5px;
 }
 
+.flex.nogap {
+    gap: 0;
+}
+
 .flex input {
     margin-bottom: 0;
 }

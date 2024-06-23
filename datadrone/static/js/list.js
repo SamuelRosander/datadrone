@@ -20,12 +20,12 @@ $(document).ready(function(){
         $(".modal-item-tags-container").hide();
     });
 
-    $(".tag-box-checkbox").change(function() {
+    $(".tag-checkbox").change(function() {
         var all_checkboxes = $("input:checkbox");
         var target = $(this).attr("target")
         for (var i = all_checkboxes.length-1; i >= 0; i--) {
             if (all_checkboxes[i].getAttribute("target") != target || 
-                    all_checkboxes[i].className != "tag-box-checkbox") {
+                    all_checkboxes[i].className != "tag-checkbox") {
                 all_checkboxes.splice(i, 1)
             }
         }

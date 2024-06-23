@@ -1,14 +1,11 @@
 from flask import current_app
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import aliased
 from .extensions import db, login_manager
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from itsdangerous import SignatureExpired
 from datetime import datetime
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 
 class User(db.Model, UserMixin):
@@ -55,6 +52,22 @@ class Item(db.Model):
 
     def __repr__(self):
         return f"Item('{self.item_id}', '{self.user_id}', '{self.itemname}')"
+
+    @hybrid_property
+    def active_tags(self):
+        return [tag for tag in self.tags
+                if not tag.deleted and not tag.archived and not tag.hidden]
+
+    @active_tags.expression
+    def active_tags(cls):
+        TagAlias = aliased(Tag)
+        return (
+            db.session.query(TagAlias)
+            .filter(TagAlias.item_id == cls.item_id)
+            .filter(TagAlias.deleted == False)
+            .filter(TagAlias.archived == False)
+            .filter(TagAlias.hidden == False)
+        )
 
 
 class Entry(db.Model):
@@ -117,3 +130,8 @@ class Location(db.Model):
     def __repr__(self):
         return f"Location('{self.location_id}', '{self.name}', " \
             f"'{self.latitude}', '{self.longitude}')"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

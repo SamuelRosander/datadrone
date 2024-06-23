@@ -64,9 +64,9 @@ class Item(db.Model):
         return (
             db.session.query(TagAlias)
             .filter(TagAlias.item_id == cls.item_id)
-            .filter(TagAlias.deleted == False)
-            .filter(TagAlias.archived == False)
-            .filter(TagAlias.hidden == False)
+            .filter(TagAlias.deleted.is_(False))
+            .filter(TagAlias.archived.is_(False))
+            .filter(TagAlias.hidden.is_(False))
         )
 
 

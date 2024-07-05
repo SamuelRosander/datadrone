@@ -1,6 +1,6 @@
 from flask import Blueprint, url_for, flash, redirect, abort
 from datadrone.extensions import db
-from datadrone.forms import AddTagForm, EditTagForm
+from datadrone.forms import AddTagForm
 from datadrone.models import Tag, Item
 from flask_login import current_user, login_required
 
@@ -27,25 +27,6 @@ def add(item_id):
               "error")
 
     return redirect(url_for("items.tags", item_id=item_id))
-
-
-@bp.route("/<int:tag_id>/edit", methods=["POST"])
-@login_required
-def edit(tag_id):
-    tag = Tag.query.get_or_404(tag_id)
-    form = EditTagForm()
-
-    if tag.item.owner != current_user:
-        abort(403)
-
-    if form.validate_on_submit():
-        tag.name = form.tagname.data
-        tag.hidden = form.hidden.data
-        tag.archived = form.archived.data
-        db.session.commit()
-        flash("Tag has been updated!", "success")
-
-    return redirect(url_for("items.tags", item_id=tag.item.item_id))
 
 
 @bp.route("/<int:tag_id>/delete")

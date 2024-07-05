@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, url_for, flash, redirect, \
     request, abort
 from datadrone.extensions import db, cache
 from datadrone.forms import AddItemForm, DetailsSearchScopeForm, \
-    EditItemForm, AddTagForm, EditTagForm
+    EditItemForm, AddTagForm, EditTagsForm
 from datadrone.models import Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import current_user, login_required
@@ -117,21 +117,39 @@ def tags(item_id):
     if item.owner != current_user:
         abort(403)
 
-    form = EditItemForm()
     add_tag_form = AddTagForm()
-    edit_tag_form = EditTagForm()
+    edit_tags_form = EditTagsForm()
 
-    if form.validate_on_submit():
-        item.itemname = form.itemname.data
+    if edit_tags_form.validate_on_submit():
+        for form_tag in edit_tags_form.tags:
+            tag = Tag.query.get_or_404(form_tag.tag_id.data)
+
+            if tag.item.owner != current_user:
+                abort(403)
+
+            tag.name = form_tag.tagname.data
+            tag.hidden = form_tag.hidden.data
+            tag.archived = form_tag.archived.data
+
         db.session.commit()
-        flash("Item has been updated!", "success")
-        return redirect(url_for("items.details", item_id=item.item_id))
+        flash("Tags has been updated.", "success")
+
     elif request.method == "GET":
-        form.itemname.data = item.itemname
+        active_tags = [tag for tag in item.tags if not tag.deleted]
+        for _ in range(len(active_tags)):
+            edit_tags_form.tags.append_entry()
+
+            for tag, form_tag in zip(active_tags, edit_tags_form.tags):
+                form_tag["tagname"].data = tag.name
+                form_tag["hidden"].data = tag.hidden
+                form_tag["archived"].data = tag.archived
+                form_tag["tag_id"].data = tag.tag_id
+    else:
+        flash(edit_tags_form.errors, "error")
 
     return render_template(
-        "item_edit.html", item=item, form=form, add_tag_form=add_tag_form,
-        edit_tag_form=edit_tag_form)
+        "item_edit.html", item=item, add_tag_form=add_tag_form,
+        edit_tags_form=edit_tags_form)
 
 
 @bp.route("/<int:item_id>/download")

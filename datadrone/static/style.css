@@ -570,7 +570,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 .item-icon {
-    font-size: 1.5rem;    
+    font-size: 1.5rem;
 }
 
 .item-icon.active {
@@ -841,7 +841,8 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     width: 3.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: end;
+    padding-bottom: 0.5rem;
     align-items: center;
     font-size: 0.6rem;
     user-select: none;
@@ -881,11 +882,6 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-}
-
-.edit_item-checkbox-container div {
-    position: absolute;
-    bottom: 0.5rem;
 }
 
 /* modals */

@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, \
-    HiddenField, FloatField, RadioField, DateField, TimeField
+    HiddenField, FloatField, RadioField, DateField, TimeField, FieldList, \
+    FormField
 from wtforms.validators import Length, Email, EqualTo, ValidationError, \
     Optional, DataRequired
 from .extensions import bcrypt
@@ -106,7 +107,12 @@ class EditTagForm(FlaskForm):
                           Length(min=1, max=32), DataRequired()])
     hidden = BooleanField("Hidden")
     archived = BooleanField("Archived")
-    submit = SubmitField("Update")
+    tag_id = HiddenField("id")
+
+
+class EditTagsForm(FlaskForm):
+    tags = FieldList(FormField(EditTagForm))
+    submit = SubmitField("Save")
 
 
 class AddLocationForm(FlaskForm):

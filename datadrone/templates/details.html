@@ -3,6 +3,10 @@
 {% block body %}
 
 <div class="heading-grid">
+    <a href="{{ url_for('main.index') }}" class="heading-icon">
+        <i class='bx bx-arrow-back'></i>
+    </a>
+
     <h3>{{ item.itemname }}</h3>
     
     <button id="heading-menu-btn" class="btn-invis heading-icon"

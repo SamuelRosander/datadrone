@@ -1,14 +1,11 @@
 from flask import current_app
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import aliased
 from .extensions import db, login_manager
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from itsdangerous import SignatureExpired
 from datetime import datetime
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 
 class User(db.Model, UserMixin):
@@ -19,8 +16,10 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(128), unique=True, nullable=False)
     register_date = db.Column(
         db.DateTime, nullable=False, default=datetime.utcnow())
-    items = db.relationship("Item", backref="owner", lazy=True)
-    locations = db.relationship("Location", backref="owner", lazy=True)
+    items = db.relationship("Item", backref="owner", lazy=True,
+                            order_by="Item.item_id")
+    locations = db.relationship("Location", backref="owner", lazy=True,
+                                order_by="Location.location_id")
 
     def get_reset_token(self):
         s = Serializer(current_app.config["SECRET_KEY"])
@@ -50,11 +49,29 @@ class Item(db.Model):
     itemname = db.Column(db.String(64), nullable=False)
     geo_default = db.Column(db.Boolean, default=False)
     deleted = db.Column(db.Boolean, default=False)
-    entries = db.relationship("Entry", backref="item", lazy=True)
-    tags = db.relationship("Tag", backref="item", lazy=True)
+    entries = db.relationship("Entry", backref="item", lazy=True,
+                              order_by="Entry.entry_id")
+    tags = db.relationship("Tag", backref="item", lazy=True,
+                           order_by="Tag.tag_id")
 
     def __repr__(self):
         return f"Item('{self.item_id}', '{self.user_id}', '{self.itemname}')"
+
+    @hybrid_property
+    def active_tags(self):
+        return [tag for tag in self.tags
+                if not tag.deleted and not tag.archived and not tag.hidden]
+
+    @active_tags.expression
+    def active_tags(cls):
+        TagAlias = aliased(Tag)
+        return (
+            db.session.query(TagAlias)
+            .filter(TagAlias.item_id == cls.item_id)
+            .filter(TagAlias.deleted.is_(False))
+            .filter(TagAlias.archived.is_(False))
+            .filter(TagAlias.hidden.is_(False))
+        )
 
 
 class Entry(db.Model):
@@ -67,7 +84,9 @@ class Entry(db.Model):
     comment = db.Column(db.String(256))
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
-    entrytags = db.relationship("EntryTag", backref="entry", lazy=True)
+    entrytags = db.relationship(
+        "EntryTag", backref="entry", lazy=True,
+        order_by="EntryTag.entrytag_id")
     deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
@@ -85,7 +104,8 @@ class Tag(db.Model):
     hidden = db.Column(db.Boolean, default=False)
     archived = db.Column(db.Boolean, default=False)
     deleted = db.Column(db.Boolean, default=False)
-    tagentries = db.relationship("EntryTag", backref="tag", lazy=True)
+    tagentries = db.relationship("EntryTag", backref="tag", lazy=True,
+                                 order_by="EntryTag.entrytag_id")
 
     def __repr__(self):
         return f"Tag('{self.tag_id}', '{self.name}')"
@@ -117,3 +137,8 @@ class Location(db.Model):
     def __repr__(self):
         return f"Location('{self.location_id}', '{self.name}', " \
             f"'{self.latitude}', '{self.longitude}')"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

@@ -59,6 +59,7 @@
 
   window.initMap = initMap;
 </script>
+
 <h3>Edit locations</h3>
 {% for location in locations if not location.deleted %}
 <form method="POST" class="edit-tag-form" action="{{ url_for('locations.edit', 
@@ -85,7 +86,8 @@
 </form>
 {% endfor %}
 
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}&callback=initMap&v=weekly" defer></script>
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}&loading=async&callback=initMap&v=weekly">
+</script>
 
 {% endblock %}

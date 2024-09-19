@@ -4,6 +4,9 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail, Message
 from flask_caching import Cache
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 db = SQLAlchemy()
 login_manager = LoginManager()

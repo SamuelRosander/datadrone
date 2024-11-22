@@ -1,11 +1,12 @@
 $(document).ready(function(){
   $(".filter-button").click(function() {
     $(".filter-body").slideToggle("fast");
-    $(this).toggleClass('active')
+    $(this).toggleClass('active');
   });
 
   $(".edit-itemname-toggle").click(function() {
     $(".heading-grid").toggleClass("hidden");
-    $("#itemname").focus().select()
+    $("#itemname").focus().select();
+    $("#heading-menu").addClass("invisible");
   });
 });

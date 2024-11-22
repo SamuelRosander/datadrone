@@ -174,7 +174,7 @@
     </div>
 </div>
 <div class="details-grid-bars">
-    <h3>Weekday</h3>
+    <h4>Weekday</h4>
     {% for day, count in stats["weekday"].items() %}
     {% set percent=(count/stats["total"]*100)|round|int 
         if stats["total"] > 0 else 0 %}
@@ -187,7 +187,7 @@
     </div>
     {% endfor %}
 
-    <h3>Time of day</h3>
+    <h4>Time of day</h4>
     {% for time, count in stats["time_of_day"].items() %}
     {% set percent=(count/stats["total"]*100)|round|int 
         if stats["total"] > 0 else 0 %}
@@ -201,7 +201,7 @@
     {% endfor %}
 
     {% if stats["nr_of_entrytags"]|length %}
-    <h3>Tags</h3>    
+    <h4>Tags</h4>
     {% for tagname, count in stats["nr_of_entrytags"].items() %}
     {% set percent=(count/stats["total"]*100)|round|int 
         if stats["total"] > 0 else 0 %}
@@ -273,7 +273,7 @@
 
 
 
-<h3>Entries</h3>
+<h4>Entries</h4>
 <div class="entries-list">
     {% for entry in entries[::-1] %}
         <div>

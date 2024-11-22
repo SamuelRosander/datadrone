@@ -26,12 +26,18 @@ function toggleHeadingMenu() {
 document.onclick = function(e) {
     if ((e.target.id != "user-icon")
             && (e.target.parentElement.id != "user-menu")) {
-        document.getElementById("user-menu").classList.add("invisible");
+        let userMenu = document.getElementById("user-menu");
+        if (userMenu) {
+            userMenu.classList.add("invisible");
+        }
     }
     
     if ((e.target.id != "heading-menu-btn")
             && (e.target.parentElement.id != "heading-menu-btn")
             && (e.target.parentElement.id != "heading-menu")) {
-        document.getElementById("heading-menu").classList.add("invisible");
+        let headingMenu = document.getElementById("heading-menu");
+        if (headingMenu) {
+            headingMenu.classList.add("invisible");
+        }
     }
 }

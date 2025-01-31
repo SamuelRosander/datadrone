@@ -2,6 +2,7 @@
 
 :root {
     --bg-color: #333;
+    --bg-color-hover: #282828;
     --navbar-color: #222;
     --form-color: #444;
     --form-color-secondary: #555;
@@ -373,7 +374,7 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
 }
 
-.heading-grid > h3, .heading-grid > input[type="text"] {
+.heading-grid > h3, .heading-grid > h4, .heading-grid > input[type="text"] {
     grid-column: 2;
     align-self: center;
     margin: 0;
@@ -497,6 +498,14 @@ h1, h2, h3, h4, h5, h6 {
     content: "";
 }
 
+.login-checkbox-label:hover::before {
+    background-color: var(--btn-hover-color);
+}
+
+input[type="checkbox"]:checked + .login-checkbox-label:hover::before {
+    background-color: var(--main-color-hover);
+}
+
 input[type="checkbox"]:checked + .login-checkbox-label::before {
     background: var(--main-color);
 }
@@ -509,8 +518,6 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     height: 10px;
     border: solid var(--text-color-inverted);
     border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
 
@@ -721,7 +728,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     opacity: 1;
 }
 
-.details-grid-bars > h3 {
+.details-grid-bars > h4 {
     grid-column: span 2;
     margin-top: 1rem;
 }
@@ -868,8 +875,16 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     z-index: 6;
 }
 
+.edit_item-checkbox-container:hover::before {
+    background: var(--bg-color-hover);
+}
+
 input[type="checkbox"]:checked + .edit_item-checkbox-container::before {
     background: var(--main-color);
+}
+
+input[type="checkbox"]:checked + .edit_item-checkbox-container:hover::before {
+    background: var(--main-color-hover);
 }
 
 input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
@@ -976,7 +991,7 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
 
 @media (pointer: fine) {
     .item-icon-container i:hover {
-        color: var(--btn-hover-color);
+        color: var(--bg-hover-color);
     }
 
     .item-icon-container i.active:hover {
@@ -988,7 +1003,7 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
     }
 
     .item-icon-container :not(input[type="checkbox"]:checked) + i:hover {
-        color: var(--btn-hover-color);
+        color: var(--bg-hover-color);
     }
 
     input[type="checkbox"]:checked + .tag-box-label:hover {

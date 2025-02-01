@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, \
     request, abort
 from datadrone.extensions import db, cache
-from datadrone.forms import AddItemForm, DetailsSearchScopeForm, \
-    EditItemForm, AddTagForm, EditTagsForm
+from datadrone.forms import AddItemForm, EditItemForm, AddTagForm, EditTagsForm
 from datadrone.models import Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import current_user, login_required
+from sqlalchemy import or_
 import datetime
 from flask_csv import send_csv
 from os import environ
@@ -22,50 +22,61 @@ def details(item_id):
     if item.owner != current_user:
         abort(403)
 
-    days = 90
-    if request.args.get('days'):
-        if request.args.get('days') == "all":
-            days = "all"
-        else:
-            days = int(request.args.get('days'))
+    # removes empty arguments from the URL
+    filtered_args = {k: v for k, v in request.args.items() if v}
+    if filtered_args != dict(request.args):
+        return redirect(
+            url_for('items.details', item_id=item_id, **filtered_args))
 
-    form = DetailsSearchScopeForm()
     edit_name_form = EditItemForm()
 
-    if form.validate_on_submit():
-        entries = Entry.query.filter(
-            Entry.item_id == item_id, Entry.deleted.is_(False),
-            Entry.timestamp >= form.scope_from.data,
-            Entry.timestamp <= form.scope_to.data +
-            datetime.timedelta(days=1)).order_by(
-            Entry.timestamp)
-        entries_list = convert_entries_to_list(entries)
-        filter_entry_list(entries_list, form)
-        all_stats = stats.get_all(
-            entries_list, form.scope_from.data, form.scope_to.data)
-    elif days == "all":
-        entries = Entry.query.filter_by(
-            item_id=item_id, deleted=False).order_by(
-            Entry.timestamp)
-        entries_list = convert_entries_to_list(entries)
-        filter_entry_list(entries_list, form)
-        all_stats = stats.get_all(entries_list)
-    else:
+    entries = Entry.query.filter(
+        Entry.item_id == item_id,
+        Entry.deleted.is_(False))
+
+    from_date = None
+
+    # default view and used in quick select days
+    if not request.args.get("filter"):
+        days = request.args.get('days', '90')
+        days = int(days) if days.isdigit() else "all"
+
         now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-        scope_from = (now - datetime.timedelta(days=days)).date()
-        entries = Entry.query.filter(
-            Entry.item_id == item_id, Entry.deleted.is_(False),
-            Entry.timestamp >= scope_from).order_by(Entry.timestamp)
-        entries_list = convert_entries_to_list(entries)
-        filter_entry_list(entries_list, form)
-        all_stats = stats.get_all(
-            entries_list, scope_from=scope_from, days=days)
+
+        if days != "all":
+            from_date = now - datetime.timedelta(days=days)
+    # filtered view
+    else:
+        from_date = request.args.get("from")
+        to_date = request.args.get("to")
+
+        has_geo = request.args.get("has_geo")
+        if (has_geo == "true"):
+            entries = entries.filter(
+                Entry.latitude.isnot(None), Entry.longitude.isnot(None))
+        elif (has_geo == "false"):
+            entries = entries.filter(
+                or_(Entry.latitude.is_(None), Entry.longitude.is_(None)))
+
+    if from_date:
+        entries = entries.filter(Entry.timestamp >= from_date)
+
+    if to_date_string := request.args.get("to"):
+        to_date = datetime.datetime.strptime(
+            to_date_string, "%Y-%m-%d") + datetime.timedelta(days=1)
+        entries = entries.filter(Entry.timestamp <= to_date)
+
+    # Apply ordering
+    entries = entries.order_by(Entry.timestamp)
+
+    entries_list = convert_entries_to_list(entries)
+    all_stats = stats.get_all(entries_list)
 
     MAP_KEY = environ.get('GOOGLEMAPS_KEY')
 
     return render_template(
         "details.html", item=item, entries=entries_list, stats=all_stats,
-        form=form, days=days, map_key=MAP_KEY, edit_name_form=edit_name_form)
+        map_key=MAP_KEY, edit_name_form=edit_name_form)
 
 
 @bp.route("/add", methods=["POST"])
@@ -199,35 +210,3 @@ def get_csv_list(sql):
         del entry["item_id"]
         entries_list.append(entry)
     return entries_list
-
-
-def filter_entry_list(all_entries, form):
-    if form.filter_geo.data == "all":
-        filter_geo = None
-    else:
-        filter_geo = form.filter_geo.data
-
-    if form.filter_comment.data == "all":
-        filter_comment = None
-    else:
-        filter_comment = form.filter_comment.data
-
-    for i in range(len(all_entries)-1, -1, -1):
-        removed = False
-        entry = all_entries[i]
-
-        entry_has_geo = bool(entry.get("longitude") and entry.get("latitude"))
-        if filter_geo:
-            if eval(filter_geo) != entry_has_geo:
-                if not removed:
-                    del all_entries[i]
-                    removed = True
-
-        entry_has_comment = bool(entry.get("comment"))
-        if filter_comment:
-            if eval(filter_comment) != entry_has_comment:
-                if not removed:
-                    del all_entries[i]
-                    removed = True
-
-    return all_entries

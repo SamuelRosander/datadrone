@@ -32,8 +32,14 @@ def get_time_since_last(entry):
             return str(int(diffs/3600)) + " hours ago"
     elif abs(diffd) < 2:
         return str(diffd) + " day ago"
-    else:
+    elif abs(diffd) < 365:
         return str(diffd) + " days ago"
+    elif abs(diffd) < 401:
+        return str(int(diffd/365)) + " year ago"
+    else:
+        return str(
+            int(diffd / 365)
+            if diffd / 365 % 1 == 0 else round(diffd / 365, 1)) + " years ago"
 
 
 def get_all(entries, scope_from=None, scope_to=None, days=None):

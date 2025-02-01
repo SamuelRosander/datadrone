@@ -616,6 +616,11 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     position: relative;
 }
 
+.filter-quickdays > select:hover {
+    background-color: var(--btn-hover-color);
+    cursor: pointer;
+}
+
 .filter-quickdays > select {
     margin-bottom: 0;
     height: 100%;
@@ -636,6 +641,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     background: var(--card-bg-color);
     margin-bottom: 1rem;
     padding: 1rem;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
 }
 
 .filter-grid {

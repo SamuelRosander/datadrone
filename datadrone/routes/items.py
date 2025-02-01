@@ -5,7 +5,7 @@ from datadrone.forms import AddItemForm, EditItemForm, AddTagForm, EditTagsForm
 from datadrone.models import Item, Entry, Tag, EntryTag
 import datadrone.stats as stats
 from flask_login import current_user, login_required
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 import datetime
 from flask_csv import send_csv
 from os import environ
@@ -57,6 +57,29 @@ def details(item_id):
         elif (has_geo == "false"):
             entries = entries.filter(
                 or_(Entry.latitude.is_(None), Entry.longitude.is_(None)))
+
+        tags = {
+            int(k.replace("tag-", "")): v for k, v in request.args.items()
+            if k.startswith("tag-")}
+        true_tag_ids = [tag_id for tag_id,
+                        value in tags.items() if value == 'true']
+        false_tag_ids = [tag_id for tag_id,
+                         value in tags.items() if value == 'false']
+
+        entries = entries.filter(
+            and_(
+                # Entry must have all the true tags
+                *[
+                    Entry.entrytags.any(EntryTag.tag_id == tag_id)
+                    for tag_id in true_tag_ids
+                ],
+                # Entry must not have any of the false tags
+                *[
+                    ~Entry.entrytags.any(EntryTag.tag_id == tag_id)
+                    for tag_id in false_tag_ids
+                ]
+            )
+        )
 
     if from_date:
         entries = entries.filter(Entry.timestamp >= from_date)

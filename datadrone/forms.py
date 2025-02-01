@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, \
-    HiddenField, FloatField, RadioField, DateField, TimeField, FieldList, \
+    HiddenField, FloatField, DateField, TimeField, FieldList, \
     FormField
 from wtforms.validators import Length, Email, EqualTo, ValidationError, \
     Optional, DataRequired
@@ -79,15 +79,6 @@ class UpdateEntryForm(FlaskForm):
     longitude = FloatField("Longitude", validators=[Optional()])
     comment = StringField("Comment")
     submit = SubmitField("Update")
-
-
-class DetailsSearchScopeForm(FlaskForm):
-    choices = [("True", 'Yes'), ("False", 'No'), ("all", 'All')]
-    scope_from = DateField("From")
-    scope_to = DateField("To")
-    filter_geo = RadioField('Geo', choices=choices, default="all")
-    filter_comment = RadioField('Comment', choices=choices, default="all")
-    submit = SubmitField("Search")
 
 
 class EditItemForm(FlaskForm):

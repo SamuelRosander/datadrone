@@ -91,11 +91,28 @@
             <input type="radio" name="has_geo" value="false" id="geo_false" {{ "checked" if request.args.get("has_geo") == "false" }}>
             <label for="geo_false">No</label>
             
-            <input type="radio" name="has_geo" value=""  id="geo_any" {{ "checked" if "has_geo" not in request.args }}>
-            <label for="geo_any">Any</label>
+            <input type="radio" name="has_geo" value=""  id="geo_all" {{ "checked" if "has_geo" not in request.args }}>
+            <label for="geo_all">All</label>
         </div>
+
+        {% if item.tags %}
+        <h4>Has tags</h4>
+            {% for tag in item.tags if tag.archived == False %}
+                <span>{{ tag.name }}</span>
+                <div>
+                    <input type="radio" name="tag-{{ tag.tag_id }}" value="true" id="tag-{{ tag.tag_id }}_true" {{ "checked" if request.args.get("tag-" + (tag.tag_id | string)) == "true" }}>
+                    <label for="tag-{{ tag.tag_id }}_true">Yes</label>
+                    
+                    <input type="radio" name="tag-{{ tag.tag_id }}" value="false" id="tag-{{ tag.tag_id }}_false" {{ "checked" if request.args.get("tag-" + (tag.tag_id | string)) == "false" }}>
+                    <label for="tag-{{ tag.tag_id }}_false">No</label>
+                    
+                    <input type="radio" name="tag-{{ tag.tag_id }}" value=""  id="tag-{{ tag.tag_id }}_all" {{ "checked" if "tag-" + (tag.tag_id | string) not in request.args }}>
+                    <label for="tag-{{ tag.tag_id }}_all">All</label>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
-    <button type="submit" class="btn">Search</button>
+    <button type="submit" class="btn mt-1 mb-0">Search</button>
 </form>
 
 <div class="lastdays-label">
@@ -212,7 +229,7 @@
     </div>
     {% endfor %}
 
-    {% if stats["nr_of_entrytags"]|length %}
+    {% if stats["nr_of_entrytags"] | length %}
     <h4>Tags</h4>
     {% for tagname, count in stats["nr_of_entrytags"].items() %}
     {% set percent=(count/stats["total"]*100)|round|int 

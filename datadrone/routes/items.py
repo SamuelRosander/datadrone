@@ -35,6 +35,7 @@ def details(item_id):
         Entry.deleted.is_(False))
 
     from_date = None
+    stat_args = {}
 
     # default view and used in quick select days
     if not request.args.get("filter"):
@@ -44,11 +45,17 @@ def details(item_id):
         now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
 
         if days != "all":
-            from_date = now - datetime.timedelta(days=days)
+            from_date = (now - datetime.timedelta(days=days)).date()
+
+        to_date = now.date()
+
+        stat_args["scope_to"] = to_date
+        stat_args["days"] = days
     # filtered view
     else:
-        from_date = request.args.get("from")
-        to_date = request.args.get("to")
+        from_date_string = request.args.get("from")
+        from_date = datetime.datetime.strptime(
+            from_date_string, "%Y-%m-%d").date() if from_date_string else None
 
         has_geo = request.args.get("has_geo")
         if (has_geo == "true"):
@@ -68,12 +75,10 @@ def details(item_id):
 
         entries = entries.filter(
             and_(
-                # Entry must have all the true tags
                 *[
                     Entry.entrytags.any(EntryTag.tag_id == tag_id)
                     for tag_id in true_tag_ids
                 ],
-                # Entry must not have any of the false tags
                 *[
                     ~Entry.entrytags.any(EntryTag.tag_id == tag_id)
                     for tag_id in false_tag_ids
@@ -83,17 +88,18 @@ def details(item_id):
 
     if from_date:
         entries = entries.filter(Entry.timestamp >= from_date)
+        stat_args["scope_from"] = from_date
 
     if to_date_string := request.args.get("to"):
         to_date = datetime.datetime.strptime(
-            to_date_string, "%Y-%m-%d") + datetime.timedelta(days=1)
+            to_date_string, "%Y-%m-%d").date() + datetime.timedelta(days=1)
         entries = entries.filter(Entry.timestamp <= to_date)
+        stat_args["scope_to"] = to_date
 
-    # Apply ordering
     entries = entries.order_by(Entry.timestamp)
-
     entries_list = convert_entries_to_list(entries)
-    all_stats = stats.get_all(entries_list)
+
+    all_stats = stats.get_all(entries_list, **stat_args)
 
     MAP_KEY = environ.get('GOOGLEMAPS_KEY')
 

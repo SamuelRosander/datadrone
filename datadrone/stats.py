@@ -83,14 +83,12 @@ def get_all(entries, scope_from=None, scope_to=None, days=None):
         stats["first"] = entries[0]["timestamp"]
         stats["last"] = entries[-1]["timestamp"]
         stats["total"] = len(entries)
-        if scope_from and scope_to:
-            stats["total_nr_of_days"] = (
-                scope_to - scope_from).days + 1
-        elif days:
-            stats["total_nr_of_days"] = days
-        else:
-            stats["total_nr_of_days"] = (
-                now_date - stats["first"].date()).days + 1
+
+        scope_from = scope_from or stats["first"].date()
+        scope_to = scope_to or stats["last"].date()
+
+        stats["total_nr_of_days"] = (scope_to - scope_from).days
+
         if stats["total_nr_of_days"] == 0:
             stats["total_nr_of_days"] = 1
         stats["average_a_day"] = round(

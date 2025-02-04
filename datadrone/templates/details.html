@@ -57,15 +57,15 @@
         <select class="form small" 
                 onchange="document.location.href=this.value">
             <option value="{{ url_for('items.details', item_id=item.item_id,
-                days=30) }}" {{ 'selected' if days == 30 }}>30</option>
+                days=30) }}" {{ 'selected' if request.args.get('days') == '30' }}>30</option>
             <option value="{{ url_for('items.details', item_id=item.item_id,
-                days=90) }}" {{ 'selected' if days == 90 }}>90</option>
+                days=90) }}" {{ 'selected' if request.args.get('days', '90') == '90' }}>90</option>
             <option value="{{ url_for('items.details', item_id=item.item_id,
-                days=180) }}" {{ 'selected' if days == 180 }}>180</option>
+                days=180) }}" {{ 'selected' if request.args.get('days') == '180' }}>180</option>
             <option value="{{ url_for('items.details', item_id=item.item_id,
-                days=365) }}" {{ 'selected' if days == 365 }}>365</option>
+                days=365) }}" {{ 'selected' if request.args.get('days') == '365' }}>365</option>
             <option value="{{ url_for('items.details', item_id=item.item_id,
-                days='all') }}" {{ 'selected' if days == 'all' }}>All</option>
+                days='all') }}" {{ 'selected' if request.args.get('days') == 'all' }}>All</option>
         </select>
         <span>
             days
@@ -73,38 +73,67 @@
     </span>
 </div>
 
-<form method="POST" class="filter-body"
+<form method="GET" class="filter-body"
         action="{{ url_for('items.details', item_id=item.item_id) }}">
+    <input type="hidden" name="filter" value="1">
     <div class="filter-grid">
-        {{ form.hidden_tag() }}
-        
-        {{ form.scope_from.label }}
-        {{ form.scope_to.label }}
+        <span>From:</span>
+        <span>To:</span>
 
+        <input type="date" class="form" name="from" value="{{ request.args.get('from') }}">
+        <input type="date" class="form" name="to" value="{{ request.args.get('to') }}">
+
+        <span>Has geo</span>
         <div>
-            {{ form.scope_from(class="form", value=form.scope_from.data) }}
-            {% if form.scope_from.errors %}
-            <div class="form-error-label">{{ form.scope_from.errors[0] }}</div>
-            {% endif %}
+            <input type="radio" name="has_geo" value="true" id="geo_true" {{ "checked" if request.args.get("has_geo") == "true" }}>
+            <label for="geo_true">Yes</label>
+            
+            <input type="radio" name="has_geo" value="false" id="geo_false" {{ "checked" if request.args.get("has_geo") == "false" }}>
+            <label for="geo_false">No</label>
+            
+            <input type="radio" name="has_geo" value=""  id="geo_all" {{ "checked" if "has_geo" not in request.args }}>
+            <label for="geo_all">All</label>
         </div>
-        <div>
-            {{ form.scope_to(class="form", value=form.scope_to.data) }}
-            {% if form.scope_to.errors %}
-            <div class="form-error-label">{{ form.scope_to.errors[0] }}</div>
-            {% endif %}
-        </div>
+
+        {% if item.tags %}
+        <h4>Has tags</h4>
+            {% for tag in item.tags if tag.archived == False %}
+                <span>{{ tag.name }}</span>
+                <div>
+                    <input type="radio" name="tag-{{ tag.tag_id }}" value="true" id="tag-{{ tag.tag_id }}_true" {{ "checked" if request.args.get("tag-" + (tag.tag_id | string)) == "true" }}>
+                    <label for="tag-{{ tag.tag_id }}_true">Yes</label>
+                    
+                    <input type="radio" name="tag-{{ tag.tag_id }}" value="false" id="tag-{{ tag.tag_id }}_false" {{ "checked" if request.args.get("tag-" + (tag.tag_id | string)) == "false" }}>
+                    <label for="tag-{{ tag.tag_id }}_false">No</label>
+                    
+                    <input type="radio" name="tag-{{ tag.tag_id }}" value=""  id="tag-{{ tag.tag_id }}_all" {{ "checked" if "tag-" + (tag.tag_id | string) not in request.args }}>
+                    <label for="tag-{{ tag.tag_id }}_all">All</label>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
-    {{ form.submit(class="btn") }}
+    <button type="submit" class="btn mt-1 mb-0">Search</button>
 </form>
 
 <div class="lastdays-label">
-    {% if form.validate_on_submit() %}
-    Showing entries between {{ form.scope_from.data }} 
-        and {{ form.scope_to.data }}
-    {% elif days == "all" %}
-    Showing all entries
+    {% if request.args.get("filter") %}
+        Showing entries
+        {% if request.args.get("from") %}
+            from {{ request.args.get("from") }}
+        {% endif %}
+        {% if request.args.get("to") %}
+            to {{ request.args.get("to") }}
+        {% endif %}
+
+        {% if request.args.get("has_geo") == "true" %}
+            that has a geo location
+        {% elif request.args.get("has_geo") == "false" %}
+            that does not have a geo location
+        {% endif %}
+    {% elif request.args.get("days") == "all" %}
+        Showing all entries
     {% else %}
-    Showing entries from the last {{ days }} days
+        Showing entries from the last {{ request.args.get("days") if request.args.get("days") else "90" }} days
     {% endif %}
 </div>
   <div class="details-grid-stats">
@@ -173,6 +202,9 @@
       {{ stats['total_today'] }}
     </div>
 </div>
+
+Total nr of days: {{ stats["total_nr_of_days"] }}<br>
+
 <div class="details-grid-bars">
     <h4>Weekday</h4>
     {% for day, count in stats["weekday"].items() %}
@@ -200,7 +232,7 @@
     </div>
     {% endfor %}
 
-    {% if stats["nr_of_entrytags"]|length %}
+    {% if stats["nr_of_entrytags"] | length %}
     <h4>Tags</h4>
     {% for tagname, count in stats["nr_of_entrytags"].items() %}
     {% set percent=(count/stats["total"]*100)|round|int 

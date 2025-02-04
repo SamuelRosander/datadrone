@@ -643,6 +643,11 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     position: relative;
 }
 
+.filter-quickdays > select:hover {
+    background-color: var(--btn-hover-color);
+    cursor: pointer;
+}
+
 .filter-quickdays > select {
     margin-bottom: 0;
     height: 100%;
@@ -663,12 +668,20 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     background: var(--form-color-third);
     margin-bottom: 1rem;
     padding: 1rem;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
 }
 
 .filter-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 5px;
+}
+
+.filter-grid h4 {
+    grid-column: span 2;
+    text-align: left;
+    margin-bottom: 0;
+    margin-top: 1rem;
 }
 
 .lastdays-label {

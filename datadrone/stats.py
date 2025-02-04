@@ -5,41 +5,29 @@ from collections import defaultdict
 
 def get_time_since_last(entry):
     now = datetime.datetime.utcnow()
-
     diff = now - entry.utc_timestamp
-    diffs = diff.seconds
-    diffd = diff.days
 
-    # handling negative entries (entry is set in the future)
-    if diffd < 0:
-        diffs = diffs - 86400
-        diffd = diffd + 1
+    if diff.total_seconds() < 0:
+        return "is in the future"
 
-    # abs() for handling negative entries
-    # int() instead of floor() for correct rounding on negative entries
-    if abs(diffd) < 1:
-        if abs(diffs) == 1:
-            return str(diffs) + " second ago"
-        elif abs(diffs) < 60:
-            return str(diffs) + " seconds ago"
-        elif abs(diffs) < 120:
-            return str(int(diffs/60)) + " minute ago"
-        elif abs(diffs) < 3600:
-            return str(int(diffs/60)) + " minutes ago"
-        elif abs(diffs) < 7200:
-            return str(int(diffs/3600)) + " hour ago"
-        else:
-            return str(int(diffs/3600)) + " hours ago"
-    elif abs(diffd) < 2:
-        return str(diffd) + " day ago"
-    elif abs(diffd) < 365:
-        return str(diffd) + " days ago"
-    elif abs(diffd) < 401:
-        return str(int(diffd/365)) + " year ago"
-    else:
-        return str(
-            int(diffd / 365)
-            if diffd / 365 % 1 == 0 else round(diffd / 365, 1)) + " years ago"
+    days = diff.days
+    seconds = diff.seconds
+
+    if days == 0:
+        if seconds < 60:
+            return f"was {seconds} second{'s' if seconds != 1 else ''} ago"
+        minutes, seconds = divmod(seconds, 60)
+        if minutes < 60:
+            return f"was {minutes} minute{'s' if minutes != 1 else ''} ago"
+        hours, minutes = divmod(minutes, 60)
+        return f"was {hours} hour{'s' if hours != 1 else ''} ago"
+
+    if days < 365:
+        return f"was {days} day{'s' if days != 1 else ''} ago"
+
+    years = days / 365
+    formatted_years = f"was {years:.1f}" if years % 1 != 0 else f"{int(years)}"
+    return f"{formatted_years} year{'s' if years != 1 else ''} ago"
 
 
 def get_all(entries, scope_from=None, scope_to=None, days=None):

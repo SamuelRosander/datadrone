@@ -26,8 +26,9 @@ def get_time_since_last(entry):
         return f"was {days} day{'s' if days != 1 else ''} ago"
 
     years = days / 365
-    formatted_years = f"was {years:.1f}" if years % 1 != 0 else f"{int(years)}"
-    return f"{formatted_years} year{'s' if years != 1 else ''} ago"
+    formatted_years = f"{years:.1f}".rstrip("0").rstrip(".")
+    return f"was {formatted_years} \
+        year{'s' if float(formatted_years) != 1 else ''} ago"
 
 
 def get_all(entries, scope_from=None, scope_to=None, days=None):

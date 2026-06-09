@@ -47,7 +47,7 @@
 
         <a onClick="return confirm('Are you sure you want to delete this tag?')"
                 href="{{ url_for('tags.delete', tag_id=form_tag.tag_id.data) }}"
-                class="btn delete">
+                class="btn delete" title="Delete">
             <i class='bx bx-trash'></i>
         </a>
     </div>

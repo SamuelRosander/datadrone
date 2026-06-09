@@ -4,11 +4,12 @@
     --bg-color: #333;
     --bg-color-hover: #282828;
     --navbar-color: #222;
-    --form-color: #444;
-    --form-color-secondary: #555;
-    --form-color-third: #3c3c3c;
+    --card-bg-color: #444;
+    --card-bg-color-secondary: #555;
+    --bar-bg-color: #3c3c3c;
     --text-color: #fff;
     --text-color-inverted: #000;
+    --form-border-color: #666;
     --main-color: #62c4ea;
     --main-color-hover: #4e9cbc;
     --btn-hover-color: #555;
@@ -26,11 +27,12 @@
     :root {
         --bg-color: #eee;
         --navbar-color: #fff;
-        --form-color: #fff;
-        --form-color-secondary: #eee;
-        --form-color-third: #e8e8e8;
+        --card-bg-color: #fff;
+        --card-bg-color-secondary: #eee;
+        --bar-bg-color: #e8e8e8;
         --text-color: #000;
         --text-color-inverted: #fff;
+        --form-border-color: #fff;
         --main-color: #348fb3;
         --main-color-hover: #4ba3c6;
         --btn-hover-color: #f5f5f5;
@@ -84,6 +86,14 @@
     opacity: 0;
 }
 
+.left {
+    justify-self: left;
+}
+
+.right {
+    justify-self: right;
+}
+
 html {
     font-size: 120%;
 }
@@ -119,7 +129,7 @@ a.delete:hover {
 }
 
 .header {
-    background: var(--form-color);
+    background: var(--card-bg-color);
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     z-index: 15;
     position: relative;
@@ -214,11 +224,12 @@ a.delete:hover {
 
 .form {
     width: 100%;
-    background-color: var(--form-color);
     color: var(--text-color);
-    padding: 1rem;
+    background-color: transparent;
+    border: 3px solid var(--form-border-color);
+    border-radius: 10px;
+    padding: calc(1rem - 3px);
     font-size: 1rem;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
     margin-bottom: 1rem;
 }
 
@@ -228,7 +239,7 @@ a.delete:hover {
 
 .form:focus {
     outline: none;
-    box-shadow: inset 0 -2px 0 var(--main-color), 0 5px 5px rgba(0,0,0,0.1);
+    border-color: var(--main-color);
 }
 
 .form.error {
@@ -244,7 +255,7 @@ a.delete:hover {
 }
 
 .tag-box-label {
-    background: var(--form-color);
+    background: var(--card-bg-color);
     padding: 1rem;
     margin: 5px 3px;
     display: inline-block;
@@ -279,14 +290,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn {
-    width: 100%;
-    background-color: var(--form-color);
-    color: var(--text-color);
+    background-color: var(--main-color);
+    color: var(--text-color-inverted);
     font-family: 'Poppins', sans-serif;
-    padding: 1rem;
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
     margin-bottom: 1rem;
-    font-size: 1rem;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+    font-size: 0.9rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -295,18 +305,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn:hover {
-    background-color: var(--btn-hover-color);
-    color: var(--text-color);
+    background-color: var(--main-color-hover);
 }
 
-.btn.outline {
-    background-color: var(--bg-color);
-    border: 2px solid var(--form-color);
-    padding: calc(1rem - 2px);
+.btn.secondary {
+    color: var(--text-color);   
+    background-color: var(--card-bg-color);
 }
 
-.btn.outline:hover {
-    border: 2px solid var(--btn-hover-color);
+.btn.secondary:hover {
     background-color: var(--btn-hover-color);
 }
 
@@ -317,16 +324,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn.delete:hover {
     background-color: var(--btn-delete-hover-color);
-}
-
-.btn.color {
-    background: var(--main-color);
-    color: var(--bg-color);
-}
-
-.btn.color:hover {
-    background: var(--main-color-hover);
-    color: var(--bg-color);
 }
 
 .btn-invis {
@@ -477,54 +474,51 @@ h1, h2, h3, h4, h5, h6 {
 /* page specific - login */
 
 .login-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
     user-select: none;
     position: relative;
+    align-self: flex-start;
 }
 
 .login-checkbox-label::before {
-    display: inline-block;
     content: "";
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-    top: 1px;
-    border-radius: 3px;
-    background: var(--form-color);
+    width: 16px;
+    height: 16px;
+    border: 3px solid var(--form-border-color);
+    border-radius: 6px;
+    display: inline-block;
+    transition: background 0.15s, border-color 0.15s;
 }
 
 .login-checkbox-label::after {
-    display: none;
-    position: absolute;
     content: "";
-}
-
-.login-checkbox-label:hover::before {
-    background-color: var(--btn-hover-color);
-}
-
-input[type="checkbox"]:checked + .login-checkbox-label:hover::before {
-    background-color: var(--main-color-hover);
-}
-
-input[type="checkbox"]:checked + .login-checkbox-label::before {
-    background: var(--main-color);
-}
-
-input[type="checkbox"]:checked + .login-checkbox-label::after {
-    display: block;
-    left: 5px;
-    top: 4px;
+    position: absolute;
     width: 5px;
     height: 10px;
     border: solid var(--text-color-inverted);
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
+    left: 7px;
+    top: 7px;
+    display: none;
+}
+
+input[type="checkbox"]:checked + .login-checkbox-label::before {
+    background: var(--main-color);
+    border-color: var(--main-color);
+}
+
+input[type="checkbox"]:checked + .login-checkbox-label::after {
+    display: block;
 }
 
 /* Page specific - list */
 .item-container {
     margin-bottom: 1rem;
-    background: var(--form-color);
+    background: var(--card-bg-color);
     display: flex;
     gap: 0.5rem;
     height: 3rem;
@@ -570,6 +564,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 .item-container > button {
     width: 3rem;
     margin-bottom: 0;
+    border-radius: 0 10px 10px 0;
 }
 
 .item-icon-container input[type="checkbox"]:checked + i {
@@ -609,7 +604,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 
 .filter-button {
     width: 100%;
-    background-color: var(--form-color);
+    background-color: var(--card-bg-color);
     padding: 1rem;
     text-align: center;
     box-shadow: 0 5px 5px rgba(0,0,0,0.1);
@@ -660,7 +655,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 
 .filter-body {
     display: none;
-    background: var(--form-color-third);
+    background: var(--card-bg-color);
     margin-bottom: 1rem;
     padding: 1rem;
 }
@@ -684,7 +679,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 
 .statsbox {
     padding: 0.5rem;
-    background-color: var(--form-color);
+    background-color: var(--card-bg-color);
     box-shadow: 0 5px 5px rgba(0,0,0,0.1);
     position: relative;
 }
@@ -713,7 +708,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 .date-info {
     font-size: 0.7rem;
     position: absolute;
-    background-color: var(--form-color-secondary);
+    background-color: var(--card-bg-color-secondary);
     right: 0.5rem;
     /* bottom: 0.5rem; */
     /* left: 0.5rem; */
@@ -734,7 +729,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 .bar-bg {
-    background: var(--form-color-third);
+    background: var(--bar-bg-color);
     display: flex;
     align-items: center;
     position: relative;
@@ -752,7 +747,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 .entries-list {
-    border: 2px solid var(--form-color);
+    border: 2px solid var(--card-bg-color);
     padding: 0.5rem;
     display: grid;
     grid-template-columns: auto auto auto 1fr;
@@ -764,7 +759,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 .entries-list > *:nth-child(8n+2),
 .entries-list > *:nth-child(8n+3),
 .entries-list > *:nth-child(8n+4) {
-    background: var(--form-color);
+    background: var(--card-bg-color);
 }
 
 .entries-list i {
@@ -821,13 +816,17 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 5px;
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
     margin-bottom: 2rem;
-    border-bottom: 2px solid var(--form-color);
+    border-bottom: 2px solid var(--card-bg-color);
 }
 
-.locations-grid > .btn{
-    grid-column: span 2;
+form:last-of-type .locations-grid {
+    border-bottom: none;
+}
+
+.locations-grid > .btn {
+    margin: 0;
 }
 
 .locations-flexrow {
@@ -843,60 +842,45 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 /* page specific - edit item */
 
 .edit_item-checkbox-container {
-    flex-shrink: 0;
-    background: var(--form-color); 
-    width: 3.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: end;
-    padding-bottom: 0.5rem;
     align-items: center;
-    font-size: 0.6rem;
-    user-select: none;
-    cursor: pointer;
+    gap: 5px;
     position: relative;
+    font-size: 0.6rem;
+    margin: 0 5px;
+    cursor: pointer;
 }
 
 .edit_item-checkbox-container::before {
     content: "";
-    position: absolute;
-    z-index: 5;
     width: 18px;
     height: 18px;
-    top: 0.8rem;
-    border-radius: 3px;
-    background: var(--bg-color);
+    border: 3px solid var(--form-border-color);
+    border-radius: 6px;
+    display: block;
+    margin-top: 9px;
 }
 
 .edit_item-checkbox-container::after {
     content: "";
     position: absolute;
-    display: none;
-    z-index: 6;
-}
-
-.edit_item-checkbox-container:hover::before {
-    background: var(--bg-color-hover);
-}
-
-input[type="checkbox"]:checked + .edit_item-checkbox-container::before {
-    background: var(--main-color);
-}
-
-input[type="checkbox"]:checked + .edit_item-checkbox-container:hover::before {
-    background: var(--main-color-hover);
-}
-
-input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
-    top: 0.85rem;
-    display: block;
+    top: 14px;
     width: 5px;
     height: 10px;
     border: solid var(--text-color-inverted);
     border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+    display: none;
+}
+
+input[type="checkbox"]:checked + .edit_item-checkbox-container::before {
+    background: var(--main-color);
+    border-color: var(--main-color);
+}
+
+input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
+    display: block;
 }
 
 /* modals */
@@ -916,18 +900,24 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
 #add-item-modal-newitem {
     display: none;
     position: fixed;
-    left: 0.8rem;
-    right: 0.8rem;
-    max-width: calc(var(--max-width) - 1.6rem);
+    left: 0;
+    right: 0;
+    background-color: var(--card-bg-color);
+    padding: 2rem;  
     top: 20%;
     z-index: 25;
+    margin: 0 auto;
+}
+
+#add-item-modal-newitem form {
+    max-width: calc(var(--max-width) - 1.6rem);
     margin: 0 auto;
 }
 
 .modal-item-tags-container {
     display: none;
     position: fixed;
-    background-color: var(--form-color-third);
+    background-color: var(--bar-bg-color);
     left: 0.8rem;
     right: 0.8rem;
     max-width: calc(var(--max-width) - 1.6rem);
@@ -940,7 +930,7 @@ input[type="checkbox"]:checked + .edit_item-checkbox-container::after {
 
 /* flashes */
 .flash {
-    background: var(--form-color);
+    background: var(--card-bg-color);
     padding: 1rem;
     display: flex;
     justify-content: space-between;

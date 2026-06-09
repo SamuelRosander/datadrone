@@ -48,7 +48,7 @@
             {{ tag.name }}
         </label>
         {% endfor %}
-        <input type="button" class="btn color jq-tag-button mt-1" 
+        <input type="button" class="btn jq-tag-button mt-1" 
             Value="Save">
     </div>
         {% endif %}
@@ -58,7 +58,7 @@
                 checked=item.geo_default) }}
             <i class='item-icon bx bx-map'></i>
         </label>
-        <button type="button" class="btn color" id="add-{{ item.item_id }}"
+        <button type="button" class="btn" id="add-{{ item.item_id }}"
                 title="Add entry"  onClick="sendForm({{ item.item_id }})">
             <i class='item-icon bx bx-plus'></i>
         </button>
@@ -76,11 +76,11 @@
 <div id="tags-modal-fade" class="modal-fade"></div>
 <div id="add-item-modal-fade" class="modal-fade"></div>
 <div id="add-item-modal-newitem">
-  What do you want to keep track of?
-  <form action="{{ url_for('items.add') }}" method="post" class="flex nogap">
-  {{ item_form.hidden_tag() }}
-  {{ item_form.itemname(class="form", id="add-item-input") }}
-  <input type="submit" class="btn color" Value="Add">
+    <form action="{{ url_for('items.add') }}" method="post">
+        What do you want to keep track of?
+        {{ item_form.hidden_tag() }}
+        {{ item_form.itemname(class="form", id="add-item-input") }}
+        <input type="submit" class="btn mb-0" Value="Add">
   </form>
 </div>
 

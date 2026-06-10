@@ -11,22 +11,25 @@
     {{ form.password.label }}
     {{ form.password(class="form", placeholder="********") }}
 
-    {{ form.remember() }}
-    {{ form.remember.label(class="login-checkbox-label") }}
+    <div class="flexrow">
+        {{ form.remember() }}
+        {{ form.remember.label(class="login-checkbox-label") }}
 
-    {{ form.submit(class="btn") }}
+        {{ form.submit(class="btn mb-0") }}
+    </div>
+
 </form>
+
+<a id="login-google-btn" class="btn secondary mt-1" 
+        href="{{ url_for('auth.oauth2_authorize', provider='google') }}">
+    Log in with Google
+    <i class='bx bxl-google ml-1'></i>
+</a>
 
 <div class="flexrow">
     <a href="{{ url_for('user.register') }}">Register</a>
     <a href="{{ url_for('user.reset_request') }}">Forgot password</a>
 </div>
-
-<a id="login-google-btn" class="btn outline mt-1" 
-        href="{{ url_for('auth.oauth2_authorize', provider='google') }}">
-    Log in with Google
-    <i class='bx bxl-google ml-1'></i>
-</a>
 
 <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 

@@ -574,66 +574,51 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 /* Page specific - details */
-.filter-header {
-    display:flex;
-    justify-content: space-between;
-    gap: 5px;
-}
-
 .filter-button {
     width: 100%;
-    background-color: var(--card-bg-color);
-    padding: 1rem;
+    color: var(--text-color);
+    background-color: transparent;
+    border: 3px solid var(--form-border-color);
+    border-radius: 10px;
+    padding: calc(0.6rem - 3px); 
     text-align: center;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
     user-select: none;
     transition: var(--animation-speed);
 }
 
 .filter-button:hover {
     cursor: pointer;
-    background: var(--btn-hover-color);
 }
 
 .filter-button::after {
-    content: "\0002c5";
+    content: "▼";
     display: inline-block;
-    position: absolute;
-    margin-left: 1rem;
-    transform: scaleX(1.5);
+    position: relative;
+    top: -2px;
+    margin-left: 0.5rem;
+    transform: scale(0.7);
 }
 
 .filter-button.active {
-    box-shadow: inset 0 -2px 0 var(--main-color), 0 5px 5px rgba(0,0,0,0.1);
+    border-color: var(--card-bg-color-secondary);
+    border-radius: 10px 10px 0 0;
+    background-color: var(--card-bg-color-secondary);
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 3px solid var(--main-color);
 }
 
 .filter-button.active::after {
-    transform: rotate(180deg) scaleX(1.5);
+    content: "▲";
 }
 
 .filter-quickdays {
-    flex-shrink: 0;
     position: relative;
 }
 
-.filter-quickdays > select:hover {
-    background-color: var(--btn-hover-color);
-    cursor: pointer;
-}
-
 .filter-quickdays > select {
+    cursor: pointer;
     margin-bottom: 0;
-    height: 100%;
-    width: 7rem;
-}
-
-.filter-quickdays > span {
-    position: absolute;
-    right: 1.5rem;
-    top: 1rem;
-    pointer-events: none;
-    user-select: none;
-    opacity: 0.5;
 }
 
 .filter-body {
@@ -648,6 +633,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 5px;
+    align-items: center;
 }
 
 .filter-grid h4 {
@@ -655,6 +641,33 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
     text-align: left;
     margin-bottom: 0;
     margin-top: 1rem;
+}
+
+.filter-radio-bar {
+    display: flex;
+    gap: 4px;
+}
+
+.filter-radio-bar > input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.filter-radio-bar > input[type="radio"] + label {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    background-color: var(--card-bg-color-secondary);
+    font-size: 0.8rem;
+    line-height: calc(1rem + 9px);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.filter-radio-bar > input[type="radio"]:checked + label {
+    background-color: var(--main-color);
+    color: var(--text-color-inverted);
 }
 
 .lastdays-label {

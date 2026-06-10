@@ -15,34 +15,12 @@
     --btn-hover-color: #555;
     --btn-delete-color: #AD3232;
     --btn-delete-hover-color: #CF2828;
-    --flash-success-color: #70b8d5;
+    --flash-success-color: #70d597;
     --flash-message-color: #a170d5;
     --flash-warning-color: #ad9032;
     --flash-error-color: #AD3232;
     --animation-speed: 0.2s;
     --max-width: 600px;
-}
-
-@media (prefers-color-scheme: light) {
-    :root {
-        --bg-color: #eee;
-        --navbar-color: #fff;
-        --card-bg-color: #fff;
-        --card-bg-color-secondary: #eee;
-        --bar-bg-color: #e8e8e8;
-        --text-color: #000;
-        --text-color-inverted: #fff;
-        --form-border-color: #fff;
-        --main-color: #348fb3;
-        --main-color-hover: #4ba3c6;
-        --btn-hover-color: #f5f5f5;
-        --btn-delete-color: #F08784;
-        --btn-delete-hover-color: #E05C5C;
-        --flash-success-color: #9dbdde;
-        --flash-message-color: #bd9dde;
-        --flash-warning-color: #d2b862;
-        --flash-error-color: #F08784;
-    }
 }
 
 * {

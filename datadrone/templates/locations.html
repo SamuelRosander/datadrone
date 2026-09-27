@@ -15,7 +15,8 @@
         {{ add_form.latitude(class="form", placeholder="0.0") }}
         {{ add_form.longitude(class="form", placeholder="0.0") }}
         
-        {{ add_form.submit(class="btn left") }}
+        <span></span>
+        {{ add_form.submit(class="btn right") }}
     </div>
 
 </form>
@@ -75,12 +76,12 @@
         {{ edit_form.latitude(value=location.latitude, class="form") }}
         {{ edit_form.longitude(value=location.longitude, class="form") }}
         
-        {{ edit_form.submit(class="btn left") }}
-        <a class="btn delete right" href="{{ url_for('locations.delete', 
+        <a class="btn delete left" href="{{ url_for('locations.delete', 
                 location_id=location.location_id) }}" 
                 onClick="return confirm('Are you sure you want to delete this location?')">
             Delete
         </a>
+        {{ edit_form.submit(class="btn right") }}
     </div>
 
 </form>

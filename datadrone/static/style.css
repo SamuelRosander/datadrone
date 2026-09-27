@@ -6,6 +6,7 @@
     --navbar-color: #222;
     --card-bg-color: #444;
     --card-bg-color-secondary: #555;
+    --card-bg-color-selected: #ddd;
     --bar-bg-color: #3c3c3c;
     --text-color: #fff;
     --text-color-inverted: #000;
@@ -671,7 +672,7 @@ input[type="checkbox"]:checked + .login-checkbox-label::after {
 }
 
 .filter-radio-bar > input[type="radio"]:checked + label {
-    background-color: var(--main-color);
+    background-color: var(--card-bg-color-selected);
     color: var(--text-color-inverted);
 }
 

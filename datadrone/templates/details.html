@@ -80,6 +80,11 @@
                 {{ 'checked' if request.args.get('days') == '365' }}>
             <label for="quickdays365">365</label>
 
+            <input type="radio" name="quickdays" id="quickdaysall" value="all"
+                data-url="{{ url_for('items.details', item_id=item.item_id, days='all') }}"
+                {{ 'checked' if request.args.get('days') == 'all' }}>
+            <label for="quickdaysall">All</label>
+
             days
         </div>
 

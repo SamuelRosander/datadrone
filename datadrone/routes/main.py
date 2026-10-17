@@ -38,11 +38,11 @@ def manifest():
     if current_app.config.get("ENVIRONMENT") == "test":
         app_name = "DataDrone (Test)"
         short_name = "DataDrone (Test)"
-        theme_color = "#62c4ea"
+        theme_color = "#000000"
     else:
         app_name = "DataDrone"
         short_name = "DataDrone"
-        theme_color = "#62c4ea"
+        theme_color = "#000000"
 
     return jsonify({
         "id": "/",

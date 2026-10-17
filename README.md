@@ -16,6 +16,7 @@ SECRET_KEY = randomstring
 GOOGLEMAPS_KEY = googlemapskey
 GOOGLE_CLIENT_ID=yourid.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your_google_secret
+ENVIRONMENT = test (optional)
 ```
 
 ### Initial setup

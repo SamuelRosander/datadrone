@@ -1,9 +1,25 @@
 {
+    "id": "/",
+    "name": "DataDrone",
+    "short_name": "DD",
+    "description": "DataDrone",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#333333",
+    "theme_color": "#62c4ea",
     "icons": [
         {
-            "src": "/img/favicon-192.png",
-            "sizes": "any",
-            "type": "image/png"
+            "src": "/static/img/favicon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/img/favicon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
         }
     ]
 }

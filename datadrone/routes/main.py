@@ -1,3 +1,4 @@
+from flask import jsonify, current_app
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import current_user
 from datadrone.forms import AddItemForm, AddEntryForm
@@ -30,6 +31,44 @@ def index():
             entry_form=entry_form, spotlight_stat=spotlight_stat)
     else:
         return redirect(url_for("auth.login"))
+
+
+@bp.route("/manifest.json")
+def manifest():
+    if current_app.config.get("ENVIRONMENT") == "test":
+        app_name = "DataDrone (Test)"
+        short_name = "DataDrone (Test)"
+        theme_color = "#000000"
+    else:
+        app_name = "DataDrone"
+        short_name = "DataDrone"
+        theme_color = "#000000"
+
+    return jsonify({
+        "id": "/",
+        "name": app_name,
+        "short_name": short_name,
+        "description": app_name,
+        "start_url": "/",
+        "scope": "/",
+        "display": "standalone",
+        "background_color": "#333333",
+        "theme_color": theme_color,
+        "icons": [
+            {
+                "src": "/static/img/favicon-192.png",
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "any"
+            },
+            {
+                "src": "/static/img/favicon-512.png",
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "any"
+            }
+        ]
+    })
 
 
 def error(error):

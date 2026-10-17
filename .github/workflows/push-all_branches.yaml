@@ -55,15 +55,15 @@ jobs:
           pytest
 
   publish_image:
-    name: Publish docker image beta
+    name: Publish docker image test
     runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v3
       - name: build
         run: |
-          docker build . -t squamsh/datadrone:beta
+          docker build . -t squamsh/datadrone:test
       - name: publish
         run: |
           docker login -u squamsh -p ${{ secrets.DOCKER_HUB_TOKEN }}
-          docker push squamsh/datadrone:beta
+          docker push squamsh/datadrone:test

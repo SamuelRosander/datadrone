@@ -13,7 +13,7 @@
     <link rel="icon" sizes="192x192" 
         href="{{ url_for('static', filename='img/favicon-192.png') }}">
     <link rel="manifest"
-        href="{{ url_for('static', filename='site.webmanifest') }}">
+        href="{{ url_for('main.manifest') }}">
     <script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
     <title>DataDrone</title>
 </head>
@@ -21,7 +21,7 @@
 <body>
     <header class="header">
         <div class="wrapper">
-            <a href="{{ url_for('main.index') }}" class="logo">DataDrone</a>
+            <a href="{{ url_for('main.index') }}" class="logo">DataDrone{{ " (Test branch)" if config.ENVIRONMENT == "test" }}</a>
             <button class="btn-invis" onClick="toggleMenu()">
                 <i class='bx bx-menu user-icon' id="user-icon"></i>
             </button>
